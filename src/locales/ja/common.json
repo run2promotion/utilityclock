@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "アラーム",
+    "timer": "タイマー",
+    "stopwatch": "ストップウォッチ",
+    "worldClock": "世界時計",
+    "holidays": "祝日",
+    "settings": "設定"
+  },
+  "actions": {
+    "start": "開始",
+    "stop": "停止",
+    "reset": "リセット"
+  },
+  "home": {
+    "title": "Web向けユーティリティ時計",
+    "subtitle": "クラシックなオンライン時計にインスパイアされたダークファーストのツール：音と通知付きアラーム、タイマー、世界時刻。高速でクロールしやすいURL。",
+    "ctaAlarm": "アラームを開く",
+    "ctaTimers": "タイマー",
+    "presetsTitle": "人気のプリセット",
+    "preset7am": "7:00 アラーム",
+    "preset10m": "10分タイマー",
+    "presetLondon": "ロンドンの時刻"
+  },
+  "hub": {
+    "presetPages": "プリセットページ",
+    "otherCategories": "他のカテゴリ："
+  },
+  "holidaysHub": {
+    "title": "祝日カウントダウン",
+    "subtitle": "国を選んで次の祝日・残り日数・大きなライブカウントダウン（日・時・分・秒）を表示。日付が過ぎると自動で翌年に進みます。"
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "オンラインアラーム・タイマー・時計",
+    "homeDescription": "ブラウザで使える高速ツール：アラーム、タイマー、世界時刻。SEO向けのプリセットページ。",
+    "patterns": {
+      "timer_minutes_title": "{n}分タイマー（オンライン）",
+      "timer_minutes_desc": "ブラウザで{n}分のカウントダウン。リング表示、通知、音のアラームに対応。",
+      "world_time_title": "{city}の現在時刻",
+      "world_time_desc": "{tz}（{city}）の日付・時刻・UTCオフセット。"
+    }
+  },
+  "footer": {
+    "legalNavLabel": "法的情報・概要",
+    "about": "概要",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "tagline": "Utility Clock — ウェブ向けの時計ツール。",
+    "breadcrumbHome": "ホーム",
+    "popularToolsTitle": "人気のツール",
+    "sitemapHeading": "人気のページ"
+  }
+}

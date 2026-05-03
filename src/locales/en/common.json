@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "Alarm Clock",
+    "timer": "Timer",
+    "stopwatch": "Stopwatch",
+    "worldClock": "World Clock",
+    "holidays": "Holidays",
+    "settings": "Settings"
+  },
+  "actions": {
+    "start": "Start",
+    "stop": "Stop",
+    "reset": "Reset"
+  },
+  "home": {
+    "title": "Utility clocks for the web",
+    "subtitle": "Dark-first tools inspired by classic online clocks: alarms with sound and notifications, timers, and world time — with fast, crawlable preset URLs.",
+    "ctaAlarm": "Open alarm",
+    "ctaTimers": "Timers",
+    "presetsTitle": "Popular presets",
+    "preset7am": "Alarm for 7:00 AM",
+    "preset10m": "10 minute timer",
+    "presetLondon": "London time"
+  },
+  "hub": {
+    "presetPages": "Preset pages",
+    "otherCategories": "Other categories:"
+  },
+  "holidaysHub": {
+    "title": "Holiday countdowns",
+    "subtitle": "Pick a country to see upcoming observances, days remaining, and open a full-screen style countdown with live days, hours, minutes, and seconds. Timers roll forward to the next year automatically after each date passes."
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "Online alarm, timer & clocks",
+    "homeDescription": "Fast, browser-based alarm clock, timers, and world time tools with SEO-friendly preset pages.",
+    "patterns": {
+      "timer_minutes_title": "{n} minute timer online",
+      "timer_minutes_desc": "Count down {n} minute(s) in your browser with a visible ring, optional notifications, and an audible finish.",
+      "world_time_title": "Current time in {city}",
+      "world_time_desc": "Live date, time, and UTC offset for {tz} ({city})."
+    }
+  },
+  "footer": {
+    "legalNavLabel": "Legal and about",
+    "about": "About",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "tagline": "Utility Clock — timing tools for the web.",
+    "breadcrumbHome": "Home",
+    "popularToolsTitle": "Popular tools",
+    "sitemapHeading": "Popular pages"
+  }
+}

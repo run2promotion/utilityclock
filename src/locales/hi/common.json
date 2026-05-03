@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "अलार्म घड़ी",
+    "timer": "टाइमर",
+    "stopwatch": "स्टॉपवॉच",
+    "worldClock": "विश्व घड़ी",
+    "holidays": "छुट्टियाँ",
+    "settings": "सेटिंग्स"
+  },
+  "actions": {
+    "start": "शुरू",
+    "stop": "रोकें",
+    "reset": "रीसेट"
+  },
+  "home": {
+    "title": "वेब के लिए उपयोगी घड़ियाँ",
+    "subtitle": "क्लासिक ऑनलाइन घड़ियों से प्रेरित डार्क-फर्स्ट टूल: ध्वनि और सूचनाओं वाले अलार्म, टाइमर और विश्व समय — तेज़, क्रॉल करने योग्य URL के साथ।",
+    "ctaAlarm": "अलार्म खोलें",
+    "ctaTimers": "टाइमर",
+    "presetsTitle": "लोकप्रिय प्रीसेट",
+    "preset7am": "7:00 बजे का अलार्म",
+    "preset10m": "10 मिनट का टाइमर",
+    "presetLondon": "लंदन का समय"
+  },
+  "hub": {
+    "presetPages": "प्रीसेट पेज",
+    "otherCategories": "अन्य श्रेणियाँ:"
+  },
+  "holidaysHub": {
+    "title": "छुट्टी काउंटडाउन",
+    "subtitle": "देश चुनें और आगामी तिथियाँ, बचे दिन और लाइव काउंटडाउन देखें। तारीख बीतने के बाद टाइमर अगले साल पर अपने आप चला जाता है।"
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "ऑनलाइन अलार्म, टाइमर और घड़ियाँ",
+    "homeDescription": "तेज़ ब्राउज़र टूल: अलार्म, टाइमर और विश्व समय — SEO-अनुकूल पेज।",
+    "patterns": {
+      "timer_minutes_title": "{n} मिनट का ऑनलाइन टाइमर",
+      "timer_minutes_desc": "ब्राउज़र में {n} मिनट की उलटी गिनती, रिंग, वैकल्पिक सूचनाएँ और ध्वनि अलर्ट।",
+      "world_time_title": "{city} में वर्तमान समय",
+      "world_time_desc": "{tz} ({city}) के लिए तारीख, समय और UTC ऑफ़सेट।"
+    }
+  },
+  "footer": {
+    "legalNavLabel": "कानूनी और परिचय",
+    "about": "परिचय",
+    "privacy": "गोपनीयता नीति",
+    "terms": "सेवा की शर्तें",
+    "tagline": "Utility Clock — वेब के लिए समय उपकरण।",
+    "breadcrumbHome": "होम",
+    "popularToolsTitle": "लोकप्रिय टूल",
+    "sitemapHeading": "लोकप्रिय पेज"
+  }
+}

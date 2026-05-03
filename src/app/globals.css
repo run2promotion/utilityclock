@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
+/* Class-based dark mode for Tailwind v4 `dark:` utilities */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa;
+  --foreground: #18181b;
+  --primary-clock-color: #34d399;
+  --clock-scale: 1;
+  color-scheme: light;
+}
+
+html.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -10,17 +22,80 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-lcd: var(--font-lcd);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+@layer utilities {
+  .font-lcd {
+    font-family: var(--font-lcd), var(--font-geist-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+
+  .text-clock-primary {
+    color: var(--primary-clock-color);
+  }
+
+  .drop-shadow-clock {
+    filter: drop-shadow(
+      0 0 24px color-mix(in srgb, var(--primary-clock-color) 22%, transparent)
+    );
+  }
+
+  /* Main homepage clock — scales with --clock-scale */
+  .clock-scale-home {
+    font-size: calc(3.75rem * var(--clock-scale));
+  }
+  @media (min-width: 640px) {
+    .clock-scale-home {
+      font-size: calc(4.5rem * var(--clock-scale));
+    }
+  }
+  @media (min-width: 768px) {
+    .clock-scale-home {
+      font-size: calc(6rem * var(--clock-scale));
+    }
+  }
+
+  .clock-scale-alarm-now {
+    font-size: calc(3rem * var(--clock-scale));
+  }
+  @media (min-width: 640px) {
+    .clock-scale-alarm-now {
+      font-size: calc(3.75rem * var(--clock-scale));
+    }
+  }
+
+  .clock-scale-timer {
+    font-size: calc(3rem * var(--clock-scale));
+  }
+  @media (min-width: 640px) {
+    .clock-scale-timer {
+      font-size: calc(3.75rem * var(--clock-scale));
+    }
+  }
+
+  .clock-scale-stopwatch {
+    font-size: calc(3rem * var(--clock-scale));
+  }
+  @media (min-width: 640px) {
+    .clock-scale-stopwatch {
+      font-size: calc(3.75rem * var(--clock-scale));
+    }
+  }
+
+  .clock-scale-world {
+    font-size: calc(2.25rem * var(--clock-scale));
+  }
+  @media (min-width: 640px) {
+    .clock-scale-world {
+      font-size: calc(3rem * var(--clock-scale));
+    }
+  }
 }

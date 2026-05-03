@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "Réveil",
+    "timer": "Minuteur",
+    "stopwatch": "Chronomètre",
+    "worldClock": "Horloge mondiale",
+    "holidays": "Jours fériés",
+    "settings": "Réglages"
+  },
+  "actions": {
+    "start": "Démarrer",
+    "stop": "Arrêter",
+    "reset": "Réinitialiser"
+  },
+  "home": {
+    "title": "Horloges utiles sur le web",
+    "subtitle": "Outils en mode sombre inspirés des horloges en ligne : alarmes avec son et notifications, minuteurs et heure mondiale — avec des URL rapides et indexables.",
+    "ctaAlarm": "Ouvrir l’alarme",
+    "ctaTimers": "Minuteurs",
+    "presetsTitle": "Préréglages populaires",
+    "preset7am": "Alarme à 7:00",
+    "preset10m": "Minuteur 10 minutes",
+    "presetLondon": "Heure à Londres"
+  },
+  "hub": {
+    "presetPages": "Pages préréglées",
+    "otherCategories": "Autres catégories :"
+  },
+  "holidaysHub": {
+    "title": "Comptes à rebours des fêtes",
+    "subtitle": "Choisissez un pays pour voir les prochaines dates, les jours restants et un grand compte à rebours en direct. Après la date, le compteur passe automatiquement à l’année suivante."
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "Alarme, minuteur & horloges en ligne",
+    "homeDescription": "Outils navigateur rapides : alarme, minuteurs et heure mondiale avec des pages optimisées pour le référencement.",
+    "patterns": {
+      "timer_minutes_title": "Minuteur {n} minutes en ligne",
+      "timer_minutes_desc": "Compte à rebours de {n} minute(s) dans le navigateur avec anneau visible, notifications optionnelles et alerte sonore.",
+      "world_time_title": "Heure actuelle à {city}",
+      "world_time_desc": "Date, heure et décalage UTC pour {tz} ({city})."
+    }
+  },
+  "footer": {
+    "legalNavLabel": "Informations légales",
+    "about": "À propos",
+    "privacy": "Confidentialité",
+    "terms": "Conditions d’utilisation",
+    "tagline": "Utility Clock — outils de temps pour le web.",
+    "breadcrumbHome": "Accueil",
+    "popularToolsTitle": "Outils populaires",
+    "sitemapHeading": "Pages populaires"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "Wecker",
+    "timer": "Timer",
+    "stopwatch": "Stoppuhr",
+    "worldClock": "Weltzeit",
+    "holidays": "Feiertage",
+    "settings": "Einstellungen"
+  },
+  "actions": {
+    "start": "Start",
+    "stop": "Stopp",
+    "reset": "Zurücksetzen"
+  },
+  "home": {
+    "title": "Nützliche Uhren fürs Web",
+    "subtitle": "Dark-First-Tools wie klassische Online-Uhren: Wecker mit Ton und Benachrichtigungen, Timer und Weltzeit — mit schnellen, crawl-freundlichen URLs.",
+    "ctaAlarm": "Wecker öffnen",
+    "ctaTimers": "Timer",
+    "presetsTitle": "Beliebte Vorlagen",
+    "preset7am": "Wecker für 7:00 Uhr",
+    "preset10m": "10-Minuten-Timer",
+    "presetLondon": "Zeit in London"
+  },
+  "hub": {
+    "presetPages": "Vorlagen-Seiten",
+    "otherCategories": "Weitere Kategorien:"
+  },
+  "holidaysHub": {
+    "title": "Feiertags-Countdowns",
+    "subtitle": "Wähle ein Land für anstehende Feiertage, verbleibende Tage und einen großen Countdown mit Tagen, Stunden, Minuten und Sekunden. Nach dem Datum springt der Timer automatisch ins nächste Jahr."
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "Online-Wecker, Timer & Uhren",
+    "homeDescription": "Schnelle Browser-Tools: Wecker, Timer und Weltzeit mit SEO-freundlichen Seiten.",
+    "patterns": {
+      "timer_minutes_title": "{n}-Minuten-Timer online",
+      "timer_minutes_desc": "Countdown für {n} Minute(n) im Browser mit Ring, optionalen Benachrichtigungen und Alarm.",
+      "world_time_title": "Aktuelle Zeit in {city}",
+      "world_time_desc": "Datum, Uhrzeit und UTC-Offset für {tz} ({city})."
+    }
+  },
+  "footer": {
+    "legalNavLabel": "Rechtliches und Über uns",
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "tagline": "Utility Clock — Zeittools fürs Web.",
+    "breadcrumbHome": "Startseite",
+    "popularToolsTitle": "Beliebte Tools",
+    "sitemapHeading": "Beliebte Seiten"
+  }
+}

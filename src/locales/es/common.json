@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "Alarma",
+    "timer": "Temporizador",
+    "stopwatch": "Cronómetro",
+    "worldClock": "Reloj mundial",
+    "holidays": "Festivos",
+    "settings": "Ajustes"
+  },
+  "actions": {
+    "start": "Iniciar",
+    "stop": "Detener",
+    "reset": "Restablecer"
+  },
+  "home": {
+    "title": "Relojes útiles en la web",
+    "subtitle": "Herramientas en modo oscuro inspiradas en relojes online: alarmas con sonido y notificaciones, temporizadores y hora mundial, con URLs rápidas y rastreables.",
+    "ctaAlarm": "Abrir alarma",
+    "ctaTimers": "Temporizadores",
+    "presetsTitle": "Ajustes populares",
+    "preset7am": "Alarma a las 7:00",
+    "preset10m": "Temporizador de 10 minutos",
+    "presetLondon": "Hora en Londres"
+  },
+  "hub": {
+    "presetPages": "Páginas predefinidas",
+    "otherCategories": "Otras categorías:"
+  },
+  "holidaysHub": {
+    "title": "Cuenta atrás de festividades",
+    "subtitle": "Elige un país para ver las próximas fechas, los días que faltan y una cuenta atrás grande en vivo. Tras la fecha, el temporizador avanza automáticamente al año siguiente."
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "Alarma, temporizador y relojes online",
+    "homeDescription": "Herramientas rápidas en el navegador: alarma, temporizadores y hora mundial con páginas amigables para SEO.",
+    "patterns": {
+      "timer_minutes_title": "Temporizador de {n} minutos online",
+      "timer_minutes_desc": "Cuenta atrás de {n} minuto(s) en el navegador con anillo visible, notificaciones opcionales y alarma sonora.",
+      "world_time_title": "Hora actual en {city}",
+      "world_time_desc": "Fecha, hora y offset UTC para {tz} ({city})."
+    }
+  },
+  "footer": {
+    "legalNavLabel": "Legal e información",
+    "about": "Acerca de",
+    "privacy": "Privacidad",
+    "terms": "Términos del servicio",
+    "tagline": "Utility Clock — herramientas de tiempo para la web.",
+    "breadcrumbHome": "Inicio",
+    "popularToolsTitle": "Herramientas populares",
+    "sitemapHeading": "Páginas populares"
+  }
+}

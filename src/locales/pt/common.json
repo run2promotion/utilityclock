@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "brand": "vClock-style",
+    "alarm": "Alarme",
+    "timer": "Temporizador",
+    "stopwatch": "Cronómetro",
+    "worldClock": "Relógio mundial",
+    "holidays": "Feriados",
+    "settings": "Definições"
+  },
+  "actions": {
+    "start": "Iniciar",
+    "stop": "Parar",
+    "reset": "Repor"
+  },
+  "home": {
+    "title": "Relógios úteis na web",
+    "subtitle": "Ferramentas em modo escuro inspiradas em relógios online: alarmes com som e notificações, temporizadores e hora mundial — com URLs rápidas e rastreáveis.",
+    "ctaAlarm": "Abrir alarme",
+    "ctaTimers": "Temporizadores",
+    "presetsTitle": "Predefinições populares",
+    "preset7am": "Alarme às 7:00",
+    "preset10m": "Temporizador de 10 minutos",
+    "presetLondon": "Hora em Londres"
+  },
+  "hub": {
+    "presetPages": "Páginas predefinidas",
+    "otherCategories": "Outras categorias:"
+  },
+  "holidaysHub": {
+    "title": "Contagens decrescentes de feriados",
+    "subtitle": "Escolha um país para ver as próximas datas, dias restantes e uma contagem grande em tempo real. Depois da data, o temporizador avança automaticamente para o ano seguinte."
+  },
+  "meta": {
+    "siteName": "Utility Clock",
+    "homeTitle": "Alarme, temporizador e relógios online",
+    "homeDescription": "Ferramentas rápidas no navegador: alarme, temporizadores e hora mundial com páginas otimizadas para SEO.",
+    "patterns": {
+      "timer_minutes_title": "Temporizador de {n} minutos online",
+      "timer_minutes_desc": "Contagem decrescente de {n} minuto(s) no navegador com anel visível, notificações opcionais e alarme sonoro.",
+      "world_time_title": "Hora atual em {city}",
+      "world_time_desc": "Data, hora e offset UTC para {tz} ({city})."
+    }
+  },
+  "footer": {
+    "legalNavLabel": "Legal e sobre",
+    "about": "Sobre",
+    "privacy": "Privacidade",
+    "terms": "Termos de uso",
+    "tagline": "Utility Clock — ferramentas de tempo para a web.",
+    "breadcrumbHome": "Início",
+    "popularToolsTitle": "Ferramentas populares",
+    "sitemapHeading": "Páginas populares"
+  }
+}
