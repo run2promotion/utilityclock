@@ -7,7 +7,8 @@ import {
   type SavedCity,
 } from "@/lib/worldClockStorage";
 import { formatInTimeZone } from "date-fns-tz";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Check, Copy, Plus, Search, Trash2 } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 function useClockTick(intervalMs = 250) {
@@ -70,12 +71,63 @@ function WorldClockReadout({
 export type WorldClockCityViewProps = {
   timeZone: string;
   label: string;
+  embedOnly?: boolean;
 };
 
-export function WorldClockCityView({ timeZone, label }: WorldClockCityViewProps) {
+export function WorldClockCityView({ timeZone, label, embedOnly = false }: WorldClockCityViewProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isEmbedMode = embedOnly || searchParams.get("embed") === "1";
+  const [embedOrigin, setEmbedOrigin] = useState("");
+  const [embedCopied, setEmbedCopied] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmbedOrigin(window.location.origin);
+    }
+  }, []);
+
+  const embedSrc = `${embedOrigin}${pathname}?embed=1`;
+  const iframeCode = `<iframe src="${embedSrc}" width="420" height="260" style="border:0;border-radius:12px;overflow:hidden;" title="Utility Clock World Clock"></iframe>`;
+
   return (
-    <div className="mx-auto w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white/60 p-8 dark:border-zinc-800 dark:bg-zinc-900/40">
-      <WorldClockReadout timeZone={timeZone} label={label} />
+    <div className="space-y-3">
+      <div
+        className={`mx-auto w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white/60 p-8 dark:border-zinc-800 dark:bg-zinc-900/40 ${
+          embedOnly ? "max-w-full rounded-none border-0 bg-transparent p-4" : ""
+        }`}
+      >
+        <WorldClockReadout timeZone={timeZone} label={label} />
+      </div>
+      {!isEmbedMode && (
+        <section className="mx-auto w-full max-w-3xl space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this world clock</h3>
+          <textarea
+            readOnly
+            value={iframeCode}
+            rows={2}
+            className="w-full rounded-md border border-zinc-300 bg-zinc-50 p-2 font-mono text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
+          />
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(iframeCode);
+                  setEmbedCopied(true);
+                  setTimeout(() => setEmbedCopied(false), 1200);
+                } catch {
+                  setEmbedCopied(false);
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              {embedCopied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+              {embedCopied ? "Copied" : "Copy embed code"}
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -97,7 +149,9 @@ function getAllTimeZones(): string[] {
   ];
 }
 
-export function WorldClockHub() {
+export function WorldClockHub({ embedOnly = false }: { embedOnly?: boolean } = {}) {
+  const searchParams = useSearchParams();
+  const isEmbedMode = embedOnly || searchParams.get("embed") === "1";
   const [cities, setCities] = useState<SavedCity[]>([]);
   const [query, setQuery] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -142,6 +196,11 @@ export function WorldClockHub() {
     return (
       <div className="h-48 animate-pulse rounded-2xl border border-zinc-800 bg-zinc-900/30" />
     );
+  }
+
+  if (isEmbedMode) {
+    const first = cities[0] ?? { timeZone: "UTC", label: "UTC" };
+    return <WorldClockCityView timeZone={first.timeZone} label={first.label} embedOnly />;
   }
 
   return (

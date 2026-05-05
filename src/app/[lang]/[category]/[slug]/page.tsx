@@ -274,6 +274,16 @@ export default async function ToolSlugPage({ params, searchParams }: Props) {
       jsonName,
       canonicalUrl,
     );
+    if (embedMode) {
+      return (
+        <>
+          <EmbedBodyClass active />
+          <div className="w-full">
+            <HolidayCountdown holiday={holiday} />
+          </div>
+        </>
+      );
+    }
     return (
       <div className="grid gap-8 lg:grid-cols-[1fr_220px] lg:items-start">
         <div className="min-w-0 space-y-6">
@@ -327,23 +337,67 @@ export default async function ToolSlugPage({ params, searchParams }: Props) {
     );
   }
 
+  if (embedMode && category === "alarm" && def?.alarm) {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <AlarmTool
+            initialPreset={{ hour: def.alarm.hour, minute: def.alarm.minute }}
+            embedOnly
+          />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "stopwatch" && def?.stopwatch !== undefined) {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <StopwatchTool embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "world-clock" && worldResolved) {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <WorldClockCityView
+            timeZone={worldResolved.timeZone}
+            label={worldResolved.label}
+            embedOnly
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_220px] lg:items-start">
       <div className="min-w-0 space-y-8">
-        <Breadcrumbs items={crumbs} />
+        <div className="embed-hidden">
+          <Breadcrumbs items={crumbs} />
+        </div>
         <JsonLd
           name={jsonName}
           description={jsonDesc}
           url={canonicalUrl}
         />
-        <header>
+        <header className="embed-hidden">
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
             {h1Title}
           </h1>
           <p className="mt-2 max-w-2xl text-zinc-400">{jsonDesc}</p>
         </header>
 
-        <ShareBar url={canonicalUrl} title={h1Title} />
+        <div className="embed-hidden">
+          <ShareBar url={canonicalUrl} title={h1Title} />
+        </div>
 
         {category === "alarm" && def?.alarm && (
           <AlarmTool initialPreset={{ hour: def.alarm.hour, minute: def.alarm.minute }} />
@@ -365,28 +419,34 @@ export default async function ToolSlugPage({ params, searchParams }: Props) {
           />
         )}
 
-        <ToolDescription
-          category={category}
-          slug={canonicalSlug}
-          pageTitle={h1Title}
-          cityLabel={worldResolved?.label}
-        />
+        <div className="embed-hidden">
+          <ToolDescription
+            category={category}
+            slug={canonicalSlug}
+            pageTitle={h1Title}
+            cityLabel={worldResolved?.label}
+          />
+        </div>
 
-        <DynamicSEOContent
+        <div className="embed-hidden">
+          <DynamicSEOContent
+            locale={locale}
+            category={category}
+            slug={canonicalSlug}
+            timerTotalSeconds={def?.timer?.totalSeconds}
+            worldTimeZone={worldResolved?.timeZone}
+            worldLabel={worldResolved?.label}
+          />
+        </div>
+      </div>
+      <div className="embed-hidden">
+        <PopularToolsAside
           locale={locale}
           category={category}
-          slug={canonicalSlug}
-          timerTotalSeconds={def?.timer?.totalSeconds}
           worldTimeZone={worldResolved?.timeZone}
-          worldLabel={worldResolved?.label}
+          excludeWorldSlug={category === "world-clock" ? canonicalSlug : undefined}
         />
       </div>
-      <PopularToolsAside
-        locale={locale}
-        category={category}
-        worldTimeZone={worldResolved?.timeZone}
-        excludeWorldSlug={category === "world-clock" ? canonicalSlug : undefined}
-      />
     </div>
   );
 }

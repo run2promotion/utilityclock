@@ -3,6 +3,8 @@
 import { useSettings } from "@/context/settings-context";
 import type { HolidayDefinition } from "@/data/holidays";
 import { buildHolidaySeoArticle, getNextHolidayOccurrence } from "@/data/holidays";
+import { Check, Copy } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 function pad2(n: number) {
@@ -67,12 +69,23 @@ export type HolidayCountdownProps = {
 
 export function HolidayCountdown({ holiday }: HolidayCountdownProps) {
   const { settings } = useSettings();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isEmbedMode = searchParams.get("embed") === "1";
   const fontClass = settings.isDigitalFont ? "font-lcd" : "font-sans";
+  const [embedOrigin, setEmbedOrigin] = useState("");
+  const [embedCopied, setEmbedCopied] = useState(false);
 
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmbedOrigin(window.location.origin);
+    }
   }, []);
 
   const target = useMemo(() => {
@@ -86,9 +99,12 @@ export function HolidayCountdown({ holiday }: HolidayCountdownProps) {
   const parts = splitRemaining(remainingMs);
   const year = target.getFullYear();
   const article = buildHolidaySeoArticle(holiday, year, target);
+  const embedSrc = `${embedOrigin}${pathname}?embed=1`;
+  const iframeCode = `<iframe src="${embedSrc}" width="420" height="420" style="border:0;border-radius:12px;overflow:hidden;" title="Utility Clock Holiday Countdown"></iframe>`;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-zinc-700/80 bg-zinc-950 shadow-2xl">
+    <div className="space-y-3">
+      <div className="relative overflow-hidden rounded-3xl border border-zinc-700/80 bg-zinc-950 shadow-2xl">
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-zinc-950 to-black" />
       <Starfield />
 
@@ -157,12 +173,45 @@ export function HolidayCountdown({ holiday }: HolidayCountdownProps) {
           </p>
         </div>
 
-        <article className="mx-auto max-w-3xl px-1">
-          <p className="text-base leading-relaxed text-zinc-300 sm:text-[17px]">
-            {article}
-          </p>
-        </article>
+        {!isEmbedMode && (
+          <article className="mx-auto max-w-3xl px-1">
+            <p className="text-base leading-relaxed text-zinc-300 sm:text-[17px]">
+              {article}
+            </p>
+          </article>
+        )}
       </div>
+      </div>
+
+      {!isEmbedMode && (
+        <section className="space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this countdown</h3>
+          <textarea
+            readOnly
+            value={iframeCode}
+            rows={2}
+            className="w-full rounded-md border border-zinc-300 bg-zinc-50 p-2 font-mono text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
+          />
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(iframeCode);
+                  setEmbedCopied(true);
+                  setTimeout(() => setEmbedCopied(false), 1200);
+                } catch {
+                  setEmbedCopied(false);
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              {embedCopied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+              {embedCopied ? "Copied" : "Copy embed code"}
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

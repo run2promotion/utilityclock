@@ -31,12 +31,16 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* iframe embed mode: keep only timer widget content */
-body.embed-mode header,
-body.embed-mode footer,
+/* iframe embed mode: hide site chrome, keep widget headers visible */
+body.embed-mode #site-header,
+body.embed-mode #site-footer,
 body.embed-mode #sidebar-ad-left,
 body.embed-mode #sidebar-ad-right,
 body.embed-mode #banner-ad-bottom {
+  display: none !important;
+}
+
+body.embed-mode .embed-hidden {
   display: none !important;
 }
 

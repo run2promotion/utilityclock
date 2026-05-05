@@ -64,7 +64,10 @@ export function SiteFooter() {
   ] as const;
 
   return (
-    <footer className="border-t border-zinc-200/90 bg-zinc-50/90 text-xs text-zinc-600 dark:border-zinc-800/80 dark:bg-zinc-950/80 dark:text-zinc-400">
+    <footer
+      id="site-footer"
+      className="border-t border-zinc-200/90 bg-zinc-50/90 text-xs text-zinc-600 dark:border-zinc-800/80 dark:bg-zinc-950/80 dark:text-zinc-400"
+    >
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8">
         <section aria-labelledby="footer-sitemap-heading">
           <h2 id="footer-sitemap-heading" className="sr-only">

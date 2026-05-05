@@ -19,7 +19,18 @@ export function ShareBar({ url, title }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
   const [embedCopied, setEmbedCopied] = useState(false);
 
-  const iframeCode = `<iframe src="${url}" width="420" height="480" style="border:0;border-radius:12px;overflow:hidden;" title="${title}"></iframe>`;
+  const embedUrl = useMemo(() => {
+    try {
+      const u = new URL(url);
+      u.searchParams.set("embed", "1");
+      return u.toString();
+    } catch {
+      const joiner = url.includes("?") ? "&" : "?";
+      return `${url}${joiner}embed=1`;
+    }
+  }, [url]);
+
+  const iframeCode = `<iframe src="${embedUrl}" width="420" height="480" style="border:0;border-radius:12px;overflow:hidden;" title="${title}"></iframe>`;
 
   const items = useMemo<ShareItem[]>(() => {
     const u = encodeURIComponent(url);

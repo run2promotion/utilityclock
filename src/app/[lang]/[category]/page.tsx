@@ -96,9 +96,42 @@ export default async function CategoryHubPage({ params, searchParams }: Props) {
     );
   }
 
+  if (embedMode && category === "alarm") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <AlarmTool embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "stopwatch") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <StopwatchTool embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "world-clock") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <WorldClockHub embedOnly />
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
-      <div>
+      <div className="embed-hidden">
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           {meta.label}
         </h1>
@@ -119,9 +152,11 @@ export default async function CategoryHubPage({ params, searchParams }: Props) {
 
       {category === "world-clock" && <WorldClockHub />}
 
-      <AdSlot slotId={`hub-${category}-top`} routeType="hub" />
+      <div className="embed-hidden">
+        <AdSlot slotId={`hub-${category}-top`} routeType="hub" />
+      </div>
 
-      <section>
+      <section className="embed-hidden">
         <h2 className="mb-3 text-sm font-medium uppercase tracking-wider text-zinc-500">
           {dict.hub.presetPages}
         </h2>
@@ -153,7 +188,7 @@ export default async function CategoryHubPage({ params, searchParams }: Props) {
         </ul>
       </section>
 
-      <section className="text-sm text-zinc-500">
+      <section className="embed-hidden text-sm text-zinc-500">
         <p>{dict.hub.otherCategories}</p>
         <ul className="mt-2 flex flex-wrap gap-2">
           {(Object.keys(CATEGORIES) as ToolCategoryId[])

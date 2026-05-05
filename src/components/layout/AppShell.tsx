@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
+import { EmbedAttributionFromQuery } from "@/components/embed/EmbedAttributionFromQuery";
+import { EmbedModeFromQuery } from "@/components/embed/EmbedModeFromQuery";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 
 const SiteHeader = dynamic(() => import("./SiteHeader"), {
@@ -20,6 +22,8 @@ const SiteHeader = dynamic(() => import("./SiteHeader"), {
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
+      <EmbedModeFromQuery />
+      <EmbedAttributionFromQuery />
       <SiteHeader />
       <div className="relative flex flex-1">
         {/* Left rail — reserved for programmatic ads; keep empty for layout tests */}

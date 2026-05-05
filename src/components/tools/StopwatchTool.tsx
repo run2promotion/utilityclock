@@ -1,7 +1,8 @@
 "use client";
 
 import { useSettings } from "@/context/settings-context";
-import { ClipboardCopy, Flag, Pause, Play, RotateCcw } from "lucide-react";
+import { Check, ClipboardCopy, Copy, Flag, Pause, Play, RotateCcw } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type LapRow = {
@@ -27,13 +28,18 @@ function formatShort(ms: number): string {
   return formatStopwatch(ms);
 }
 
-export function StopwatchTool() {
+export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {}) {
   const { settings } = useSettings();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isEmbedMode = embedOnly || searchParams.get("embed") === "1";
   const timeFont = settings.isDigitalFont ? "font-lcd" : "font-mono";
   const [running, setRunning] = useState(false);
   const [displayMs, setDisplayMs] = useState(0);
   const [laps, setLaps] = useState<LapRow[]>([]);
   const [copyState, setCopyState] = useState<"idle" | "ok" | "err">("idle");
+  const [embedOrigin, setEmbedOrigin] = useState("");
+  const [embedCopied, setEmbedCopied] = useState(false);
 
   const baseMsRef = useRef(0);
   const segmentStartRef = useRef<number | null>(null);
@@ -41,10 +47,17 @@ export function StopwatchTool() {
   const runningRef = useRef(false);
   const lapCounter = useRef(0);
   const lastLapTotalRef = useRef(0);
+  const autoStartedRef = useRef(false);
 
   useEffect(() => {
     runningRef.current = running;
   }, [running]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmbedOrigin(window.location.origin);
+    }
+  }, []);
 
   const stopRaf = () => {
     if (rafRef.current != null) {
@@ -74,11 +87,18 @@ export function StopwatchTool() {
     return () => stopRaf();
   }, [running, tick]);
 
-  const start = () => {
+  const start = useCallback(() => {
     if (running) return;
     segmentStartRef.current = performance.now();
     setRunning(true);
-  };
+  }, [running]);
+
+  useEffect(() => {
+    if (!isEmbedMode) return;
+    if (autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    start();
+  }, [isEmbedMode, start]);
 
   const pause = () => {
     if (!running) return;
@@ -144,6 +164,8 @@ export function StopwatchTool() {
   };
 
   const hasStarted = displayMs > 0 || running || laps.length > 0;
+  const embedSrc = `${embedOrigin}${pathname}?embed=1`;
+  const iframeCode = `<iframe src="${embedSrc}" width="420" height="320" style="border:0;border-radius:12px;overflow:hidden;" title="Utility Clock Stopwatch"></iframe>`;
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6">
@@ -157,7 +179,7 @@ export function StopwatchTool() {
         <p className="mt-2 text-xs text-zinc-500">Hours · minutes · seconds · centiseconds</p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      {!isEmbedMode && <div className="flex flex-wrap items-center justify-center gap-3">
         {!running ? (
           <button
             type="button"
@@ -210,9 +232,9 @@ export function StopwatchTool() {
               ? "Failed"
               : "Export laps"}
         </button>
-      </div>
+      </div>}
 
-      {laps.length > 0 && (
+      {!isEmbedMode && laps.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-zinc-400">Laps</h3>
           <ul className="max-h-56 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 font-mono text-sm tabular-nums">
@@ -228,6 +250,36 @@ export function StopwatchTool() {
             ))}
           </ul>
         </div>
+      )}
+
+      {!isEmbedMode && (
+        <section className="space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this stopwatch</h3>
+          <textarea
+            readOnly
+            value={iframeCode}
+            rows={2}
+            className="w-full rounded-md border border-zinc-300 bg-zinc-50 p-2 font-mono text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
+          />
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(iframeCode);
+                  setEmbedCopied(true);
+                  setTimeout(() => setEmbedCopied(false), 1200);
+                } catch {
+                  setEmbedCopied(false);
+                }
+              }}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              {embedCopied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+              {embedCopied ? "Copied" : "Copy embed code"}
+            </button>
+          </div>
+        </section>
       )}
     </div>
   );

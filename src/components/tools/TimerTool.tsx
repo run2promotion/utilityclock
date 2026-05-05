@@ -86,6 +86,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const doneRef = useRef(false);
+  const autoStartedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const endAtRef = useRef<number | null>(null);
   const phaseRef = useRef<Phase>("idle");
@@ -235,7 +236,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
     phase === "running" && endAtMs !== null,
   );
 
-  const start = (durationMs: number) => {
+  const start = useCallback((durationMs: number) => {
     primeAudio();
     doneRef.current = false;
     setTotalMs(durationMs);
@@ -244,7 +245,15 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
     setEndAtMs(end);
     setDisplayRemaining(durationMs);
     setPhase("running");
-  };
+  }, [primeAudio]);
+
+  useEffect(() => {
+    if (!isEmbedMode) return;
+    if (autoStartedRef.current) return;
+    if (phase !== "idle") return;
+    autoStartedRef.current = true;
+    start(totalMs);
+  }, [isEmbedMode, phase, totalMs, start]);
 
   const pause = () => {
     if (phase !== "running" || endAtMs === null) return;
@@ -727,6 +736,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
           Time is up — sound played (unmute if needed).
         </p>
       )}
+
     </div>
   );
 }

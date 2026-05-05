@@ -5,11 +5,13 @@ import { createAlarmAudio } from "@/lib/alarmSounds";
 import { useAlarmWorker } from "@/hooks/useAlarmWorker";
 import { useNow } from "@/hooks/useNow";
 import { Bell, BellOff, Volume2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type AlarmToolProps = {
   /** 24-hour parts from SEO preset */
   initialPreset?: { hour: number; minute: number };
+  embedOnly?: boolean;
 };
 
 function toHour12(h24: number, m: number) {
@@ -34,8 +36,10 @@ function nextAlarmAt(hour24: number, minute: number, from: Date): number {
   return target.getTime();
 }
 
-export function AlarmTool({ initialPreset }: AlarmToolProps) {
+export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) {
   const { settings } = useSettings();
+  const searchParams = useSearchParams();
+  const isEmbedMode = embedOnly || searchParams.get("embed") === "1";
   const now = useNow(250);
   const preset12 = initialPreset
     ? toHour12(initialPreset.hour, initialPreset.minute)
@@ -58,6 +62,7 @@ export function AlarmTool({ initialPreset }: AlarmToolProps) {
   const [ringing, setRinging] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const rangRef = useRef(false);
+  const autoArmedRef = useRef(false);
 
   const hour24 = useMemo(
     () => toHour24(hour12, minute, isPM),
@@ -119,18 +124,26 @@ export function AlarmTool({ initialPreset }: AlarmToolProps) {
     }
   }, [armed, alarmAtMs, now, fireAlarm]);
 
-  const arm = () => {
+  const arm = useCallback(() => {
     rangRef.current = false;
     const at = nextAlarmAt(hour24, minute, new Date());
     setAlarmAtMs(at);
     setArmed(true);
-  };
+  }, [hour24, minute]);
 
   const disarm = () => {
     setArmed(false);
     setAlarmAtMs(null);
     stopRinging();
   };
+
+  useEffect(() => {
+    if (!isEmbedMode) return;
+    if (autoArmedRef.current) return;
+    if (armed || ringing) return;
+    autoArmedRef.current = true;
+    arm();
+  }, [isEmbedMode, armed, ringing, arm]);
 
   const requestNotify = async () => {
     if (typeof Notification === "undefined") return;
@@ -171,7 +184,7 @@ export function AlarmTool({ initialPreset }: AlarmToolProps) {
         ) : null}
       </div>
 
-      <div className="space-y-4 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-6 dark:border-zinc-800 dark:bg-zinc-900/40">
+      {!isEmbedMode && <div className="space-y-4 rounded-2xl border border-zinc-200 bg-zinc-50/80 p-6 dark:border-zinc-800 dark:bg-zinc-900/40">
         <h2 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Set alarm</h2>
         <div className="flex flex-wrap items-end gap-4">
           <label className="flex flex-col gap-1 text-sm text-zinc-400">
@@ -279,7 +292,7 @@ export function AlarmTool({ initialPreset }: AlarmToolProps) {
             </button>
           )}
         </div>
-      </div>
+      </div>}
 
       {ringing && (
         <div
