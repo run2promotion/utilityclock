@@ -2,11 +2,12 @@ import { HolidayCountdown } from "@/components/holidays/HolidayCountdown";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { DynamicSEOContent } from "@/components/seo/DynamicSEOContent";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareBar } from "@/components/seo/ShareBar";
 import { ToolDescription } from "@/components/seo/ToolDescription";
 import { PopularToolsAside } from "@/components/tools/PopularToolsAside";
 import { AlarmTool } from "@/components/tools/AlarmTool";
 import { StopwatchTool } from "@/components/tools/StopwatchTool";
-import { TimerTool } from "@/components/tools/TimerTool";
+import { TimerToolExperience } from "@/components/tools/TimerToolExperience";
 import { WorldClockCityView } from "@/components/tools/WorldClock";
 import {
   getAllHolidayTimerSlugs,
@@ -27,6 +28,8 @@ import {
   getLocalizedWorldClockMetadata,
 } from "@/i18n/tool-metadata";
 import { getDictionary } from "@/i18n/dictionary";
+import { buildSeoMeta } from "@/lib/seo-metadata";
+import { withLocaleKeywordExpansion } from "@/lib/locale-seo";
 import {
   buildPath,
   getLocalizedCategorySegment,
@@ -39,7 +42,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
 
 function hubNavLabel(
   messages: ReturnType<typeof getDictionary>,
@@ -91,6 +94,17 @@ function toolBreadcrumbItems(
 
 type Props = { params: Promise<{ lang: string; category: string; slug: string }> };
 
+function withBenefit(title: string, category: ToolCategoryId): string {
+  if (title.includes(" - ")) return title;
+  const benefit: Record<ToolCategoryId, string> = {
+    alarm: "Set a Precise Wake Reminder",
+    timer: "Start a Fast Countdown",
+    stopwatch: "Track Time with Accurate Laps",
+    "world-clock": "See Live Local Time Instantly",
+  };
+  return `${title} - ${benefit[category]}`;
+}
+
 export function generateStaticParams() {
   const out: { lang: string; category: string; slug: string }[] = [];
   for (const lang of locales) {
@@ -124,12 +138,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const def = getToolDefinition(category, canonicalSlug);
 
   if (def) {
-    const { title, description } = getLocalizedToolMetadata(
+    const localized = getLocalizedToolMetadata(
       locale,
       category,
       canonicalSlug,
       def,
     );
+    const { title, description } = buildSeoMeta({
+      title: withBenefit(localized.title, category),
+      description: withLocaleKeywordExpansion(locale, category, localized.description),
+    });
     const alt = hreflangAlternates(siteBase, locale, {
       type: "tool",
       category,
@@ -150,21 +168,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const h = getHolidayBySlug(canonicalSlug);
     if (h) {
       const next = getNextHolidayOccurrence(h);
-      const title = holidayPageTitle(h, next.getFullYear());
-      const description = holidayPageDescription(h, next);
+      const meta = buildSeoMeta({
+        title: `${holidayPageTitle(h, next.getFullYear())} - Start Free Countdown`,
+        description: withLocaleKeywordExpansion(
+          locale,
+          "timer",
+          holidayPageDescription(h, next),
+        ),
+      });
       const alt = hreflangAlternates(siteBase, locale, {
         type: "tool",
         category: "timer",
         canonicalSlug,
       });
       return {
-        title,
-        description,
+        title: meta.title,
+        description: meta.description,
         alternates: {
           canonical: alt.canonical,
           languages: alt.languages,
         },
-        openGraph: { title, description },
+        openGraph: { title: meta.title, description: meta.description },
       };
     }
   }
@@ -172,11 +196,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (category === "world-clock") {
     const wc = resolveWorldClockFromSlug(canonicalSlug);
     if (wc) {
-      const { title, description } = getLocalizedWorldClockMetadata(
+      const localized = getLocalizedWorldClockMetadata(
         locale,
         wc.label,
         wc.timeZone,
       );
+      const { title, description } = buildSeoMeta({
+        title: withBenefit(localized.title, "world-clock"),
+        description: withLocaleKeywordExpansion(
+          locale,
+          "world-clock",
+          localized.description,
+        ),
+      });
       const alt = hreflangAlternates(siteBase, locale, {
         type: "tool",
         category: "world-clock",
@@ -241,6 +273,7 @@ export default async function ToolSlugPage({ params }: Props) {
         <div className="min-w-0 space-y-6">
           <Breadcrumbs items={crumbs} />
           <JsonLd name={jsonName} description={jsonDesc} url={canonicalUrl} />
+          <ShareBar url={canonicalUrl} title={jsonName} />
           <HolidayCountdown holiday={holiday} />
         </div>
         <PopularToolsAside locale={locale} category={category} />
@@ -289,12 +322,14 @@ export default async function ToolSlugPage({ params }: Props) {
           <p className="mt-2 max-w-2xl text-zinc-400">{jsonDesc}</p>
         </header>
 
+        <ShareBar url={canonicalUrl} title={h1Title} />
+
         {category === "alarm" && def?.alarm && (
           <AlarmTool initialPreset={{ hour: def.alarm.hour, minute: def.alarm.minute }} />
         )}
 
         {category === "timer" && def?.timer && (
-          <TimerTool
+          <TimerToolExperience
             initialSeconds={def.timer.totalSeconds}
             pageTitle={def.title}
           />
@@ -317,6 +352,7 @@ export default async function ToolSlugPage({ params }: Props) {
         />
 
         <DynamicSEOContent
+          locale={locale}
           category={category}
           slug={canonicalSlug}
           timerTotalSeconds={def?.timer?.totalSeconds}

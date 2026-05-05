@@ -4,16 +4,21 @@ import { useSettings } from "@/context/settings-context";
 import { createAlarmAudio } from "@/lib/alarmSounds";
 import { useAlarmWorker } from "@/hooks/useAlarmWorker";
 import {
+  Check,
+  Copy,
+  Code2,
   Maximize2,
+  Minus,
   Minimize2,
   Pause,
   Play,
   Plus,
   RotateCcw,
+  Share2,
   Volume2,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 
 type Phase = "idle" | "running" | "paused" | "done";
 
@@ -41,8 +46,7 @@ const PRESETS = [
   { label: "1h", ms: 60 * 60_000 },
 ] as const;
 
-const R = 88;
-const CIRC = 2 * Math.PI * R;
+const MAX_CUSTOM_HOURS = 99;
 
 type FullscreenDoc = Document & {
   webkitFullscreenElement?: Element | null;
@@ -56,13 +60,26 @@ type FullscreenEl = HTMLElement & {
 export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
   const { settings } = useSettings();
   const pathname = usePathname();
-  const defaultMs = (initialSeconds ?? 5 * 60) * 1000;
+  const searchParams = useSearchParams();
+  const queryT = searchParams.get("t");
+  const querySeconds = queryT ? Number.parseInt(queryT, 10) : NaN;
+  const fromQuery = Number.isFinite(querySeconds) && querySeconds > 0 ? querySeconds : undefined;
+  const defaultMs = (fromQuery ?? initialSeconds ?? 5 * 60) * 1000;
   const timeFont = settings.isDigitalFont ? "font-lcd" : "font-sans";
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [totalMs, setTotalMs] = useState(defaultMs);
   const [endAtMs, setEndAtMs] = useState<number | null>(null);
   const [displayRemaining, setDisplayRemaining] = useState(defaultMs);
+  const [customHours, setCustomHours] = useState("0");
+  const [customMinutes, setCustomMinutes] = useState("5");
+  const [customSeconds, setCustomSeconds] = useState("0");
+  const [embedOrigin, setEmbedOrigin] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [embedCopied, setEmbedCopied] = useState(false);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [clockScale, setClockScale] = useState(1);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const doneRef = useRef(false);
@@ -109,7 +126,20 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
   useEffect(() => {
     setTotalMs(defaultMs);
     setDisplayRemaining(defaultMs);
+    const wholeSeconds = Math.max(1, Math.ceil(defaultMs / 1000));
+    const h = Math.floor(wholeSeconds / 3600);
+    const m = Math.floor((wholeSeconds % 3600) / 60);
+    const s = wholeSeconds % 60;
+    setCustomHours(String(h));
+    setCustomMinutes(String(m));
+    setCustomSeconds(String(s));
   }, [defaultMs]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmbedOrigin(window.location.origin);
+    }
+  }, []);
 
   const stopRaf = () => {
     if (rafRef.current != null) {
@@ -121,6 +151,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
   const playAlarm = useCallback(() => {
     const a = audioRef.current;
     if (a) {
+      a.currentTime = 0;
       a.play().catch(() => {});
     }
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
@@ -129,6 +160,23 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
         tag: "utility-timer",
       });
     }
+  }, []);
+
+  const primeAudio = useCallback(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    const prevMuted = a.muted;
+    a.muted = true;
+    a.currentTime = 0;
+    a.play()
+      .then(() => {
+        a.pause();
+        a.currentTime = 0;
+        a.muted = prevMuted;
+      })
+      .catch(() => {
+        a.muted = prevMuted;
+      });
   }, []);
 
   const finish = useCallback(() => {
@@ -185,6 +233,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
   );
 
   const start = (durationMs: number) => {
+    primeAudio();
     doneRef.current = false;
     setTotalMs(durationMs);
     const end = Date.now() + durationMs;
@@ -249,6 +298,18 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
     setDisplayRemaining(defaultMs);
   };
 
+  const applyCustomDuration = () => {
+    if (phase === "running") return;
+    const h = Math.min(MAX_CUSTOM_HOURS, Math.max(0, Number.parseInt(customHours || "0", 10) || 0));
+    const m = Math.min(59, Math.max(0, Number.parseInt(customMinutes || "0", 10) || 0));
+    const s = Math.min(59, Math.max(0, Number.parseInt(customSeconds || "0", 10) || 0));
+    const ms = (h * 3600 + m * 60 + s) * 1000;
+    const next = ms > 0 ? ms : 1000;
+    setTotalMs(next);
+    setDisplayRemaining(next);
+    if (phase === "done") setPhase("idle");
+  };
+
   const requestNotify = async () => {
     if (typeof Notification === "undefined") return;
     try {
@@ -259,8 +320,63 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
   };
 
   const shownMs = phase === "idle" ? totalMs : displayRemaining;
-  const progress = totalMs > 0 ? 1 - Math.min(1, shownMs / totalMs) : 0;
-  const dashOffset = CIRC * (1 - progress);
+  const embedSeconds = Math.max(1, Math.ceil(totalMs / 1000));
+  const embedSrc = `${embedOrigin}${pathname}?t=${embedSeconds}&embed=1`;
+  const iframeCode = `<iframe src="${embedSrc}" width="420" height="480" style="border:0;border-radius:12px;overflow:hidden;" title="Utility Clock Timer"></iframe>`;
+  const shareUrl = embedOrigin ? `${embedOrigin}${pathname}` : pathname;
+  const shareText = pageTitle ?? "Utility Clock Timer";
+  const encUrl = encodeURIComponent(shareUrl);
+  const encText = encodeURIComponent(shareText);
+  const shareLinks = [
+    {
+      id: "facebook",
+      label: "f",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encUrl}`,
+      cls: "bg-[#1877f2] text-white",
+    },
+    {
+      id: "x",
+      label: "X",
+      href: `https://twitter.com/intent/tweet?url=${encUrl}&text=${encText}`,
+      cls: "bg-black text-white",
+    },
+    {
+      id: "whatsapp",
+      label: "WA",
+      href: `https://api.whatsapp.com/send?text=${encText}%20${encUrl}`,
+      cls: "bg-[#25D366] text-white",
+    },
+    {
+      id: "blogger",
+      label: "B",
+      href: `https://www.blogger.com/blog-this.g?u=${encUrl}&n=${encText}`,
+      cls: "bg-[#f57d00] text-white",
+    },
+    {
+      id: "reddit",
+      label: "R",
+      href: `https://www.reddit.com/submit?url=${encUrl}&title=${encText}`,
+      cls: "bg-[#ff4500] text-white",
+    },
+    {
+      id: "tumblr",
+      label: "T",
+      href: `https://www.tumblr.com/widgets/share/tool?canonicalUrl=${encUrl}&title=${encText}`,
+      cls: "bg-[#35465c] text-white",
+    },
+    {
+      id: "pinterest",
+      label: "P",
+      href: `https://pinterest.com/pin/create/button/?url=${encUrl}&description=${encText}`,
+      cls: "bg-[#e60023] text-white",
+    },
+    {
+      id: "linkedin",
+      label: "in",
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`,
+      cls: "bg-[#0a66c2] text-white",
+    },
+  ] as const;
 
   useEffect(() => {
     const base = tabBaseTitleRef.current ?? document.title;
@@ -299,41 +415,119 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
     }
   };
 
+  const shareCurrent = async () => {
+    setShareMenuOpen((v) => !v);
+  };
+
+  const shrinkClock = () => {
+    setClockScale((v) => Math.max(0.8, Math.round((v - 0.1) * 10) / 10));
+  };
+
+  const growClock = () => {
+    setClockScale((v) => Math.min(1.8, Math.round((v + 0.1) * 10) / 10));
+  };
+
   return (
     <div
       ref={shellRef}
-      className="mx-auto w-full max-w-lg space-y-8 rounded-2xl bg-white/80 p-4 dark:bg-zinc-950/80 sm:p-6 [&:fullscreen]:bg-white dark:[&:fullscreen]:bg-zinc-950"
+      className="mx-auto w-full max-w-3xl space-y-8 rounded-2xl bg-white/80 p-4 dark:bg-zinc-950/80 sm:p-6 [&:fullscreen]:bg-white dark:[&:fullscreen]:bg-zinc-950"
+      style={{ "--clock-scale": clockScale } as CSSProperties}
     >
-      <div className="relative mx-auto flex aspect-square w-full max-w-[280px] items-center justify-center sm:max-w-[320px]">
-        <svg
-          className="absolute inset-0 h-full w-full -rotate-90"
-          viewBox="0 0 200 200"
-          aria-hidden
+      <div className="flex items-center justify-end gap-2 text-zinc-300">
+        <button
+          type="button"
+          onClick={shareCurrent}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-600 hover:bg-zinc-800"
+          title={shareCopied ? "Copied" : "Share"}
+          aria-label={shareCopied ? "Link copied" : "Share timer"}
         >
-          <circle
-            cx="100"
-            cy="100"
-            r={R}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="10"
-            className="text-zinc-200 dark:text-zinc-800"
-          />
-          <circle
-            cx="100"
-            cy="100"
-            r={R}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="10"
-            strokeLinecap="round"
-            className="transition-[stroke-dashoffset] duration-150 ease-linear"
-            style={{ color: "var(--primary-clock-color)" }}
-            strokeDasharray={CIRC}
-            strokeDashoffset={dashOffset}
-          />
-        </svg>
-        <div className="relative z-10 px-4 text-center">
+          <Share2 className="h-4 w-4" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={shrinkClock}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-600 hover:bg-zinc-800"
+          title="Smaller timer"
+          aria-label="Smaller timer"
+        >
+          <Minus className="h-4 w-4" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={growClock}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-600 hover:bg-zinc-800"
+          title="Bigger timer"
+          aria-label="Bigger timer"
+        >
+          <Plus className="h-4 w-4" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-600 hover:bg-zinc-800"
+          title={isFullscreen ? "Exit full screen" : "Full page"}
+          aria-label={isFullscreen ? "Exit full screen" : "Full page"}
+          aria-pressed={isFullscreen}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="h-4 w-4" aria-hidden />
+          ) : (
+            <Maximize2 className="h-4 w-4" aria-hidden />
+          )}
+        </button>
+      </div>
+
+      {shareMenuOpen && (
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900/60 p-2">
+          {shareLinks.map((item) => (
+            <a
+              key={item.id}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex h-9 min-w-9 items-center justify-center rounded-sm px-2 text-xs font-semibold ${item.cls}`}
+              aria-label={`Share on ${item.id}`}
+            >
+              {item.label}
+            </a>
+          ))}
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(shareUrl);
+                setShareCopied(true);
+                setTimeout(() => setShareCopied(false), 1200);
+              } catch {
+                setShareCopied(false);
+              }
+            }}
+            className="inline-flex h-9 items-center gap-1 rounded-sm border border-zinc-600 px-2 text-xs font-semibold text-zinc-200 hover:bg-zinc-800"
+          >
+            {shareCopied ? <Check className="h-3.5 w-3.5" aria-hidden /> : <Copy className="h-3.5 w-3.5" aria-hidden />}
+            {shareCopied ? "Copied" : "Copy"}
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(iframeCode);
+                setEmbedCopied(true);
+                setTimeout(() => setEmbedCopied(false), 1200);
+              } catch {
+                setEmbedCopied(false);
+              }
+            }}
+            className="inline-flex h-9 items-center gap-1 rounded-sm border border-zinc-600 px-2 text-xs font-semibold text-zinc-200 hover:bg-zinc-800"
+          >
+            <Code2 className="h-3.5 w-3.5" aria-hidden />
+            {embedCopied ? "Embed copied" : "Embed"}
+          </button>
+        </div>
+      )}
+
+      <div className="mx-auto w-full max-w-3xl rounded-2xl border border-zinc-800/80 bg-zinc-900/50 px-4 py-8 sm:px-8 sm:py-10">
+        <div className="text-center">
           <p
             className={`${timeFont} clock-scale-timer tabular-nums tracking-wide text-clock-primary drop-shadow-clock`}
           >
@@ -366,23 +560,88 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
             {p.label}
           </button>
         ))}
-        <button
-          type="button"
-          onClick={toggleFullscreen}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-800"
-          aria-pressed={isFullscreen}
-          title={isFullscreen ? "Exit full screen" : "Full screen"}
-        >
-          {isFullscreen ? (
-            <Minimize2 className="h-4 w-4" aria-hidden />
-          ) : (
-            <Maximize2 className="h-4 w-4" aria-hidden />
-          )}
-          <span className="hidden sm:inline">
-            {isFullscreen ? "Exit full screen" : "Full screen"}
-          </span>
-        </button>
       </div>
+
+      {phase === "idle" && !isFullscreen && (
+        <section className="space-y-3 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Set timer</h3>
+        <div className="grid grid-cols-3 gap-2">
+          <label className="space-y-1 text-xs text-zinc-500">
+            <span>Hours</span>
+            <input
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={customHours}
+              onChange={(e) => setCustomHours(e.target.value.replace(/[^\d]/g, ""))}
+              className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+            />
+          </label>
+          <label className="space-y-1 text-xs text-zinc-500">
+            <span>Minutes</span>
+            <input
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={customMinutes}
+              onChange={(e) => setCustomMinutes(e.target.value.replace(/[^\d]/g, ""))}
+              className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+            />
+          </label>
+          <label className="space-y-1 text-xs text-zinc-500">
+            <span>Seconds</span>
+            <input
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={customSeconds}
+              onChange={(e) => setCustomSeconds(e.target.value.replace(/[^\d]/g, ""))}
+              className="w-full rounded-md border border-zinc-300 bg-white px-2 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+            />
+          </label>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-zinc-500">Applies to start button and embed snippet.</p>
+          <button
+            type="button"
+            onClick={applyCustomDuration}
+            className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500"
+          >
+            Set timer
+          </button>
+        </div>
+        </section>
+      )}
+
+      {phase === "idle" && !isFullscreen && (
+        <section className="space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this timer</h3>
+        <p className="text-xs text-zinc-500">
+          Copy and paste this iframe into your website to show the current timer preset.
+        </p>
+        <textarea
+          readOnly
+          value={iframeCode}
+          rows={3}
+          className="w-full rounded-md border border-zinc-300 bg-zinc-50 p-2 font-mono text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
+        />
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(iframeCode);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1400);
+              } catch {
+                setCopied(false);
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          >
+            {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+            {copied ? "Copied" : "Copy embed code"}
+          </button>
+        </div>
+        </section>
+      )}
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         {phase === "idle" && (

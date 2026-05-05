@@ -15,7 +15,7 @@ export function JsonLd({ name, description, url }: JsonLdProps) {
     description,
     url,
     applicationCategory: "UtilitiesApplication",
-    operatingSystem: "Web Browser",
+    operatingSystem: "Web",
     offers: {
       "@type": "Offer",
       price: "0",

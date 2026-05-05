@@ -52,10 +52,19 @@ export function SiteFooter() {
   const { locale, messages } = useI18n();
   const f = messages.footer;
   const nav = messages.nav;
+  const siteUrl = "https://utilityclock.com";
+  const shareText = encodeURIComponent("Utility Clock - Free browser-based timer and clock tools");
+  const shareLinks = [
+    { id: "facebook", label: "f", href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}`, cls: "bg-[#1877f2] text-white" },
+    { id: "x", label: "X", href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(siteUrl)}&text=${shareText}`, cls: "bg-black text-white" },
+    { id: "whatsapp", label: "WA", href: `https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(siteUrl)}`, cls: "bg-[#25D366] text-white" },
+    { id: "linkedin", label: "in", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(siteUrl)}`, cls: "bg-[#0a66c2] text-white" },
+    { id: "reddit", label: "R", href: `https://www.reddit.com/submit?url=${encodeURIComponent(siteUrl)}&title=${shareText}`, cls: "bg-[#ff4500] text-white" },
+  ] as const;
 
   return (
     <footer className="border-t border-zinc-200/90 bg-zinc-50/90 text-xs text-zinc-600 dark:border-zinc-800/80 dark:bg-zinc-950/80 dark:text-zinc-400">
-      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-8">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8">
         <section aria-labelledby="footer-sitemap-heading">
           <h2 id="footer-sitemap-heading" className="sr-only">
             {f.sitemapHeading}
@@ -137,6 +146,20 @@ export function SiteFooter() {
         </section>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-zinc-200/80 pt-6 dark:border-zinc-800/80 sm:flex-row">
+          <div className="flex items-center gap-2" aria-label="Share Utility Clock">
+            {shareLinks.map((item) => (
+              <a
+                key={item.id}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex h-8 min-w-8 items-center justify-center rounded-sm px-2 text-[11px] font-semibold ${item.cls}`}
+                aria-label={`Share on ${item.id}`}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
           <nav
             className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2"
             aria-label={f.legalNavLabel}

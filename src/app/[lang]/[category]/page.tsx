@@ -1,6 +1,7 @@
+import { AdSlot } from "@/components/ads/AdSlot";
 import { AlarmTool } from "@/components/tools/AlarmTool";
 import { StopwatchTool } from "@/components/tools/StopwatchTool";
-import { TimerTool } from "@/components/tools/TimerTool";
+import { TimerToolExperience } from "@/components/tools/TimerToolExperience";
 import { WorldClockHub } from "@/components/tools/WorldClock";
 import {
   CATEGORIES,
@@ -22,7 +23,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
 
 type Props = { params: Promise<{ lang: string; category: string }> };
 
@@ -95,11 +96,13 @@ export default async function CategoryHubPage({ params }: Props) {
         </div>
       )}
 
-      {category === "timer" && <TimerTool />}
+      {category === "timer" && <TimerToolExperience />}
 
       {category === "stopwatch" && <StopwatchTool />}
 
       {category === "world-clock" && <WorldClockHub />}
+
+      <AdSlot slotId={`hub-${category}-top`} routeType="hub" />
 
       <section>
         <h2 className="mb-3 text-sm font-medium uppercase tracking-wider text-zinc-500">

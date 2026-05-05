@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-05-05T16:03:12.207Z",
+  "env": "unknown",
+  "routeHealth": {
+    "errorBudgetPercent": 1,
+    "topRoutes": [
+      "/en",
+      "/en/timer",
+      "/en/alarm",
+      "/en/stopwatch",
+      "/en/world-clock"
+    ]
+  },
+  "cwvTargets": {
+    "lcpMs": 1200,
+    "inpMs": 200,
+    "cls": 0.1
+  },
+  "engagementBaseline": {
+    "timerStartsPerSession": null,
+    "timerCompletionRatePercent": null,
+    "returnVisitorsPercent": null
+  },
+  "notes": "Populate engagementBaseline with production analytics snapshots before enabling new feature flags."
+}

@@ -73,6 +73,42 @@ const ACTIVITY_TIMERS: {
   },
 ];
 
+const STUDY_CLUSTER_TIMERS: {
+  slug: string;
+  seconds: number;
+  title: string;
+  description: string;
+}[] = [
+  {
+    slug: "study-session-timer",
+    seconds: 50 * 60,
+    title: "Study session timer (50 minutes)",
+    description:
+      "Fifty-minute deep-work countdown for focused study blocks with a clear finish alert.",
+  },
+  {
+    slug: "short-study-break-timer",
+    seconds: 10 * 60,
+    title: "Short study break timer (10 minutes)",
+    description:
+      "Ten-minute reset timer between study rounds to maintain focus and avoid burnout.",
+  },
+  {
+    slug: "exam-practice-timer",
+    seconds: 90 * 60,
+    title: "Exam practice timer (90 minutes)",
+    description:
+      "Ninety-minute mock exam countdown for timed practice and pacing drills.",
+  },
+  {
+    slug: "reading-sprint-timer",
+    seconds: 30 * 60,
+    title: "Reading sprint timer (30 minutes)",
+    description:
+      "Thirty-minute reading sprint timer for revision, comprehension drills, and book sessions.",
+  },
+];
+
 /** Minutes 1–120 + second-based presets + activity slugs (pSEO scale). */
 export function buildTimerPages(): Record<string, ToolDefinition> {
   const out: Record<string, ToolDefinition> = {};
@@ -106,6 +142,14 @@ export function buildTimerPages(): Record<string, ToolDefinition> {
   };
 
   for (const t of ACTIVITY_TIMERS) {
+    out[t.slug] = {
+      title: t.title,
+      description: t.description,
+      timer: { totalSeconds: t.seconds },
+    };
+  }
+
+  for (const t of STUDY_CLUSTER_TIMERS) {
     out[t.slug] = {
       title: t.title,
       description: t.description,

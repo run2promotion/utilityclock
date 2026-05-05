@@ -10,11 +10,14 @@ import {
   CalendarDays,
   Globe2,
   Hourglass,
+  Menu,
   Settings,
   Watch,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function categoryActive(
   pathname: string,
@@ -36,6 +39,7 @@ export default function SiteHeader() {
   const pathname = usePathname() ?? "/";
   const { openSettings } = useSettings();
   const { locale, messages } = useI18n();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const nav = [
     {
@@ -60,19 +64,20 @@ export default function SiteHeader() {
     },
   ];
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/90 bg-white/85 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/85">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-4 sm:px-8">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
         <Link
           href={buildPath(locale, { type: "home" })}
           className="font-semibold tracking-tight text-zinc-900 transition hover:text-emerald-600 dark:text-zinc-100 dark:hover:text-emerald-400"
         >
           Utility<span className="text-zinc-500">Clock</span>
         </Link>
-        <nav
-          className="flex flex-1 flex-wrap items-center justify-end gap-1 sm:gap-2"
-          aria-label="Main"
-        >
+        <nav className="hidden flex-1 flex-wrap items-center justify-end gap-1 md:flex md:gap-2" aria-label="Main">
           {nav.map(({ category, label, icon: Icon }) => {
             const active = categoryActive(pathname, category);
             return (
@@ -86,7 +91,7 @@ export default function SiteHeader() {
                 }`}
               >
                 <Icon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-                <span className="hidden sm:inline">{label}</span>
+                <span>{label}</span>
               </Link>
             );
           })}
@@ -99,7 +104,7 @@ export default function SiteHeader() {
             }`}
           >
             <CalendarDays className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-            <span className="hidden sm:inline">{messages.nav.holidays}</span>
+            <span>{messages.nav.holidays}</span>
           </Link>
           <LanguageSwitcher />
           <button
@@ -109,10 +114,68 @@ export default function SiteHeader() {
             aria-label={messages.nav.settings}
           >
             <Settings className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
-            <span className="hidden sm:inline">{messages.nav.settings}</span>
+            <span>{messages.nav.settings}</span>
           </button>
         </nav>
+
+        <div className="flex items-center gap-1 md:hidden">
+          <button
+            type="button"
+            onClick={openSettings}
+            className="inline-flex items-center rounded-lg p-2 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
+            aria-label={messages.nav.settings}
+          >
+            <Settings className="h-5 w-5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            className="inline-flex items-center rounded-lg p-2 text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-200"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
+          </button>
+        </div>
       </div>
+
+      {mobileOpen && (
+        <div className="border-t border-zinc-200/90 px-4 py-3 dark:border-zinc-800/80 md:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1" aria-label="Mobile main">
+            {nav.map(({ category, label, icon: Icon }) => {
+              const active = categoryActive(pathname, category);
+              return (
+                <Link
+                  key={category}
+                  href={buildPath(locale, { type: "hub", category })}
+                  className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    active
+                      ? "bg-zinc-200 text-emerald-700 dark:bg-zinc-800 dark:text-emerald-400"
+                      : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  }`}
+                >
+                  <Icon className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+                  <span>{label}</span>
+                </Link>
+              );
+            })}
+            <Link
+              href={buildPath(locale, { type: "holidays" })}
+              className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                holidaysActive(pathname)
+                  ? "bg-zinc-200 text-emerald-700 dark:bg-zinc-800 dark:text-emerald-400"
+                  : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              }`}
+            >
+              <CalendarDays className="h-4 w-4 shrink-0 opacity-80" aria-hidden />
+              <span>{messages.nav.holidays}</span>
+            </Link>
+            <div className="pt-2">
+              <LanguageSwitcher />
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

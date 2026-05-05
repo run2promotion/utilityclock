@@ -146,7 +146,7 @@ export function StopwatchTool() {
   const hasStarted = displayMs > 0 || running || laps.length > 0;
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-6">
+    <div className="mx-auto w-full max-w-3xl space-y-6">
       <div className="rounded-2xl border border-zinc-200 bg-white/60 p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
         <p
           className={`${timeFont} clock-scale-stopwatch tabular-nums tracking-tight text-clock-primary drop-shadow-clock`}

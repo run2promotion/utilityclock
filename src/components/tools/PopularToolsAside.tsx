@@ -3,6 +3,7 @@ import { getDictionary } from "@/i18n/dictionary";
 import { buildPath } from "@/i18n/routing";
 import type { AppLocale } from "@/i18n/config";
 import type { ToolCategoryId } from "@/data/tool-schema";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import Link from "next/link";
 
 function hubLinks(
@@ -60,6 +61,22 @@ export function PopularToolsAside({
     links = hubLinks(locale, ["timer", "stopwatch"], labelMap);
   } else if (category === "timer") {
     links = hubLinks(locale, ["alarm", "stopwatch"], labelMap);
+    if (isFeatureEnabled("studyClusterLinks")) {
+      const studyLinks = [
+        "study-session-timer",
+        "short-study-break-timer",
+        "exam-practice-timer",
+        "reading-sprint-timer",
+      ].map((slug) => ({
+        href: buildPath(locale, {
+          type: "tool",
+          category: "timer",
+          canonicalSlug: slug,
+        }),
+        label: slug.replace(/-/g, " "),
+      }));
+      links = [...studyLinks, ...links];
+    }
   } else if (category === "stopwatch") {
     links = hubLinks(locale, ["alarm", "timer"], labelMap);
   }

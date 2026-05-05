@@ -2,6 +2,7 @@ import { i18nRouter } from "next-i18n-router";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { i18nRouterConfig } from "@/i18n/config";
+import { isAppLocale, LOCALE_COOKIE } from "@/i18n/config";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -67,7 +68,17 @@ export function middleware(request: NextRequest) {
     return new NextResponse("Invalid host", { status: 400 });
   }
 
-  const response = i18nRouter(request, i18nRouterConfig);
+  const segments = request.nextUrl.pathname.split("/").filter(Boolean);
+  const first = segments[0];
+  const response = first && isAppLocale(first) ? NextResponse.next() : i18nRouter(request, i18nRouterConfig);
+  if (first && isAppLocale(first)) {
+    response.cookies.set(LOCALE_COOKIE, first, {
+      path: "/",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+      secure: isProd,
+    });
+  }
   applySecurityHeaders(response);
   return response;
 }

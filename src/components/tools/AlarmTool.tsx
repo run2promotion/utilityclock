@@ -147,7 +147,7 @@ export function AlarmTool({ initialPreset }: AlarmToolProps) {
   const timeFont = settings.isDigitalFont ? "font-lcd" : "font-sans";
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-8">
+    <div className="mx-auto w-full max-w-3xl space-y-8">
       <div className="rounded-2xl border border-zinc-200 bg-white/60 p-6 shadow-inner dark:border-zinc-800 dark:bg-zinc-900/50">
         <p
           className={`${timeFont} clock-scale-alarm-now text-center tabular-nums tracking-widest text-clock-primary drop-shadow-clock`}

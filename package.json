@@ -10,7 +10,8 @@
     "build:clean": "npm run clean && next build",
     "start": "next start",
     "lint": "eslint",
-    "check:links": "node scripts/check-sitemap-links.mjs"
+    "check:links": "node scripts/check-sitemap-links.mjs",
+    "baseline:report": "node scripts/baseline-report.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

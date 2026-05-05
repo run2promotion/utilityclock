@@ -29,7 +29,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           aria-hidden
         />
 
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-28 pt-8 sm:px-8 sm:pb-32">
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-28 pt-8 sm:px-8 sm:pb-32">
           {children}
         </main>
 
@@ -45,7 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Bottom leaderboard / anchor slot */}
       <div
         id="banner-ad-bottom"
-        className="mx-auto mt-auto min-h-[90px] w-full max-w-5xl px-4 pb-4 sm:px-8"
+        className="mx-auto mt-auto min-h-[90px] w-full max-w-6xl px-4 pb-4 sm:px-8"
         aria-hidden
       />
     </div>

@@ -74,7 +74,7 @@ export type WorldClockCityViewProps = {
 
 export function WorldClockCityView({ timeZone, label }: WorldClockCityViewProps) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white/60 p-8 dark:border-zinc-800 dark:bg-zinc-900/40">
+    <div className="mx-auto w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white/60 p-8 dark:border-zinc-800 dark:bg-zinc-900/40">
       <WorldClockReadout timeZone={timeZone} label={label} />
     </div>
   );
