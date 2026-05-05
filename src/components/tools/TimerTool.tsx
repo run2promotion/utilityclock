@@ -26,6 +26,7 @@ export type TimerToolProps = {
   initialSeconds?: number;
   /** Shown in the browser tab while the countdown runs */
   pageTitle?: string;
+  embedOnly?: boolean;
 };
 
 function formatMs(ms: number): string {
@@ -57,11 +58,13 @@ type FullscreenEl = HTMLElement & {
   webkitRequestFullscreen?: () => Promise<void>;
 };
 
-export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
+export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: TimerToolProps) {
   const { settings } = useSettings();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryT = searchParams.get("t");
+  const queryEmbed = searchParams.get("embed");
+  const isEmbedMode = embedOnly || queryEmbed === "1";
   const querySeconds = queryT ? Number.parseInt(queryT, 10) : NaN;
   const fromQuery = Number.isFinite(querySeconds) && querySeconds > 0 ? querySeconds : undefined;
   const defaultMs = (fromQuery ?? initialSeconds ?? 5 * 60) * 1000;
@@ -433,7 +436,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
       className="mx-auto w-full max-w-3xl space-y-8 rounded-2xl bg-white/80 p-4 dark:bg-zinc-950/80 sm:p-6 [&:fullscreen]:bg-white dark:[&:fullscreen]:bg-zinc-950"
       style={{ "--clock-scale": clockScale } as CSSProperties}
     >
-      <div className="flex items-center justify-end gap-2 text-zinc-300">
+      {!isEmbedMode && <div className="flex items-center justify-end gap-2 text-zinc-300">
         <button
           type="button"
           onClick={shareCurrent}
@@ -475,9 +478,9 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
             <Maximize2 className="h-4 w-4" aria-hidden />
           )}
         </button>
-      </div>
+      </div>}
 
-      {shareMenuOpen && (
+      {!isEmbedMode && shareMenuOpen && (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900/60 p-2">
           {shareLinks.map((item) => (
             <a
@@ -545,7 +548,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      {!isEmbedMode && <div className="flex flex-wrap items-center justify-center gap-2">
         {PRESETS.map((p) => (
           <button
             key={p.label}
@@ -560,9 +563,9 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
             {p.label}
           </button>
         ))}
-      </div>
+      </div>}
 
-      {phase === "idle" && !isFullscreen && (
+      {phase === "idle" && !isFullscreen && !isEmbedMode && (
         <section className="space-y-3 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
         <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Set timer</h3>
         <div className="grid grid-cols-3 gap-2">
@@ -610,7 +613,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
         </section>
       )}
 
-      {phase === "idle" && !isFullscreen && (
+      {phase === "idle" && !isFullscreen && !isEmbedMode && (
         <section className="space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
         <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this timer</h3>
         <p className="text-xs text-zinc-500">
@@ -707,7 +710,7 @@ export function TimerTool({ initialSeconds, pageTitle }: TimerToolProps) {
           </button>
         )}
 
-        {typeof Notification !== "undefined" && Notification.permission !== "granted" && (
+        {!isEmbedMode && typeof Notification !== "undefined" && Notification.permission !== "granted" && (
           <button
             type="button"
             onClick={requestNotify}

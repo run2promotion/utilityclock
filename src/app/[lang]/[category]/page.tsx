@@ -1,4 +1,5 @@
 import { AdSlot } from "@/components/ads/AdSlot";
+import { EmbedBodyClass } from "@/components/embed/EmbedBodyClass";
 import { AlarmTool } from "@/components/tools/AlarmTool";
 import { StopwatchTool } from "@/components/tools/StopwatchTool";
 import { TimerToolExperience } from "@/components/tools/TimerToolExperience";
@@ -25,7 +26,10 @@ import { notFound } from "next/navigation";
 const siteBase =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
 
-type Props = { params: Promise<{ lang: string; category: string }> };
+type Props = {
+  params: Promise<{ lang: string; category: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 export function generateStaticParams() {
   const ids = Object.keys(CATEGORIES) as ToolCategoryId[];
@@ -68,8 +72,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CategoryHubPage({ params }: Props) {
+export default async function CategoryHubPage({ params, searchParams }: Props) {
   const { lang, category: catSeg } = await params;
+  const sp = await searchParams;
+  const embedMode = sp.embed === "1";
   if (!isAppLocale(lang)) notFound();
   const locale = lang as AppLocale;
   const resolved = resolveRouteCategory(catSeg, locale);
@@ -78,6 +84,17 @@ export default async function CategoryHubPage({ params }: Props) {
   const meta = getLocalizedCategoryMeta(locale, category);
   const slugs = getToolSlugsForCategory(category);
   const dict = getDictionary(locale);
+
+  if (embedMode && category === "timer") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <TimerToolExperience embedOnly />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="space-y-10">

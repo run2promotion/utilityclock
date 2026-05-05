@@ -1,4 +1,5 @@
 import { HolidayCountdown } from "@/components/holidays/HolidayCountdown";
+import { EmbedBodyClass } from "@/components/embed/EmbedBodyClass";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { DynamicSEOContent } from "@/components/seo/DynamicSEOContent";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -92,7 +93,10 @@ function toolBreadcrumbItems(
   ];
 }
 
-type Props = { params: Promise<{ lang: string; category: string; slug: string }> };
+type Props = {
+  params: Promise<{ lang: string; category: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 function withBenefit(title: string, category: ToolCategoryId): string {
   if (title.includes(" - ")) return title;
@@ -229,8 +233,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {};
 }
 
-export default async function ToolSlugPage({ params }: Props) {
+export default async function ToolSlugPage({ params, searchParams }: Props) {
   const { lang, category: catSeg, slug: urlSlug } = await params;
+  const sp = await searchParams;
+  const embedMode = sp.embed === "1";
   if (!isAppLocale(lang)) notFound();
   const locale = lang as AppLocale;
   const resolvedCat = resolveRouteCategory(catSeg, locale);
@@ -305,6 +311,21 @@ export default async function ToolSlugPage({ params }: Props) {
   }
 
   const crumbs = toolBreadcrumbItems(locale, messages, category, h1Title, canonicalUrl);
+
+  if (embedMode && category === "timer" && def?.timer) {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <TimerToolExperience
+            initialSeconds={def.timer.totalSeconds}
+            pageTitle={def.title}
+            embedOnly
+          />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_220px] lg:items-start">

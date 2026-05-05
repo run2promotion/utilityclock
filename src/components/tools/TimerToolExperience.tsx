@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 type TimerToolExperienceProps = {
   initialSeconds?: number;
   pageTitle?: string;
+  embedOnly?: boolean;
 };
 
 type WorkflowMode = {
@@ -80,7 +81,11 @@ function humanize(seconds: number): string {
   return `${seconds}s`;
 }
 
-export function TimerToolExperience({ initialSeconds, pageTitle }: TimerToolExperienceProps) {
+export function TimerToolExperience({
+  initialSeconds,
+  pageTitle,
+  embedOnly = false,
+}: TimerToolExperienceProps) {
   const workflowEnabled = isFeatureEnabled("workflowModes");
   const retentionEnabled = isFeatureEnabled("retentionLayer");
   const [selectedModeId, setSelectedModeId] = useState<string>("classic");
@@ -117,7 +122,7 @@ export function TimerToolExperience({ initialSeconds, pageTitle }: TimerToolExpe
 
   return (
     <div className="space-y-4">
-      {workflowEnabled && (
+      {!embedOnly && workflowEnabled && (
         <section className="rounded-xl border border-zinc-200 bg-white/80 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
           <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Workflow modes</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
@@ -143,7 +148,7 @@ export function TimerToolExperience({ initialSeconds, pageTitle }: TimerToolExpe
         </section>
       )}
 
-      {retentionEnabled && recent.length > 0 && (
+      {!embedOnly && retentionEnabled && recent.length > 0 && (
         <section className="rounded-xl border border-zinc-200 bg-white/80 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
           <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Recent presets</h2>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -174,6 +179,7 @@ export function TimerToolExperience({ initialSeconds, pageTitle }: TimerToolExpe
         key={`${selectedMode.id}-${instanceKey}`}
         initialSeconds={startSeconds}
         pageTitle={pageTitle}
+        embedOnly={embedOnly}
       />
     </div>
   );

@@ -31,6 +31,24 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+/* iframe embed mode: keep only timer widget content */
+body.embed-mode header,
+body.embed-mode footer,
+body.embed-mode #sidebar-ad-left,
+body.embed-mode #sidebar-ad-right,
+body.embed-mode #banner-ad-bottom {
+  display: none !important;
+}
+
+body.embed-mode main {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+body.embed-mode {
+  background: transparent !important;
+}
+
 @layer utilities {
   .font-lcd {
     font-family: var(--font-lcd), var(--font-geist-mono), ui-monospace, monospace;

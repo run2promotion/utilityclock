@@ -6,7 +6,7 @@ import { isAppLocale, LOCALE_COOKIE } from "@/i18n/config";
 
 const isProd = process.env.NODE_ENV === "production";
 
-function cspValue() {
+function cspValue(allowEmbedding: boolean) {
   const scriptSrc = isProd
     ? "script-src 'self' 'unsafe-inline'"
     : "script-src 'self' 'unsafe-inline' 'unsafe-eval'";
@@ -15,7 +15,7 @@ function cspValue() {
     "default-src 'self'",
     "base-uri 'self'",
     "object-src 'none'",
-    "frame-ancestors 'none'",
+    allowEmbedding ? "frame-ancestors *" : "frame-ancestors 'none'",
     "form-action 'self'",
     scriptSrc,
     "style-src 'self' 'unsafe-inline'",
@@ -31,9 +31,13 @@ function cspValue() {
     .join("; ");
 }
 
-function applySecurityHeaders(response: NextResponse) {
+function applySecurityHeaders(response: NextResponse, allowEmbedding: boolean) {
   response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "DENY");
+  if (allowEmbedding) {
+    response.headers.delete("X-Frame-Options");
+  } else {
+    response.headers.set("X-Frame-Options", "DENY");
+  }
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   response.headers.set("Cross-Origin-Resource-Policy", "same-origin");
@@ -41,7 +45,7 @@ function applySecurityHeaders(response: NextResponse) {
     "Permissions-Policy",
     "accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
   );
-  response.headers.set("Content-Security-Policy", cspValue());
+  response.headers.set("Content-Security-Policy", cspValue(allowEmbedding));
   if (isProd) {
     response.headers.set(
       "Strict-Transport-Security",
@@ -70,6 +74,7 @@ export function middleware(request: NextRequest) {
 
   const segments = request.nextUrl.pathname.split("/").filter(Boolean);
   const first = segments[0];
+  const allowEmbedding = request.nextUrl.searchParams.get("embed") === "1";
   const response = first && isAppLocale(first) ? NextResponse.next() : i18nRouter(request, i18nRouterConfig);
   if (first && isAppLocale(first)) {
     response.cookies.set(LOCALE_COOKIE, first, {
@@ -79,7 +84,7 @@ export function middleware(request: NextRequest) {
       secure: isProd,
     });
   }
-  applySecurityHeaders(response);
+  applySecurityHeaders(response, allowEmbedding);
   return response;
 }
 
