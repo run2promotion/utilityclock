@@ -13,6 +13,7 @@ import { getHolidayBySlug } from "@/data/holidays";
 import { getToolDefinition, type ToolCategoryId } from "@/data/tools";
 import { getLocalizedToolMetadata } from "@/i18n/tool-metadata";
 import { buildLegalPath, buildPath } from "@/i18n/routing";
+import { siteOrigin } from "@/lib/site-url";
 import Link from "next/link";
 
 function toolLinkLabel(
@@ -52,7 +53,7 @@ export function SiteFooter() {
   const { locale, messages } = useI18n();
   const f = messages.footer;
   const nav = messages.nav;
-  const siteUrl = "https://utilityclock.com";
+  const siteUrl = siteOrigin();
   const shareText = encodeURIComponent("Utility Clock - Free browser-based timer and clock tools");
   const shareLinks = [
     { id: "facebook", label: "f", href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}`, cls: "bg-[#1877f2] text-white" },

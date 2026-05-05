@@ -4,10 +4,11 @@ import { CATEGORIES, getAllToolSlugs } from "@/data/tools";
 import type { ToolCategoryId } from "@/data/tool-schema";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { locales } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import type { MetadataRoute } from "next";
 
-/** Sitemap URLs should always point to production origin. */
-const base = "https://utilityclock.com";
+/** Sitemap URLs use NEXT_PUBLIC_SITE_URL when set (same canonical as metadata). */
+const base = siteOrigin();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const out: MetadataRoute.Sitemap = [];
