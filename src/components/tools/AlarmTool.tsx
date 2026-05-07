@@ -61,6 +61,9 @@ export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) 
   const [alarmAtMs, setAlarmAtMs] = useState<number | null>(null);
   const [ringing, setRinging] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fallbackCtxRef = useRef<AudioContext | null>(null);
+  const fallbackGainRef = useRef<GainNode | null>(null);
+  const fallbackTimerRef = useRef<number | null>(null);
   const rangRef = useRef(false);
   const autoArmedRef = useRef(false);
 
@@ -80,8 +83,44 @@ export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) 
     return () => {
       audioRef.current?.pause();
       audioRef.current = null;
+      if (fallbackTimerRef.current !== null) {
+        window.clearInterval(fallbackTimerRef.current);
+        fallbackTimerRef.current = null;
+      }
+      fallbackGainRef.current?.disconnect();
+      fallbackGainRef.current = null;
+      fallbackCtxRef.current?.close().catch(() => {});
+      fallbackCtxRef.current = null;
     };
   }, [settings.alarmSound]);
+
+  const startFallbackTone = useCallback(() => {
+    if (typeof window === "undefined" || fallbackTimerRef.current !== null) return;
+    const AudioCtx =
+      window.AudioContext ||
+      (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const gain = ctx.createGain();
+    gain.gain.value = 0.08;
+    gain.connect(ctx.destination);
+    fallbackCtxRef.current = ctx;
+    fallbackGainRef.current = gain;
+
+    const pulse = () => {
+      if (!fallbackCtxRef.current || !fallbackGainRef.current) return;
+      const osc = fallbackCtxRef.current.createOscillator();
+      osc.type = "square";
+      osc.frequency.value = 880;
+      osc.connect(fallbackGainRef.current);
+      osc.start();
+      osc.stop(fallbackCtxRef.current.currentTime + 0.22);
+      osc.onended = () => osc.disconnect();
+    };
+
+    pulse();
+    fallbackTimerRef.current = window.setInterval(pulse, 500);
+  }, []);
 
   const stopRinging = useCallback(() => {
     setRinging(false);
@@ -90,6 +129,14 @@ export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) 
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
+    if (fallbackTimerRef.current !== null) {
+      window.clearInterval(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+    fallbackGainRef.current?.disconnect();
+    fallbackGainRef.current = null;
+    fallbackCtxRef.current?.close().catch(() => {});
+    fallbackCtxRef.current = null;
   }, []);
 
   const fireAlarm = useCallback(() => {
@@ -101,9 +148,12 @@ export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) 
 
     const a = audioRef.current;
     if (a) {
+      a.currentTime = 0;
       a.play().catch(() => {
-        /* autoplay policies: user may need to interact */
+        startFallbackTone();
       });
+    } else {
+      startFallbackTone();
     }
 
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
@@ -112,7 +162,7 @@ export function AlarmTool({ initialPreset, embedOnly = false }: AlarmToolProps) 
         tag: "utility-alarm",
       });
     }
-  }, []);
+  }, [startFallbackTone]);
 
   useAlarmWorker(armed ? alarmAtMs : null, fireAlarm, armed && alarmAtMs !== null);
 
