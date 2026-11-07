@@ -1,7 +1,7 @@
 "use client";
 
 import { useSettings } from "@/context/settings-context";
-import { createAlarmAudio } from "@/lib/alarmSounds";
+import { AlarmSoundPlayer } from "@/lib/alarmSounds";
 import { useAlarmWorker } from "@/hooks/useAlarmWorker";
 import {
   Check,
@@ -84,7 +84,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [clockScale, setClockScale] = useState(1);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playerRef = useRef<AlarmSoundPlayer | null>(null);
   const doneRef = useRef(false);
   const autoStartedRef = useRef(false);
   const rafRef = useRef<number | null>(null);
@@ -153,11 +153,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
   };
 
   const playAlarm = useCallback(() => {
-    const a = audioRef.current;
-    if (a) {
-      a.currentTime = 0;
-      a.play().catch(() => {});
-    }
+    playerRef.current?.play();
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
       new Notification("Timer finished", {
         body: "Your countdown reached zero.",
@@ -167,20 +163,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
   }, []);
 
   const primeAudio = useCallback(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const prevMuted = a.muted;
-    a.muted = true;
-    a.currentTime = 0;
-    a.play()
-      .then(() => {
-        a.pause();
-        a.currentTime = 0;
-        a.muted = prevMuted;
-      })
-      .catch(() => {
-        a.muted = prevMuted;
-      });
+    playerRef.current?.prime();
   }, []);
 
   const finish = useCallback(() => {
@@ -218,11 +201,14 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
   }, [phase, endAtMs, loop]);
 
   useEffect(() => {
-    audioRef.current?.pause();
-    audioRef.current = createAlarmAudio(settings.alarmSound);
+    if (!playerRef.current) {
+      playerRef.current = new AlarmSoundPlayer(settings.alarmSound);
+    } else {
+      playerRef.current.setKind(settings.alarmSound);
+    }
     return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
+      playerRef.current?.destroy();
+      playerRef.current = null;
     };
   }, [settings.alarmSound]);
 
@@ -255,23 +241,23 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
     start(totalMs);
   }, [isEmbedMode, phase, totalMs, start]);
 
-  const pause = () => {
-    if (phase !== "running" || endAtMs === null) return;
-    const left = Math.max(0, endAtMs - Date.now());
+  const pause = useCallback(() => {
+    if (phaseRef.current !== "running" || endAtRef.current === null) return;
+    const left = Math.max(0, endAtRef.current - Date.now());
     setDisplayRemaining(left);
     endAtRef.current = null;
     setEndAtMs(null);
     setPhase("paused");
-  };
+  }, []);
 
-  const resume = () => {
-    if (phase !== "paused") return;
+  const resume = useCallback(() => {
+    if (phaseRef.current !== "paused") return;
     doneRef.current = false;
     const end = Date.now() + displayRemaining;
     endAtRef.current = end;
     setEndAtMs(end);
     setPhase("running");
-  };
+  }, [displayRemaining]);
 
   const reset = () => {
     doneRef.current = false;
@@ -280,10 +266,7 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
     setEndAtMs(null);
     setTotalMs(defaultMs);
     setDisplayRemaining(defaultMs);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+    playerRef.current?.stop();
   };
 
   const addMinute = () => {
@@ -299,16 +282,46 @@ export function TimerTool({ initialSeconds, pageTitle, embedOnly = false }: Time
     setDisplayRemaining((d) => d + add);
   };
 
-  const dismissDone = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+  const dismissDone = useCallback(() => {
+    playerRef.current?.stop();
     doneRef.current = false;
     setPhase("idle");
     setTotalMs(defaultMs);
     setDisplayRemaining(defaultMs);
-  };
+  }, [defaultMs]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (phaseRef.current === "idle") {
+          start(totalMs);
+        } else if (phaseRef.current === "running") {
+          pause();
+        } else if (phaseRef.current === "paused") {
+          resume();
+        } else if (phaseRef.current === "done") {
+          dismissDone();
+        }
+      } else if (e.key === "Escape" && phaseRef.current === "done") {
+        dismissDone();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [totalMs, start, pause, resume, dismissDone]);
 
   const applyCustomDuration = () => {
     if (phase === "running") return;

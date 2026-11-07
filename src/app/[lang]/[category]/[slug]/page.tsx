@@ -10,6 +10,14 @@ import { AlarmTool } from "@/components/tools/AlarmTool";
 import { StopwatchTool } from "@/components/tools/StopwatchTool";
 import { TimerToolExperience } from "@/components/tools/TimerToolExperience";
 import { WorldClockCityView } from "@/components/tools/WorldClock";
+import { DateTools } from "@/components/tools/DateTools";
+import { CalculatorTools } from "@/components/tools/CalculatorTools";
+import { TimeTools } from "@/components/tools/TimeTools";
+import { ProductivityTools } from "@/components/tools/ProductivityTools";
+import { ConverterTools } from "@/components/tools/ConverterTools";
+import { FinanceTools } from "@/components/tools/FinanceTools";
+import { TextTools } from "@/components/tools/TextTools";
+import { getLocalizedCategoryMeta } from "@/i18n/category-overrides";
 import {
   getAllHolidayTimerSlugs,
   getHolidayBySlug,
@@ -46,6 +54,7 @@ const siteBase =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
 
 function hubNavLabel(
+  locale: AppLocale,
   messages: ReturnType<typeof getDictionary>,
   cat: ToolCategoryId,
 ): string {
@@ -58,6 +67,13 @@ function hubNavLabel(
       return messages.nav.stopwatch;
     case "world-clock":
       return messages.nav.worldClock;
+    case "date-calendar":
+    case "calculators":
+    case "productivity":
+    case "converters":
+    case "finance":
+    case "text":
+      return getLocalizedCategoryMeta(locale, cat).label;
     default: {
       const _exhaustive: never = cat;
       return _exhaustive;
@@ -82,7 +98,7 @@ function toolBreadcrumbItems(
       item: `${origin}${homePath}`,
     },
     {
-      name: hubNavLabel(messages, category),
+      name: hubNavLabel(locale, messages, category),
       href: hubPath,
       item: `${origin}${hubPath}`,
     },
@@ -105,6 +121,12 @@ function withBenefit(title: string, category: ToolCategoryId): string {
     timer: "Start a Fast Countdown",
     stopwatch: "Track Time with Accurate Laps",
     "world-clock": "See Live Local Time Instantly",
+    "date-calendar": "Calculate Dates & Business Days",
+    calculators: "Fast Accurate Online Calculation",
+    productivity: "Optimize Your Routine & Focus",
+    converters: "Fast Accurate Unit Conversion",
+    finance: "Calculate EMI, Interest & Margins",
+    text: "Format, Count & Clean Text Online",
   };
   return `${title} - ${benefit[category]}`;
 }
@@ -377,6 +399,82 @@ export default async function ToolSlugPage({ params, searchParams }: Props) {
     );
   }
 
+  if (embedMode && category === "date-calendar") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <DateTools activeSlug={canonicalSlug} />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "calculators") {
+    const isTime = [
+      "time-duration-calculator",
+      "time-converter",
+      "work-hours-calculator",
+      "break-time-calculator",
+    ].includes(canonicalSlug);
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          {isTime ? (
+            <TimeTools activeSlug={canonicalSlug} embedOnly />
+          ) : (
+            <CalculatorTools activeSlug={canonicalSlug} />
+          )}
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "productivity") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <ProductivityTools activeSlug={canonicalSlug} />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "converters") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <ConverterTools activeSlug={canonicalSlug} embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "finance") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <FinanceTools activeSlug={canonicalSlug} embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "text") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <TextTools activeSlug={canonicalSlug} embedOnly />
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_220px] lg:items-start">
       <div className="min-w-0 space-y-8">
@@ -417,6 +515,38 @@ export default async function ToolSlugPage({ params, searchParams }: Props) {
             timeZone={worldResolved.timeZone}
             label={worldResolved.label}
           />
+        )}
+
+        {category === "date-calendar" && (
+          <DateTools activeSlug={canonicalSlug} />
+        )}
+
+        {category === "calculators" &&
+          ([
+            "time-duration-calculator",
+            "time-converter",
+            "work-hours-calculator",
+            "break-time-calculator",
+          ].includes(canonicalSlug) ? (
+            <TimeTools activeSlug={canonicalSlug} />
+          ) : (
+            <CalculatorTools activeSlug={canonicalSlug} />
+          ))}
+
+        {category === "productivity" && (
+          <ProductivityTools activeSlug={canonicalSlug} />
+        )}
+
+        {category === "converters" && (
+          <ConverterTools activeSlug={canonicalSlug} />
+        )}
+
+        {category === "finance" && (
+          <FinanceTools activeSlug={canonicalSlug} />
+        )}
+
+        {category === "text" && (
+          <TextTools activeSlug={canonicalSlug} />
         )}
 
         <div className="embed-hidden">

@@ -20,6 +20,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "timer",
     stopwatch: "stopwatch",
     "world-clock": "world-clock",
+    "date-calendar": "date-calendar",
+    calculators: "calculators",
+    productivity: "productivity",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   de: {
@@ -27,6 +33,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "timer",
     stopwatch: "stoppuhr",
     "world-clock": "weltzeit",
+    "date-calendar": "datum-kalender",
+    calculators: "rechner",
+    productivity: "produktivitaet",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     /** Must match static route folder `holidays` (not localized in the URL). */
     holidays: "holidays",
   },
@@ -35,6 +47,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "minuteur",
     stopwatch: "chronometre",
     "world-clock": "horloge-mondiale",
+    "date-calendar": "date-calendrier",
+    calculators: "calculatrices",
+    productivity: "productivite",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   ja: {
@@ -42,6 +60,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "timer",
     stopwatch: "stopwatch",
     "world-clock": "sekai-tokei",
+    "date-calendar": "date-calendar",
+    calculators: "calculators",
+    productivity: "productivity",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   es: {
@@ -49,6 +73,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "temporizador",
     stopwatch: "cronometro",
     "world-clock": "reloj-mundial",
+    "date-calendar": "fecha-calendario",
+    calculators: "calculadoras",
+    productivity: "productividad",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   pt: {
@@ -56,6 +86,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "temporizador",
     stopwatch: "cronometro",
     "world-clock": "relogio-mundial",
+    "date-calendar": "data-calendario",
+    calculators: "calculadoras",
+    productivity: "produtividade",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   ar: {
@@ -63,6 +99,12 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "muaqqit",
     stopwatch: "stopwatch",
     "world-clock": "saat-alam",
+    "date-calendar": "date-calendar",
+    calculators: "calculators",
+    productivity: "productivity",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
   hi: {
@@ -70,6 +112,25 @@ const CATEGORY_SEGMENTS: Record<AppLocale, Record<RouteCategory, string>> = {
     timer: "timer",
     stopwatch: "stopwatch",
     "world-clock": "vishwa-ghadi",
+    "date-calendar": "date-calendar",
+    calculators: "calculators",
+    productivity: "productivity",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
+    holidays: "holidays",
+  },
+  gu: {
+    alarm: "alarm",
+    timer: "timer",
+    stopwatch: "stopwatch",
+    "world-clock": "vishwa-ghadi",
+    "date-calendar": "date-calendar",
+    calculators: "calculators",
+    productivity: "productivity",
+    converters: "converters",
+    finance: "finance",
+    text: "text",
     holidays: "holidays",
   },
 };
@@ -86,6 +147,7 @@ const ACTIVITY: Record<
     pt: "temporizador-ovo",
     ar: "bayd-timer",
     hi: "anda-timer",
+    gu: "anda-timer",
   },
   "pomodoro-timer": {
     de: "pomodoro-timer",
@@ -95,6 +157,7 @@ const ACTIVITY: Record<
     pt: "temporizador-pomodoro",
     ar: "pomodoro-timer",
     hi: "pomodoro-timer",
+    gu: "pomodoro-timer",
   },
   "meditation-timer": {
     de: "meditation-timer",
@@ -104,6 +167,7 @@ const ACTIVITY: Record<
     pt: "temporizador-meditacao",
     ar: "tafakkur-timer",
     hi: "dhyan-timer",
+    gu: "dhyan-timer",
   },
   "workout-timer": {
     de: "workout-timer",
@@ -113,6 +177,7 @@ const ACTIVITY: Record<
     pt: "temporizador-treino",
     ar: "riyada-timer",
     hi: "workout-timer",
+    gu: "workout-timer",
   },
 };
 
@@ -126,6 +191,7 @@ function minuteLocalized(n: number, locale: AppLocale): string {
     pt: `${n}-minutos`,
     ar: `${n}-daqaiq`,
     hi: `${n}-minute-timer`,
+    gu: `${n}-minute-timer`,
   };
   return table[locale as Exclude<AppLocale, "en">];
 }
@@ -146,6 +212,7 @@ function parseMinuteLocalized(
     pt: /^(\d+)-minutos$/,
     ar: /^(\d+)-daqaiq$/,
     hi: /^(\d+)-minute-timer$/,
+    gu: /^(\d+)-minute-timer$/,
   };
   const p = patterns[locale as Exclude<AppLocale, "en">];
   const m = p.exec(slug);
@@ -164,6 +231,7 @@ const FIXED_TIMER_SLUGS: Record<
     pt: "30-segundos",
     ar: "30-thanya",
     hi: "30-second-timer",
+    gu: "30-second-timer",
   },
   "90-second-timer": {
     de: "90-sekunden-timer",
@@ -173,6 +241,7 @@ const FIXED_TIMER_SLUGS: Record<
     pt: "90-segundos",
     ar: "90-thanya",
     hi: "90-second-timer",
+    gu: "90-second-timer",
   },
   "2-hour-timer": {
     de: "2-stunden-timer",
@@ -182,6 +251,7 @@ const FIXED_TIMER_SLUGS: Record<
     pt: "2-horas",
     ar: "2-saa",
     hi: "2-hour-timer",
+    gu: "2-hour-timer",
   },
 };
 
@@ -308,12 +378,17 @@ export function buildPath(
   input:
     | { type: "home" }
     | { type: "holidays" }
+    | { type: "path"; path: string }
     | { type: "hub"; category: ToolCategoryId }
     | { type: "tool"; category: ToolCategoryId; canonicalSlug: string },
 ): string {
   if (input.type === "home") return `/${locale}`;
   if (input.type === "holidays") {
     return `/${locale}/holidays`;
+  }
+  if (input.type === "path") {
+    const clean = input.path.replace(/^\/+/, "");
+    return clean ? `/${locale}/${clean}` : `/${locale}`;
   }
   const catSeg = getLocalizedCategorySegment(input.category, locale);
   if (input.type === "hub") return `/${locale}/${catSeg}`;
@@ -331,6 +406,7 @@ export function buildAlternatePaths(
     | { type: "home" }
     | { type: "holidays" }
     | { type: "legal"; page: LegalPageId }
+    | { type: "path"; path: string }
     | { type: "hub"; category: ToolCategoryId }
     | {
         type: "tool";
@@ -345,6 +421,8 @@ export function buildAlternatePaths(
       out[locale] = buildPath(locale, { type: "holidays" });
     else if (input.type === "legal")
       out[locale] = buildLegalPath(locale, input.page);
+    else if (input.type === "path")
+      out[locale] = buildPath(locale, { type: "path", path: input.path });
     else if (input.type === "hub")
       out[locale] = buildPath(locale, {
         type: "hub",

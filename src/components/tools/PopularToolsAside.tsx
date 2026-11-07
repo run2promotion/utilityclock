@@ -3,6 +3,7 @@ import { getDictionary } from "@/i18n/dictionary";
 import { buildPath } from "@/i18n/routing";
 import type { AppLocale } from "@/i18n/config";
 import type { ToolCategoryId } from "@/data/tool-schema";
+import { getLocalizedCategoryMeta } from "@/i18n/category-overrides";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import Link from "next/link";
 
@@ -37,6 +38,12 @@ export function PopularToolsAside({
     timer: nav.timer,
     stopwatch: nav.stopwatch,
     "world-clock": nav.worldClock,
+    "date-calendar": getLocalizedCategoryMeta(locale, "date-calendar").label,
+    calculators: getLocalizedCategoryMeta(locale, "calculators").label,
+    productivity: getLocalizedCategoryMeta(locale, "productivity").label,
+    converters: getLocalizedCategoryMeta(locale, "converters").label,
+    finance: getLocalizedCategoryMeta(locale, "finance").label,
+    text: getLocalizedCategoryMeta(locale, "text").label,
   };
 
   let links: { href: string; label: string }[] = [];
@@ -58,9 +65,9 @@ export function PopularToolsAside({
       links = hubLinks(locale, ["alarm", "timer"], labelMap);
     }
   } else if (category === "alarm") {
-    links = hubLinks(locale, ["timer", "stopwatch"], labelMap);
+    links = hubLinks(locale, ["timer", "stopwatch", "productivity"], labelMap);
   } else if (category === "timer") {
-    links = hubLinks(locale, ["alarm", "stopwatch"], labelMap);
+    links = hubLinks(locale, ["alarm", "stopwatch", "productivity"], labelMap);
     if (isFeatureEnabled("studyClusterLinks")) {
       const studyLinks = [
         "study-session-timer",
@@ -78,7 +85,19 @@ export function PopularToolsAside({
       links = [...studyLinks, ...links];
     }
   } else if (category === "stopwatch") {
-    links = hubLinks(locale, ["alarm", "timer"], labelMap);
+    links = hubLinks(locale, ["alarm", "timer", "productivity"], labelMap);
+  } else if (category === "date-calendar") {
+    links = hubLinks(locale, ["calculators", "productivity", "timer"], labelMap);
+  } else if (category === "calculators") {
+    links = hubLinks(locale, ["converters", "finance", "date-calendar"], labelMap);
+  } else if (category === "productivity") {
+    links = hubLinks(locale, ["timer", "stopwatch", "text"], labelMap);
+  } else if (category === "converters") {
+    links = hubLinks(locale, ["calculators", "finance", "date-calendar"], labelMap);
+  } else if (category === "finance") {
+    links = hubLinks(locale, ["calculators", "converters", "date-calendar"], labelMap);
+  } else if (category === "text") {
+    links = hubLinks(locale, ["productivity", "calculators", "converters"], labelMap);
   }
 
   if (links.length === 0) return null;

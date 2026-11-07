@@ -88,16 +88,27 @@ export function TimerToolExperience({
 }: TimerToolExperienceProps) {
   const workflowEnabled = isFeatureEnabled("workflowModes");
   const retentionEnabled = isFeatureEnabled("retentionLayer");
-  const [selectedModeId, setSelectedModeId] = useState<string>("classic");
+  const [selectedModeId, setSelectedModeId] = useState<string>(() => {
+    if (initialSeconds != null) {
+      const match = MODES.find((m) => m.presetSeconds === initialSeconds);
+      if (match) return match.id;
+    }
+    return "classic";
+  });
+  const [overrideSeconds, setOverrideSeconds] = useState<number | null>(null);
   const [recent, setRecent] = useState<number[]>([]);
   const [lastSeconds, setLastSeconds] = useState<number | null>(null);
   const [instanceKey, setInstanceKey] = useState(0);
   const selectedMode = MODES.find((m) => m.id === selectedModeId) ?? MODES[0];
 
+  // A route-specific duration must always take precedence on page load.
+  // User interactions with workflow modes or recents override on demand.
   const startSeconds = useMemo(() => {
-    if (!workflowEnabled) return initialSeconds;
-    return selectedMode.presetSeconds;
-  }, [workflowEnabled, selectedMode, initialSeconds]);
+    if (overrideSeconds !== null) return overrideSeconds;
+    if (initialSeconds !== undefined) return initialSeconds;
+    if (workflowEnabled) return selectedMode.presetSeconds;
+    return undefined;
+  }, [overrideSeconds, workflowEnabled, selectedMode, initialSeconds]);
 
   useEffect(() => {
     if (!retentionEnabled) return;
@@ -113,10 +124,9 @@ export function TimerToolExperience({
 
   const runPreset = (seconds: number) => {
     saveRecentPreset(seconds);
-    if (workflowEnabled) {
-      const mode = MODES.find((m) => m.presetSeconds === seconds);
-      if (mode) setSelectedModeId(mode.id);
-    }
+    setOverrideSeconds(seconds);
+    const mode = MODES.find((m) => m.presetSeconds === seconds);
+    if (mode) setSelectedModeId(mode.id);
     setInstanceKey((k) => k + 1);
   };
 

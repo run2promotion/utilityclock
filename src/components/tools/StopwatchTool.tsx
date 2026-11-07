@@ -1,9 +1,20 @@
 "use client";
 
 import { useSettings } from "@/context/settings-context";
-import { Check, ClipboardCopy, Copy, Flag, Pause, Play, RotateCcw } from "lucide-react";
+import {
+  Check,
+  ClipboardCopy,
+  Copy,
+  Flag,
+  Pause,
+  Play,
+  RotateCcw,
+  Timer,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type LapRow = {
   id: number;
@@ -100,7 +111,7 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
     start();
   }, [isEmbedMode, start]);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     if (!running) return;
     const seg = segmentStartRef.current;
     if (seg !== null) {
@@ -109,9 +120,9 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
     }
     setDisplayMs(baseMsRef.current);
     setRunning(false);
-  };
+  }, [running]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     stopRaf();
     baseMsRef.current = 0;
     segmentStartRef.current = null;
@@ -120,9 +131,9 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
     setDisplayMs(0);
     setLaps([]);
     setRunning(false);
-  };
+  }, []);
 
-  const lap = () => {
+  const lap = useCallback(() => {
     if (!running) return;
     const total = readElapsed();
     const lapMs = total - lastLapTotalRef.current;
@@ -137,11 +148,61 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
       },
       ...prev,
     ]);
-  };
+  }, [running, readElapsed]);
+
+  // Keyboard accessibility: Space to Start/Pause, L for Lap, R for Reset
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (runningRef.current) pause();
+        else start();
+      } else if (e.key === "l" || e.key === "L") {
+        e.preventDefault();
+        lap();
+      } else if (e.key === "r" || e.key === "R") {
+        e.preventDefault();
+        reset();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [start, pause, lap, reset]);
+
+  // Compute best and average laps
+  const lapStats = useMemo(() => {
+    if (laps.length === 0) return null;
+    let minMs = Infinity;
+    let maxMs = -Infinity;
+    let sumMs = 0;
+    for (const r of laps) {
+      if (r.lapMs < minMs) minMs = r.lapMs;
+      if (r.lapMs > maxMs) maxMs = r.lapMs;
+      sumMs += r.lapMs;
+    }
+    return {
+      bestMs: minMs,
+      slowestMs: maxMs,
+      avgMs: sumMs / laps.length,
+      count: laps.length,
+    };
+  }, [laps]);
 
   const exportLaps = async () => {
     const lines = [
-      `Total\t${formatShort(displayMs)}`,
+      `Total Elapsed:\t${formatShort(displayMs)}`,
       "",
       "Lap\tSplit\tCumulative",
       ...laps
@@ -152,6 +213,11 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
             `${r.lapIndex}\t${formatShort(r.lapMs)}\t${formatShort(r.totalMs)}`,
         ),
     ];
+    if (lapStats) {
+      lines.push("");
+      lines.push(`Fastest Lap:\t${formatShort(lapStats.bestMs)}`);
+      lines.push(`Average Lap:\t${formatShort(lapStats.avgMs)}`);
+    }
     const text = lines.join("\n");
     try {
       await navigator.clipboard.writeText(text);
@@ -169,6 +235,7 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6">
+      {/* Main Stopwatch Timer Display */}
       <div className="rounded-2xl border border-zinc-200 bg-white/60 p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
         <p
           className={`${timeFont} clock-scale-stopwatch tabular-nums tracking-tight text-clock-primary drop-shadow-clock`}
@@ -176,85 +243,155 @@ export function StopwatchTool({ embedOnly = false }: { embedOnly?: boolean } = {
         >
           {formatStopwatch(displayMs)}
         </p>
-        <p className="mt-2 text-xs text-zinc-500">Hours · minutes · seconds · centiseconds</p>
+        <p className="mt-2 text-xs text-zinc-500">
+          Hours · minutes · seconds · centiseconds
+        </p>
       </div>
 
-      {!isEmbedMode && <div className="flex flex-wrap items-center justify-center gap-3">
-        {!running ? (
+      {/* Stopwatch Controls */}
+      {!isEmbedMode && (
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {!running ? (
+            <button
+              type="button"
+              onClick={start}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-500"
+            >
+              <Play className="h-4 w-4" aria-hidden />
+              {hasStarted ? "Resume" : "Start"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={pause}
+              className="inline-flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-zinc-600"
+            >
+              <Pause className="h-4 w-4" aria-hidden />
+              Pause
+            </button>
+          )}
+
           <button
             type="button"
-            onClick={start}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-500"
+            onClick={lap}
+            disabled={!running}
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800 disabled:opacity-40"
           >
-            <Play className="h-4 w-4" aria-hidden />
-            {hasStarted ? "Resume" : "Start"}
+            <Flag className="h-4 w-4" aria-hidden />
+            Lap
           </button>
-        ) : (
+
           <button
             type="button"
-            onClick={pause}
-            className="inline-flex items-center gap-2 rounded-xl bg-zinc-700 px-6 py-3 text-sm font-semibold text-white hover:bg-zinc-600"
+            onClick={reset}
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm text-zinc-300 transition hover:bg-zinc-800"
           >
-            <Pause className="h-4 w-4" aria-hidden />
-            Pause
+            <RotateCcw className="h-4 w-4" aria-hidden />
+            Reset
           </button>
-        )}
 
-        <button
-          type="button"
-          onClick={lap}
-          disabled={!running}
-          className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm font-medium text-zinc-200 hover:bg-zinc-800 disabled:opacity-40"
-        >
-          <Flag className="h-4 w-4" aria-hidden />
-          Lap
-        </button>
+          <button
+            type="button"
+            onClick={exportLaps}
+            disabled={laps.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm text-zinc-300 transition hover:bg-zinc-800 disabled:opacity-40"
+          >
+            <ClipboardCopy className="h-4 w-4" aria-hidden />
+            {copyState === "ok"
+              ? "Copied"
+              : copyState === "err"
+                ? "Failed"
+                : "Export laps"}
+          </button>
+        </div>
+      )}
 
-        <button
-          type="button"
-          onClick={reset}
-          className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm text-zinc-300 hover:bg-zinc-800"
-        >
-          <RotateCcw className="h-4 w-4" aria-hidden />
-          Reset
-        </button>
+      {/* Lap Stats & Summary Card */}
+      {!isEmbedMode && lapStats && (
+        <div className="grid grid-cols-3 gap-2 rounded-xl border border-zinc-200 bg-white/70 p-3 text-center dark:border-zinc-800 dark:bg-zinc-900/50 sm:gap-4 sm:p-4">
+          <div className="space-y-0.5">
+            <span className="flex items-center justify-center gap-1 text-[11px] font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+              <TrendingDown className="h-3 w-3" /> Fastest Lap
+            </span>
+            <p className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:text-base">
+              {formatShort(lapStats.bestMs)}
+            </p>
+          </div>
+          <div className="space-y-0.5">
+            <span className="flex items-center justify-center gap-1 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+              <Timer className="h-3 w-3" /> Average Lap
+            </span>
+            <p className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:text-base">
+              {formatShort(lapStats.avgMs)}
+            </p>
+          </div>
+          <div className="space-y-0.5">
+            <span className="flex items-center justify-center gap-1 text-[11px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">
+              <TrendingUp className="h-3 w-3" /> Slowest Lap
+            </span>
+            <p className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100 sm:text-base">
+              {formatShort(lapStats.slowestMs)}
+            </p>
+          </div>
+        </div>
+      )}
 
-        <button
-          type="button"
-          onClick={exportLaps}
-          disabled={laps.length === 0}
-          className="inline-flex items-center gap-2 rounded-xl border border-zinc-600 px-5 py-3 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-40"
-        >
-          <ClipboardCopy className="h-4 w-4" aria-hidden />
-          {copyState === "ok"
-            ? "Copied"
-            : copyState === "err"
-              ? "Failed"
-              : "Export laps"}
-        </button>
-      </div>}
-
+      {/* Laps List */}
       {!isEmbedMode && laps.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-zinc-400">Laps</h3>
-          <ul className="max-h-56 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 font-mono text-sm tabular-nums">
-            {laps.map((r) => (
-              <li
-                key={r.id}
-                className="flex justify-between gap-4 border-b border-zinc-800/80 px-4 py-2 last:border-0"
-              >
-                <span className="text-zinc-500">Lap {r.lapIndex}</span>
-                <span className="text-clock-primary">{formatShort(r.lapMs)}</span>
-                <span className="text-zinc-400">{formatShort(r.totalMs)}</span>
-              </li>
-            ))}
+          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-zinc-500">
+            <span>Lap Number</span>
+            <span className="pr-4">Split Time · Cumulative</span>
+          </div>
+          <ul className="max-h-60 overflow-y-auto rounded-xl border border-zinc-200 bg-white font-mono text-sm tabular-nums dark:border-zinc-800 dark:bg-zinc-950/80">
+            {laps.map((r) => {
+              const isBest = lapStats && lapStats.count > 1 && r.lapMs === lapStats.bestMs;
+              const isSlowest = lapStats && lapStats.count > 1 && r.lapMs === lapStats.slowestMs;
+              return (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between gap-4 border-b border-zinc-200/70 px-4 py-2.5 last:border-0 dark:border-zinc-800/80"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-zinc-500">Lap {r.lapIndex}</span>
+                    {isBest && (
+                      <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                        Fastest
+                      </span>
+                    )}
+                    {isSlowest && (
+                      <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                        Slowest
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={
+                        isBest
+                          ? "font-semibold text-emerald-600 dark:text-emerald-400"
+                          : "text-clock-primary"
+                      }
+                    >
+                      +{formatShort(r.lapMs)}
+                    </span>
+                    <span className="text-xs text-zinc-400">
+                      {formatShort(r.totalMs)}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
 
+      {/* Embed Code Snippet */}
       {!isEmbedMode && (
         <section className="space-y-2 rounded-xl border border-zinc-200/80 bg-white/70 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Embed this stopwatch</h3>
+          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+            Embed this stopwatch
+          </h3>
           <textarea
             readOnly
             value={iframeCode}

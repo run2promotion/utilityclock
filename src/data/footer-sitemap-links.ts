@@ -23,6 +23,54 @@ export const FOOTER_TOP_STOPWATCH_SLUGS = [
   "study-stopwatch",
 ] as const;
 
+export const FOOTER_TOP_DATE_SLUGS = [
+  "age-calculator",
+  "business-days-calculator",
+  "date-difference-calculator",
+  "days-between-dates",
+  "days-until-date",
+] as const;
+
+export const FOOTER_TOP_CALCULATOR_SLUGS = [
+  "percentage-calculator",
+  "unit-converter",
+  "basic-calculator",
+  "temperature-converter",
+  "speed-converter",
+] as const;
+
+export const FOOTER_TOP_PRODUCTIVITY_SLUGS = [
+  "sleep-cycle-calculator",
+  "pomodoro-timer",
+  "interval-timer",
+  "hourly-chime",
+  "countdown-to-event",
+] as const;
+
+export const FOOTER_TOP_CONVERTER_SLUGS = [
+  "area-converter",
+  "volume-converter",
+  "pressure-converter",
+  "data-storage-converter",
+  "fuel-economy-converter",
+] as const;
+
+export const FOOTER_TOP_FINANCE_SLUGS = [
+  "loan-emi-calculator",
+  "compound-interest-calculator",
+  "gst-calculator",
+  "vat-calculator",
+  "profit-margin-calculator",
+] as const;
+
+export const FOOTER_TOP_TEXT_SLUGS = [
+  "word-counter",
+  "character-counter",
+  "case-converter",
+  "remove-duplicate-lines",
+  "text-diff-checker",
+] as const;
+
 /** Holiday countdown timer pages (under /timer/). */
 export const FOOTER_TOP_HOLIDAY_TIMER_SLUGS = [
   "christmas-day-usa",
@@ -32,7 +80,17 @@ export const FOOTER_TOP_HOLIDAY_TIMER_SLUGS = [
   "labor-day-usa",
 ] as const;
 
-export type FooterSitemapCategory = "alarm" | "timer" | "stopwatch" | "holidays";
+export type FooterSitemapCategory =
+  | "alarm"
+  | "timer"
+  | "stopwatch"
+  | "holidays"
+  | "date-calendar"
+  | "calculators"
+  | "productivity"
+  | "converters"
+  | "finance"
+  | "text";
 
 export const FOOTER_SITEMAP_SLUGS: Record<
   Exclude<FooterSitemapCategory, "holidays">,
@@ -41,4 +99,10 @@ export const FOOTER_SITEMAP_SLUGS: Record<
   alarm: FOOTER_TOP_ALARM_SLUGS,
   timer: FOOTER_TOP_TIMER_SLUGS,
   stopwatch: FOOTER_TOP_STOPWATCH_SLUGS,
+  "date-calendar": FOOTER_TOP_DATE_SLUGS,
+  calculators: FOOTER_TOP_CALCULATOR_SLUGS,
+  productivity: FOOTER_TOP_PRODUCTIVITY_SLUGS,
+  converters: FOOTER_TOP_CONVERTER_SLUGS,
+  finance: FOOTER_TOP_FINANCE_SLUGS,
+  text: FOOTER_TOP_TEXT_SLUGS,
 };

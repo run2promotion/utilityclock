@@ -43,7 +43,7 @@ function applySecurityHeaders(response: NextResponse, allowEmbedding: boolean) {
   response.headers.set("Cross-Origin-Resource-Policy", "same-origin");
   response.headers.set(
     "Permissions-Policy",
-    "accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
+    "accelerometer=(), autoplay=(self), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()",
   );
   response.headers.set("Content-Security-Policy", cspValue(allowEmbedding));
   if (isProd) {
@@ -60,10 +60,14 @@ function hostAllowed(hostHeader: string | null): boolean {
   const configured = process.env.ALLOWED_HOSTS?.split(",")
     .map((h) => h.trim().toLowerCase())
     .filter(Boolean);
-  if (configured && configured.length > 0) return configured.includes(host);
-  // Safe local defaults; in production set ALLOWED_HOSTS explicitly.
-  return ["localhost", "127.0.0.1", "utilityclock.com", "www.utilityclock.com"].includes(
-    host,
+  if (configured && configured.length > 0) {
+    if (configured.includes(host)) return true;
+    if (configured.some((c) => c.startsWith("*.") && host.endsWith(c.slice(1)))) return true;
+  }
+  // Safe defaults for local dev, production, and Vercel staging preview branches
+  return (
+    ["localhost", "127.0.0.1", "utilityclock.com", "www.utilityclock.com"].includes(host) ||
+    host.endsWith(".vercel.app")
   );
 }
 
@@ -74,8 +78,41 @@ export function middleware(request: NextRequest) {
 
   const segments = request.nextUrl.pathname.split("/").filter(Boolean);
   const first = segments[0];
+
+  // Direct root legacy redirects to canonical localized calendar hub routes
+  if (first === "hindu-calendar") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/en/calendar/hindu-calendar`;
+    return NextResponse.redirect(url, 301);
+  }
+  if (first === "gujarati-calendar") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/en/calendar/gujarati-calendar`;
+    return NextResponse.redirect(url, 301);
+  }
+
+  if (first && isAppLocale(first)) {
+    if (segments[1] === "hindu-calendar") {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${first}/calendar/hindu-calendar`;
+      return NextResponse.redirect(url, 301);
+    }
+    if (segments[1] === "gujarati-calendar") {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${first}/calendar/gujarati-calendar`;
+      return NextResponse.redirect(url, 301);
+    }
+  }
+
   const allowEmbedding = request.nextUrl.searchParams.get("embed") === "1";
-  const response = first && isAppLocale(first) ? NextResponse.next() : i18nRouter(request, i18nRouterConfig);
+  const requestHeaders = new Headers(request.headers);
+  if (first && isAppLocale(first)) {
+    requestHeaders.set("x-next-i18n-router-locale", first);
+  }
+  const response =
+    first && isAppLocale(first)
+      ? NextResponse.next({ request: { headers: requestHeaders } })
+      : i18nRouter(request, i18nRouterConfig);
   if (first && isAppLocale(first)) {
     response.cookies.set(LOCALE_COOKIE, first, {
       path: "/",
@@ -90,6 +127,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|ico|png|jpg|jpeg|gif|webp|json|xml|txt)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|sw.js|site.webmanifest|manifest.webmanifest|.*\\.(?:svg|ico|png|jpg|jpeg|gif|webp|json|xml|txt|webmanifest|js)$).*)",
   ],
 };

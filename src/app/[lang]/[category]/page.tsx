@@ -4,6 +4,13 @@ import { AlarmTool } from "@/components/tools/AlarmTool";
 import { StopwatchTool } from "@/components/tools/StopwatchTool";
 import { TimerToolExperience } from "@/components/tools/TimerToolExperience";
 import { WorldClockHub } from "@/components/tools/WorldClock";
+import { DateTools } from "@/components/tools/DateTools";
+import { CalculatorTools } from "@/components/tools/CalculatorTools";
+import { TimeTools } from "@/components/tools/TimeTools";
+import { ProductivityTools } from "@/components/tools/ProductivityTools";
+import { ConverterTools } from "@/components/tools/ConverterTools";
+import { FinanceTools } from "@/components/tools/FinanceTools";
+import { TextTools } from "@/components/tools/TextTools";
 import {
   CATEGORIES,
   getToolDefinition,
@@ -129,6 +136,72 @@ export default async function CategoryHubPage({ params, searchParams }: Props) {
     );
   }
 
+  if (embedMode && category === "date-calendar") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <DateTools />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "calculators") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <CalculatorTools />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "productivity") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <ProductivityTools />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "converters") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <ConverterTools embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "finance") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <FinanceTools embedOnly />
+        </div>
+      </>
+    );
+  }
+
+  if (embedMode && category === "text") {
+    return (
+      <>
+        <EmbedBodyClass active />
+        <div className="w-full">
+          <TextTools embedOnly />
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="space-y-10">
       <div className="embed-hidden">
@@ -151,6 +224,28 @@ export default async function CategoryHubPage({ params, searchParams }: Props) {
       {category === "stopwatch" && <StopwatchTool />}
 
       {category === "world-clock" && <WorldClockHub />}
+
+      {category === "date-calendar" && <DateTools />}
+
+      {category === "calculators" && (
+        <div className="space-y-10">
+          <CalculatorTools />
+          <div className="border-t border-zinc-200/80 pt-8 dark:border-zinc-800/80">
+            <h2 className="mb-4 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Time & Duration Calculators
+            </h2>
+            <TimeTools />
+          </div>
+        </div>
+      )}
+
+      {category === "productivity" && <ProductivityTools />}
+
+      {category === "converters" && <ConverterTools />}
+
+      {category === "finance" && <FinanceTools />}
+
+      {category === "text" && <TextTools />}
 
       <div className="embed-hidden">
         <AdSlot slotId={`hub-${category}-top`} routeType="hub" />

@@ -49,6 +49,18 @@ const COUNTRY_LABEL: Record<HolidayCountryId, string> = {
   india: "India",
 };
 
+/** Official governmental sources & verification metadata for public holidays */
+export const HOLIDAY_SOURCE_DOCUMENTATION = {
+  lastVerified: "2026-05-01",
+  sources: {
+    usa: "United States Office of Personnel Management (OPM) Federal Holidays (5 U.S.C. 6103).",
+    uk: "United Kingdom Government (GOV.UK) Official Bank Holidays schedule.",
+    canada: "Government of Canada National Holidays & Canada Labour Code statutory days.",
+    australia: "Australian Government Fair Work Ombudsman National Public Holidays.",
+    india: "Ministry of Personnel & Government of India Gazette National Holidays.",
+  },
+};
+
 /** Gregorian Easter Sunday (Western) — Anonymous Gregorian algorithm */
 export function easterSundayWestern(year: number): Date {
   const a = year % 19;

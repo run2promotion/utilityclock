@@ -1,0 +1,711 @@
+/**
+ * Comprehensive 2026 Sacred Festival & Observances Registry
+ *
+ * Covers Sanatan Hindu, Gujarati Amavasyanta, Jain, Sikh, and Buddhist traditions.
+ * Timed according to classical Indian lunisolar ephemeris and solar ingress for 2026 CE.
+ */
+
+export type FestivalCategory =
+  | "hindu"
+  | "gujarati"
+  | "jain"
+  | "sikh"
+  | "buddhist"
+  | "national";
+
+export type FestivalItem = {
+  id: string;
+  name: string;
+  nativeName: string;
+  category: FestivalCategory;
+  categoryLabel: string;
+  date: string; // YYYY-MM-DD
+  dayOfWeek: string;
+  lunarMonth: string;
+  paksha: "Shukla" | "Krishna" | "Solar";
+  tithi: string;
+  description: string;
+  significance: string;
+  rituals: string[];
+  isMajor: boolean;
+};
+
+export const FESTIVALS_2026: FestivalItem[] = [
+  // --- JANUARY 2026 ---
+  {
+    id: "makar-sankranti-2026",
+    name: "Makar Sankranti / Uttarayan",
+    nativeName: "मकर संक्रांति / ઉત્તરાયણ",
+    category: "gujarati",
+    categoryLabel: "Gujarati & Hindu Solar Festival",
+    date: "2026-01-14",
+    dayOfWeek: "Wednesday",
+    lunarMonth: "Pausha / Magha",
+    paksha: "Solar",
+    tithi: "Solar Makara Ingress",
+    description: "The celestial transition of the Sun into sidereal Capricorn (Makara Rashi), marking the beginning of the auspicious Uttarayan period.",
+    significance: "Celebrated across Gujarat with international kite-flying (Patang Utsav), Undhiyu and Jalebi feasts, and Surya Puja across India.",
+    rituals: ["Surya Arghya at dawn", "Kite flying", "Charity of sesame (til) and jaggery", "Holy dip in sacred rivers"],
+    isMajor: true,
+  },
+  {
+    id: "vasant-panchami-2026",
+    name: "Vasant Panchami (Saraswati Puja)",
+    nativeName: "बसंत पंचमी (सरस्वती पूजा)",
+    category: "hindu",
+    categoryLabel: "Hindu Festival",
+    date: "2026-01-23",
+    dayOfWeek: "Friday",
+    lunarMonth: "Magha",
+    paksha: "Shukla",
+    tithi: "Panchami (5th Lunar Day)",
+    description: "Heralds the onset of spring (Vasant Ritu) and venerates Maa Saraswati, the Goddess of knowledge, arts, and wisdom.",
+    significance: "Auspicious day for Aksharabhyasam (first writing for children), worship of books and musical instruments, wearing yellow attire.",
+    rituals: ["Saraswati Vandana and Stotram", "Offering yellow flowers and saffron sweets", "Initiation into education"],
+    isMajor: true,
+  },
+
+  // --- FEBRUARY 2026 ---
+  {
+    id: "maha-shivratri-2026",
+    name: "Maha Shivratri",
+    nativeName: "महाशिवरात्रि / મહાશિવરાત્રી",
+    category: "hindu",
+    categoryLabel: "Sanatan Hindu Great Night",
+    date: "2026-02-15",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Phalguna (Magha in Amanta)",
+    paksha: "Krishna",
+    tithi: "Chaturdashi (14th Lunar Day)",
+    description: "The Great Night of Shiva commemorating the divine union of Lord Shiva and Devi Parvati, and the cosmic dance of creation (Tandava).",
+    significance: "Devotees observe a strict 24-hour fast and 4-prahara Nishita Kaal Puja to overcome darkness and ignorance.",
+    rituals: ["Nishita Kaal Rudrabhishek with Panchamrit", "Offering Bilva (Bel) patra and Dhatura", "Night-long Jagran and Maha Mrityunjaya Jaap"],
+    isMajor: true,
+  },
+
+  // --- MARCH 2026 ---
+  {
+    id: "holika-dahan-2026",
+    name: "Holika Dahan (Chhoti Holi)",
+    nativeName: "होलिका दहन",
+    category: "hindu",
+    categoryLabel: "Hindu Festival",
+    date: "2026-03-03",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Phalguna",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "Bonfire ritual commemorating the supreme devotion of Bhakt Prahlada and the burning of the demoness Holika.",
+    significance: "Symbolizes the triumph of truth, righteousness, and divine protection over ego and malice.",
+    rituals: ["Pradosh Kaal Holika bonfire lighting", "Parikrama of the sacred fire", "Roasting new wheat and gram stalks"],
+    isMajor: true,
+  },
+  {
+    id: "holi-dhuleti-2026",
+    name: "Holi (Dhulandi / Dhuleti)",
+    nativeName: "होली (धुलेंडी / ધૂળેટી)",
+    category: "hindu",
+    categoryLabel: "Universal Spring Festival",
+    date: "2026-03-04",
+    dayOfWeek: "Wednesday",
+    lunarMonth: "Chaitra (Purnimanta) / Phalguna (Amanta)",
+    paksha: "Krishna",
+    tithi: "Pratipada (1st Lunar Day)",
+    description: "The vibrant festival of colours, celebrating the eternal love of Radha and Krishna and the arrival of springtime.",
+    significance: "Brings communities together in joyous forgiveness, breaking social barriers with colored powder (gulal) and festive sweets.",
+    rituals: ["Playing with natural gulal and water", "Sharing Gujiya, Thandai, and sweets", "Embracing friends and family"],
+    isMajor: true,
+  },
+  {
+    id: "gudi-padwa-ugadi-2026",
+    name: "Gudi Padwa / Ugadi / Chaitra Navratri Begins",
+    nativeName: "गुड़ी पड़वा / ಯುಗಾದಿ / ચૈત્રી નવરાત્રી",
+    category: "hindu",
+    categoryLabel: "Vedic New Year & Navratri",
+    date: "2026-03-19",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Chaitra",
+    paksha: "Shukla",
+    tithi: "Pratipada (1st Lunar Day)",
+    description: "Commencement of Vikram Samvat 2083 (North Indian) and Shalivahana Shaka 1948. Marks the first day of Chaitra Navratri.",
+    significance: "Celebrates the cosmic day Lord Brahma commenced creation. In Maharashtra, the sacred Gudi is hoisted; in Karnataka and Andhra, Ugadi Pachadi is tasted.",
+    rituals: ["Ghatasthapana for Navratri", "Hoisting the decorated Gudi flag", "Consuming neem and jaggery prasadam", "Panchanga Shravanam"],
+    isMajor: true,
+  },
+  {
+    id: "rama-navami-2026",
+    name: "Rama Navami",
+    nativeName: "राम नवमी / રામનવમી",
+    category: "hindu",
+    categoryLabel: "Sanatan Hindu Sacred Day",
+    date: "2026-03-27",
+    dayOfWeek: "Friday",
+    lunarMonth: "Chaitra",
+    paksha: "Shukla",
+    tithi: "Navami (9th Lunar Day)",
+    description: "The divine appearance day of Bhagavan Shri Rama in Ayodhya at noon (Madhyahna Kaal) in Punarvasu Nakshatra.",
+    significance: "Culmination of Chaitra Navratri. Reveres Shri Rama as Maryada Purushottama, the personification of righteousness.",
+    rituals: ["Madhyahna Kaal Janmotsav Puja at 12:00 noon", "Recitation of Ramcharitmanas and Sundarkand", "Kanya Puja and distribution of Panakam"],
+    isMajor: true,
+  },
+  {
+    id: "mahavir-jayanti-2026",
+    name: "Mahavir Jayanti",
+    nativeName: "महावीर जयंती / મહાવીર જયંતી",
+    category: "jain",
+    categoryLabel: "Jain Sacred Anniversary",
+    date: "2026-03-31",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Chaitra",
+    paksha: "Shukla",
+    tithi: "Trayodashi (13th Lunar Day)",
+    description: "The 2624th Janma Kalyanak of Bhagwan Mahavira, the 24th Tirthankara of Jainism.",
+    significance: "Propagates the fundamental tenets of Ahimsa (non-violence), Satya (truthfulness), Asteya, Brahmacharya, and Aparigraha.",
+    rituals: ["Abhishek of Mahavira idols with milk and fragrant water", "Rath Yatra processions", "Sermons on Ahimsa and charity for animal shelters"],
+    isMajor: true,
+  },
+
+  // --- APRIL 2026 ---
+  {
+    id: "hanuman-jayanti-2026",
+    name: "Hanuman Jayanti",
+    nativeName: "हनुमान जयंती / હનુમાન જયંતિ",
+    category: "hindu",
+    categoryLabel: "Hindu Sacred Day",
+    date: "2026-04-02",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Chaitra",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "Appearance day of Lord Hanuman, the supreme devotee of Lord Rama endowed with boundless strength and humility.",
+    significance: "Devotees seek protection from Saturn's afflictions, courage, and spiritual strength.",
+    rituals: ["Recitation of Hanuman Chalisa 108 times", "Offering vermillion (sindoor) and jasmine oil", "Sunderkand recitation"],
+    isMajor: true,
+  },
+  {
+    id: "vaisakhi-puthandu-2026",
+    name: "Vaisakhi / Solar New Year / Mesha Sankranti",
+    nativeName: "ਵੈਸાਖੀ / Puthandu / বৈশাখী",
+    category: "sikh",
+    categoryLabel: "Sikh & Regional Solar Festival",
+    date: "2026-04-14",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Vaishakha / Mesha Solar",
+    paksha: "Solar",
+    tithi: "Mesha Sankranti",
+    description: "Marks the creation of the Khalsa Panth by Guru Gobind Singh Ji in 1699, as well as the solar regional new year in Punjab, Tamil Nadu, and Bengal.",
+    significance: "Harvest celebration, spiritual initiation, Nagar Kirtan processions, and community langars.",
+    rituals: ["Amrit Sanchar ceremonies", "Nagar Kirtan with Nishan Sahib", "Bhangra & Gidda harvest dance", "Charity and sewa"],
+    isMajor: true,
+  },
+  {
+    id: "akshaya-tritiya-2026",
+    name: "Akshaya Tritiya (Akha Teej)",
+    nativeName: "अक्षय तृतीया / અખાત્રીજ",
+    category: "gujarati",
+    categoryLabel: "Auspicious Vedic Muhurat",
+    date: "2026-04-20",
+    dayOfWeek: "Monday",
+    lunarMonth: "Vaishakha",
+    paksha: "Shukla",
+    tithi: "Tritiya (3rd Lunar Day)",
+    description: "An inherently auspicious day ('Swayam Siddha Muhurat') where any good deed or investment yields unending (Akshaya) merit.",
+    significance: "Celebrates the descent of Mother Ganga to Earth, birth of Lord Parashurama, and commencement of Treta Yuga.",
+    rituals: ["Purchasing gold, silver, or property", "Charity of water vessels, grains, and umbrellas", "Lakshmi-Narayana Puja"],
+    isMajor: true,
+  },
+
+  // --- MAY 2026 ---
+  {
+    id: "adhika-jyeshtha-start-2026",
+    name: "Adhika Jyeshtha Begins (Purushottam Maas)",
+    nativeName: "अधिक ज्येष्ठ प्रारंभ (પુરુષોત્તમ માસ)",
+    category: "gujarati",
+    categoryLabel: "Sacred Intercalary Month",
+    date: "2026-05-17",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Adhika Jyeshtha",
+    paksha: "Shukla",
+    tithi: "Pratipada (1st Lunar Day)",
+    description: "Commencement of the celestial Adhika Masa in 2026, dedicated exclusively to Bhagavan Vishnu / Purushottama.",
+    significance: "Occurring once every ~32.5 months, this month carries immense spiritual merit for japa, charity, and Vishnu Sahasranama chanting.",
+    rituals: ["Daily Vishnu Sahasranama chanting", "Charity of malpua, brass utensils, and food", "Reading Purushottama Mahatmya"],
+    isMajor: true,
+  },
+  {
+    id: "buddha-purnima-2026",
+    name: "Buddha Purnima (Vesak)",
+    nativeName: "बुद्ध पूर्णिमा (वेसाक)",
+    category: "buddhist",
+    categoryLabel: "Buddhist Sacred Day",
+    date: "2026-05-31",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Vaishakha",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "The triple-blessed day commemorating the Birth, Supreme Enlightenment (Bodhi), and Mahaparinirvana of Gautama Buddha.",
+    significance: "Celebrated globally with meditation, mindfulness, circumambulation of stupas, and releasing caged birds.",
+    rituals: ["Bathing the Buddha statue", "Listening to Dhamma discourses", "Practicing Metta (loving-kindness) meditation"],
+    isMajor: true,
+  },
+
+  // --- JUNE 2026 ---
+  {
+    id: "parama-ekadashi-2026",
+    name: "Parama Ekadashi (Adhika Masa Special)",
+    nativeName: "परमा एकादशी (अधिक मास)",
+    category: "hindu",
+    categoryLabel: "Special Adhika Vrat",
+    date: "2026-06-11",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Adhika Jyeshtha",
+    paksha: "Krishna",
+    tithi: "Ekadashi (11th Lunar Day)",
+    description: "Rare Ekadashi falling in the Krishna Paksha of Adhika Jyeshtha, observed for the elimination of rare afflictions and penury.",
+    significance: "Grants liberation from intense financial and karmic distress when observed with sincerity.",
+    rituals: ["24-hour waterless or fruit fast", "Vishnu Puja with yellow fruits", "Night vigil with stotrams"],
+    isMajor: false,
+  },
+  {
+    id: "vat-purnima-2026",
+    name: "Vat Savitri Vrat / Vat Purnima",
+    nativeName: "वट सावित्री व्रत / વટ પૂર્ણિમા",
+    category: "gujarati",
+    categoryLabel: "Vrat & Observance",
+    date: "2026-06-29",
+    dayOfWeek: "Monday",
+    lunarMonth: "Jyeshtha",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "Vrat observed by married women honoring Savitri's unwavering devotion that brought her husband Satyavan back from Yamaraja.",
+    significance: "Prayers for marital longevity, health, and family prosperity conducted around the sacred Banyan (Vat) tree.",
+    rituals: ["Tying raw cotton thread 108 times around the banyan tree", "Listening to Savitri-Satyavan Katha", "Offering seasonal fruits (mango, jackfruit)"],
+    isMajor: true,
+  },
+
+  // --- JULY 2026 ---
+  {
+    id: "ashadhi-bij-rath-yatra-2026",
+    name: "Ashadhi Bij (Jagannath Rath Yatra & Kutchhi New Year)",
+    nativeName: "અષાઢી બીજ (રથયાત્રા / કચ્છી નવું વર્ષ)",
+    category: "gujarati",
+    categoryLabel: "Gujarati & Odisha Grand Festival",
+    date: "2026-07-16",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Ashadha",
+    paksha: "Shukla",
+    tithi: "Dwitiya (2nd Lunar Day)",
+    description: "Grand chariot procession of Lord Jagannath, Balabhadra, and Subhadra in Puri and Ahmedabad. Also marks Kutchhi New Year.",
+    significance: "The Supreme Lord leaves the sanctum sanctorum to meet all devotees on the royal highway. In Kutch, rainfall omens are read.",
+    rituals: ["Pulling the holy Rath ropes", "Distributing sprouted moong and jamun prasadam", "Kutchhi community greetings"],
+    isMajor: true,
+  },
+  {
+    id: "guru-purnima-2026",
+    name: "Guru Purnima (Vyasa Purnima)",
+    nativeName: "गुरु पूर्णिमा (व्यास पूर्णिमा)",
+    category: "hindu",
+    categoryLabel: "Universal Spiritual Observance",
+    date: "2026-07-28",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Ashadha",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "Veneration of the spiritual Guru and appearance day of Maharshi Veda Vyasa, the compiler of the Vedas and author of Mahabharata.",
+    significance: "Expressing reverence and gratitude to teachers, spiritual mentors, and gurus; commencement of Chaturmas.",
+    rituals: ["Guru Paduka Puja", "Offering Dakshina and flowers to mentors", "Veda and Gita recitation"],
+    isMajor: true,
+  },
+
+  // --- AUGUST 2026 ---
+  {
+    id: "nag-panchami-2026",
+    name: "Nag Panchami",
+    nativeName: "नाग पंचमी / નાગ પાંચમ",
+    category: "hindu",
+    categoryLabel: "Hindu Sacred Day",
+    date: "2026-08-18",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Shravana",
+    paksha: "Shukla",
+    tithi: "Panchami (5th Lunar Day)",
+    description: "Traditional veneration of serpent deities (Nagas) symbolizing protection, kundalini energy, and ecological balance.",
+    significance: "Seeking liberation from Sarpa Dosha and protection against venomous creatures during the peak monsoon.",
+    rituals: ["Offering milk, flowers, and sweets to serpent idols", "Drawing serpent emblems with turmeric/chandan", "Abstaining from tilling soil"],
+    isMajor: false,
+  },
+  {
+    id: "raksha-bandhan-2026",
+    name: "Raksha Bandhan",
+    nativeName: "रक्षाबंधन / રક્ષાબંધન",
+    category: "hindu",
+    categoryLabel: "Universal Hindu Celebration",
+    date: "2026-08-28",
+    dayOfWeek: "Friday",
+    lunarMonth: "Shravana",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "Sacred bond of unconditional love and lifelong protection celebrated between brothers and sisters.",
+    significance: "Sisters tie the protective Rakhi thread on their brothers' wrists, receiving blessings and vows of protection in return.",
+    rituals: ["Aarti and tying of sacred Rakhi", "Application of tilak and akshat", "Exchange of gifts and sweets (Ghewar)"],
+    isMajor: true,
+  },
+
+  // --- SEPTEMBER 2026 ---
+  {
+    id: "krishna-janmashtami-2026",
+    name: "Krishna Janmashtami (Gokulashtami)",
+    nativeName: "कृष्ण जन्माष्टमी / કૃષ્ણ જન્માષ્ટમી",
+    category: "hindu",
+    categoryLabel: "Major Sanatan Hindu Festival",
+    date: "2026-09-04",
+    dayOfWeek: "Friday",
+    lunarMonth: "Bhadrapada (Shravana in Amanta)",
+    paksha: "Krishna",
+    tithi: "Ashtami (8th Lunar Day)",
+    description: "Appearance of Lord Krishna at midnight in the Rohini Nakshatra in Mathura to annihilate demon king Kamsa.",
+    significance: "Celebrated worldwide with continuous chanting, midnight Abhishek, cradle ceremonies, and Dahi Handi.",
+    rituals: ["Midnight Janmotsav and Panchamrit Abhishek", "Offering Makhan-Mishri and 56 Bhog", "Dahi Handi celebrations on the following day"],
+    isMajor: true,
+  },
+  {
+    id: "paryushan-parva-2026",
+    name: "Paryushan Parva & Samvatsari (Kshamavani)",
+    nativeName: "पर्युषण पर्व एवं संवत्सरी / મિચ્છામિ દુક્કડમ્",
+    category: "jain",
+    categoryLabel: "Jain King of Festivals",
+    date: "2026-09-15",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Bhadrapada",
+    paksha: "Shukla",
+    tithi: "Panchami (5th Lunar Day)",
+    description: "The supreme 8 to 10-day period of spiritual purification, fasting, reading of the Kalpa Sutra, culminating in Samvatsari.",
+    significance: "Universal day of forgiveness where Jains seek pardon from all living entities with the phrase 'Micchami Dukkadam'.",
+    rituals: ["Samvatsari Pratikramana", "Uttering 'Micchami Dukkadam' to all beings", "Severe tapashya (Atthai, Upvas)", "Vow of forgiveness"],
+    isMajor: true,
+  },
+  {
+    id: "ganesh-chaturthi-2026",
+    name: "Ganesh Chaturthi (Vinayaka Chavithi)",
+    nativeName: "गणेश चतुर्थी / ગણેશ ચતુર્થી",
+    category: "hindu",
+    categoryLabel: "Major Hindu Celebration",
+    date: "2026-09-14",
+    dayOfWeek: "Monday",
+    lunarMonth: "Bhadrapada",
+    paksha: "Shukla",
+    tithi: "Chaturthi (4th Lunar Day)",
+    description: "The grand welcoming of Lord Ganesha, the lord of beginnings and wisdom, into homes and public pandals.",
+    significance: "10-day extravaganza celebrated with immense enthusiasm in Maharashtra, Gujarat, Karnataka, and across the globe.",
+    rituals: ["Prana Pratishtha of clay Ganesha idols", "Offering 21 Modaks and Durva grass", "Daily morning and evening Aarti"],
+    isMajor: true,
+  },
+  {
+    id: "anant-chaturdashi-2026",
+    name: "Anant Chaturdashi (Ganesh Visarjan)",
+    nativeName: "अनंत चतुर्दशी (गणेश विसर्जन)",
+    category: "hindu",
+    categoryLabel: "Hindu Festival",
+    date: "2026-09-24",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Bhadrapada",
+    paksha: "Shukla",
+    tithi: "Chaturdashi (14th Lunar Day)",
+    description: "The grand immersion (Visarjan) of Lord Ganesha with emotional farewells and prayers to return early next year.",
+    significance: "Also dedicated to Lord Ananta (Vishnu) with the tying of the sacred 14-knot thread on the right forearm.",
+    rituals: ["Grand immersion procession with chants of 'Ganpati Bappa Morya'", "Tying of the Anant Sutra", "Ananta Padmanabha Puja"],
+    isMajor: true,
+  },
+
+  // --- OCTOBER 2026 ---
+  {
+    id: "sharad-navratri-begins-2026",
+    name: "Sharad Navratri Begins (Ghatasthapana)",
+    nativeName: "शारदीय नवरात्रि प्रारंभ / નવરાત્રી",
+    category: "gujarati",
+    categoryLabel: "Gujarat & Sanatan Grand Celebration",
+    date: "2026-10-11",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Ashvina (Aso in Gujarati)",
+    paksha: "Shukla",
+    tithi: "Pratipada (1st Lunar Day)",
+    description: "The divine 9 nights dedicated to the nine manifestations of Maa Durga (Navadurga). In Gujarat, it marks the start of world-famous Garba.",
+    significance: "Triumph of divine feminine shakti over demonic forces. Celebrated with continuous music, fasting, and rhythmic folk dances.",
+    rituals: ["Ghatasthapana and Akhand Jyoti lighting", "Nine nights of Raas-Garba dance", "Fasting on fruits and milk (Falahar)"],
+    isMajor: true,
+  },
+  {
+    id: "durga-ashtami-2026",
+    name: "Maha Ashtami (Durga Ashtami)",
+    nativeName: "महा अष्टमी / મહા આઠમ",
+    category: "hindu",
+    categoryLabel: "Navratri & Durga Puja Highlight",
+    date: "2026-10-18",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Ashvina",
+    paksha: "Shukla",
+    tithi: "Ashtami (8th Lunar Day)",
+    description: "The peak worship day of Maa Mahagauri and Sandhi Puja in Bengali Durga Puja, venerating Maa Chamunda.",
+    significance: "Sandhi Puja conducted at the exact juncture between Ashtami and Navami with 108 lotus flowers and 108 oil lamps.",
+    rituals: ["Kanya Pujan (worshipping young girls as goddesses)", "Sandhi Puja with 108 earthen lamps", "Pushpanjali and Aarti"],
+    isMajor: true,
+  },
+  {
+    id: "dussehra-vijayadashami-2026",
+    name: "Dussehra (Vijayadashami)",
+    nativeName: "दशहरा (विजयादशमी / દશેરા)",
+    category: "hindu",
+    categoryLabel: "Universal Triumph Festival",
+    date: "2026-10-20",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Ashvina",
+    paksha: "Shukla",
+    tithi: "Dashami (10th Lunar Day)",
+    description: "Celebrates Shri Rama's victory over Ravana and Goddess Durga's vanquishing of the buffalo demon Mahishasura.",
+    significance: "Auspicious day for Shami Puja, vehicle puja (Vahan Puja), starting new enterprises, and tasting Fafda-Jalebi in Gujarat.",
+    rituals: ["Effigy burning of Ravana, Kumbhakarna, and Meghanada", "Shami tree worship and exchange of golden leaves (Apta)", "Weapon and tool worship (Shastra Puja)"],
+    isMajor: true,
+  },
+  {
+    id: "sharad-purnima-2026",
+    name: "Sharad Purnima (Kojagiri Purnima)",
+    nativeName: "शरद पूर्णिमा / શરદ પૂનમ",
+    category: "gujarati",
+    categoryLabel: "Auspicious Full Moon Night",
+    date: "2026-10-25",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Ashvina",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "The most brilliant full moon of the year when the Moon's rays are said to drip celestial nectar (Amrit).",
+    significance: "Commemorates the celestial Maha Raas of Radha-Krishna. Sweetened milk and poha (Doodh-Poha) are placed under moonlight.",
+    rituals: ["Leaving kheer or milk under moonlight overnight", "Kojagiri Lakshmi invocation: 'Ko Jagarti' (Who is awake?)", "Garba dancing under moonbeams"],
+    isMajor: true,
+  },
+  {
+    id: "karwa-chauth-2026",
+    name: "Karwa Chauth",
+    nativeName: "करवा चौथ",
+    category: "hindu",
+    categoryLabel: "Vrat & Observance",
+    date: "2026-10-29",
+    dayOfWeek: "Thursday",
+    lunarMonth: "Kartika (Ashvina in Amanta)",
+    paksha: "Krishna",
+    tithi: "Chaturthi (4th Lunar Day)",
+    description: "Strict waterless fast observed by married women from sunrise until moonrise for the safety and long life of their husbands.",
+    significance: "Culminates when the Moon rises; women view the Moon through a sieve, then gaze at their husband's face before breaking fast.",
+    rituals: ["Sargi pre-dawn meal", "Listening to Karwa Chauth Katha in the afternoon", "Arghya to the rising Moon through a chhalni (sieve)"],
+    isMajor: true,
+  },
+
+  // --- NOVEMBER 2026 ---
+  {
+    id: "dhanteras-2026",
+    name: "Dhanteras (Dhantrayodashi)",
+    nativeName: "धनतेरस / ધનતેરસ",
+    category: "gujarati",
+    categoryLabel: "Diwali Festival Day 1",
+    date: "2026-11-07",
+    dayOfWeek: "Saturday",
+    lunarMonth: "Kartika (Aso in Gujarati)",
+    paksha: "Krishna",
+    tithi: "Trayodashi (13th Lunar Day)",
+    description: "Commencement of the 5-day Diwali festivities. Honors Lord Dhanvantari (God of Ayurveda) and Goddess Lakshmi.",
+    significance: "Purchasing gold, silver, utensils, or vehicles to attract enduring wealth, health, and family abundance.",
+    rituals: ["Purchasing new metals/utensils", "Yamadeepdaan (lighting a four-wick lamp facing south for Yamaraja)", "Lakshmi-Kuber Puja"],
+    isMajor: true,
+  },
+  {
+    id: "kali-chaudas-2026",
+    name: "Kali Chaudas / Naraka Chaturdashi (Chhoti Diwali)",
+    nativeName: "काली चौदस / કાળી ચૌદશ",
+    category: "gujarati",
+    categoryLabel: "Diwali Festival Day 2",
+    date: "2026-11-08",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Kartika",
+    paksha: "Krishna",
+    tithi: "Chaturdashi (14th Lunar Day)",
+    description: "Commemorates the elimination of demon Narakasura by Lord Krishna and Satyabhama, dispelling dark energies.",
+    significance: "In Gujarat, deep-fried Vada are offered at crossroads; devotees perform Abhyanga Snan to cleanse physical and subtle bodies.",
+    rituals: ["Pre-dawn Abhyanga Snan with herbal ubtan", "Maa Kali Puja and Hanuman Chalisa recitation", "Lighting 14 earthen lamps"],
+    isMajor: true,
+  },
+  {
+    id: "diwali-deepavali-2026",
+    name: "Diwali (Deepavali / Lakshmi Puja)",
+    nativeName: "दीपावली / દિવાળી (લક્ષ્મી પૂજન)",
+    category: "gujarati",
+    categoryLabel: "Grand Festival of Lights",
+    date: "2026-11-09",
+    dayOfWeek: "Monday",
+    lunarMonth: "Kartika (Aso Amavasya in Gujarati)",
+    paksha: "Krishna",
+    tithi: "Amavasya (New Moon)",
+    description: "The supreme Festival of Lights celebrating Lord Rama's triumphant return to Ayodhya and the cosmic emergence of Goddess Lakshmi.",
+    significance: "Houses are adorned with diyas, rangolis, and torans. Business communities perform Chopda Pujan (account book sanctification).",
+    rituals: ["Evening Lakshmi-Ganesh & Kuber Puja in Pradosh Kaal", "Chopda Pujan (blessing new accounting books)", "Illuminating homes with earthen diyas and fireworks"],
+    isMajor: true,
+  },
+  {
+    id: "bestu-varas-2026",
+    name: "Bestu Varas (Gujarati New Year VS 2083) & Govardhan Puja",
+    nativeName: "બેસતું વર્ષ (વિક્રમ સંવત ૨૦૮૩) / ગોવર્ધન પૂજા",
+    category: "gujarati",
+    categoryLabel: "Gujarati New Year & Annakut",
+    date: "2026-11-10",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Kartak (કારતક)",
+    paksha: "Shukla",
+    tithi: "Pratipada (Ekam - 1st Lunar Day)",
+    description: "Commencement of Gujarati Vikram Samvat 2083. Celebrated alongside Govardhan Puja and grand Annakut offerings.",
+    significance: "Gujaratis greet each other with 'Saal Mubarak' (સાલ મુબારક) and seek blessings from elders. Temples offer mountain-like feasts (Annakut).",
+    rituals: ["Morning temple visits and 'Saal Mubarak' greetings", "Annakut offering of 56 or 108 dishes to Lord Krishna", "Buying auspicious sabras (salt)"],
+    isMajor: true,
+  },
+  {
+    id: "bhai-dooj-bhai-bij-2026",
+    name: "Bhai Dooj / Bhai Bij",
+    nativeName: "भाई दूज / ભાઈબીજ",
+    category: "gujarati",
+    categoryLabel: "Diwali Festival Day 4",
+    date: "2026-11-11",
+    dayOfWeek: "Wednesday",
+    lunarMonth: "Kartak (Kartika)",
+    paksha: "Shukla",
+    tithi: "Dwitiya (Beej - 2nd Lunar Day)",
+    description: "Celebrates the divine bond between siblings, originating from Yamuna's hospitality to her brother Yamaraja.",
+    significance: "Brothers visit their sisters' homes for festive meals and tilak ceremonies, receiving blessings of long life.",
+    rituals: ["Sister performs Aarti and applies vermillion tilak", "Special celebratory feast cooked by sisters", "Exchange of gifts"],
+    isMajor: true,
+  },
+  {
+    id: "labh-pancham-2026",
+    name: "Labh Pancham (Saubhagya Panchami)",
+    nativeName: "લાભ પાંચમ / લાભ પંચમી",
+    category: "gujarati",
+    categoryLabel: "Gujarati Business Reopening Day",
+    date: "2026-11-14",
+    dayOfWeek: "Saturday",
+    lunarMonth: "Kartak",
+    paksha: "Shukla",
+    tithi: "Panchami (5th Lunar Day)",
+    description: "The most auspicious day for merchants and business owners in Gujarat to inaugurate new ventures and reopen shops after Diwali.",
+    significance: "Writing 'Shubh' (શુભ) and 'Labh' (લાભ) in account ledgers, invoking Goddess Lakshmi and Lord Ganesha for enduring enterprise prosperity.",
+    rituals: ["Opening shop shutters in auspicious Choghadiya", "Writing Shubh-Labh with vermillion in new chopdas", "Distributing sweets to clients and employees"],
+    isMajor: true,
+  },
+  {
+    id: "chhath-puja-2026",
+    name: "Chhath Puja (Surya Shashthi)",
+    nativeName: "छठ पूजा (सूर्य षष्ठी)",
+    category: "hindu",
+    categoryLabel: "Ancient Vedic Solar Vrat",
+    date: "2026-11-15",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Kartika",
+    paksha: "Shukla",
+    tithi: "Shashthi (6th Lunar Day)",
+    description: "Ancient, rigorous 4-day solar penance paying homage to Surya Bhagavan and Chhathi Maiya for health, progeny, and prosperity.",
+    significance: "Unique festival honoring both the setting and rising sun from water bodies, observing 36-hour waterless fasting.",
+    rituals: ["Sanjhiya Arghya (evening offerings to setting Sun)", "Bhorva Arghya (morning offerings to rising Sun)", "Offering Thekua, sugarcane, and Daura fruits in knee-deep water"],
+    isMajor: true,
+  },
+  {
+    id: "tulsi-vivah-2026",
+    name: "Dev Uthani Ekadashi & Tulsi Vivah",
+    nativeName: "देवउठनी एकादशी / તુલસી વિવાહ",
+    category: "hindu",
+    categoryLabel: "Sacred Wedding Ceremony",
+    date: "2026-11-20",
+    dayOfWeek: "Friday",
+    lunarMonth: "Kartika",
+    paksha: "Shukla",
+    tithi: "Ekadashi (11th Lunar Day)",
+    description: "Lord Vishnu awakens from his 4-month cosmic slumber (Yoga Nidra). Formal ceremonial marriage of Tulsi (Vrinda) with Shaligram.",
+    significance: "Inaugurates the Hindu wedding season across India; eliminates obstacles in finding suitable life partners.",
+    rituals: ["Elaborate wedding mandap built with sugarcane around Tulsi pot", "Kanyadaan of Tulsi Devi", "Breaking the 4-month Chaturmas vows"],
+    isMajor: true,
+  },
+  {
+    id: "dev-diwali-guru-nanak-2026",
+    name: "Dev Diwali & Guru Nanak Jayanti",
+    nativeName: "देव दीपावली / ਗੁਰੂ ਨਾਨਕ ਪ੍ਰਕਾਸ਼ ਪੁਰਬ",
+    category: "sikh",
+    categoryLabel: "Varanasi Grand Lights & Gurpurab",
+    date: "2026-11-24",
+    dayOfWeek: "Tuesday",
+    lunarMonth: "Kartika",
+    paksha: "Shukla",
+    tithi: "Purnima (Full Moon)",
+    description: "The gods celebrate Diwali in Varanasi on the ghats of the Ganga (Tripurotsav). Also marks the 557th Prakash Parv of Guru Nanak Dev Ji.",
+    significance: "Over 1 million earthen lamps illuminate Varanasi ghats. Gurdwaras hold 48-hour Akhand Path and magnificent langars.",
+    rituals: ["Maha Aarti at Dashashwamedh Ghat", "Deepdan along sacred riverfronts", "Prabhat Pheri and Langar sewa at Gurdwaras"],
+    isMajor: true,
+  },
+
+  // --- DECEMBER 2026 ---
+  {
+    id: "gita-jayanti-2026",
+    name: "Gita Jayanti & Mokshada Ekadashi",
+    nativeName: "गीता जयंती एवं मोक्षदा एकादशी",
+    category: "hindu",
+    categoryLabel: "Sanatan Sacred Day",
+    date: "2026-12-20",
+    dayOfWeek: "Sunday",
+    lunarMonth: "Margashirsha",
+    paksha: "Shukla",
+    tithi: "Ekadashi (11th Lunar Day)",
+    description: "Commemorates the day Bhagavan Shri Krishna imparted the immortal wisdom of the Bhagavad Gita to Arjuna on the battlefield of Kurukshetra.",
+    significance: "Grants spiritual liberation (Moksha) and guidance for ethical duty (Dharma) and mental clarity.",
+    rituals: ["Recitation of all 18 chapters of Shrimad Bhagavad Gita", "Gita Havan and distribution of copies of the Gita", "Observance of Mokshada Ekadashi fast"],
+    isMajor: true,
+  },
+];
+
+/**
+ * Filter festivals by category
+ */
+export function getFestivalsByCategory(category: FestivalCategory): FestivalItem[] {
+  return FESTIVALS_2026.filter((f) => f.category === category);
+}
+
+/**
+ * Find upcoming festivals relative to a reference date
+ */
+export function getUpcomingFestivals(fromDate: Date = new Date(), limit: number = 5): FestivalItem[] {
+  const dateStr = fromDate.toISOString().slice(0, 10);
+  const future = FESTIVALS_2026.filter((f) => f.date >= dateStr);
+  if (future.length >= limit) {
+    return future.slice(0, limit);
+  }
+  // If near end of year, wrap around
+  return future.concat(FESTIVALS_2026.slice(0, limit - future.length));
+}
+
+/**
+ * Find festivals in a specific calendar month (1 = Jan, 12 = Dec)
+ */
+export function getFestivalsByMonth(month1to12: number): FestivalItem[] {
+  const prefix = `2026-${String(month1to12).padStart(2, "0")}`;
+  return FESTIVALS_2026.filter((f) => f.date.startsWith(prefix));
+}
+
+/**
+ * Search festivals by keyword in English, Hindi, or Gujarati
+ */
+export function searchFestivals(query: string): FestivalItem[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return FESTIVALS_2026;
+  return FESTIVALS_2026.filter((f) => {
+    return (
+      f.name.toLowerCase().includes(q) ||
+      f.nativeName.toLowerCase().includes(q) ||
+      f.description.toLowerCase().includes(q) ||
+      f.lunarMonth.toLowerCase().includes(q) ||
+      f.categoryLabel.toLowerCase().includes(q) ||
+      f.date.includes(q)
+    );
+  });
+}

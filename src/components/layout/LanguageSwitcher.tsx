@@ -27,6 +27,7 @@ const NATIVE: Record<AppLocale, string> = {
   pt: "Português",
   ar: "العربية",
   hi: "हिन्दी",
+  gu: "ગુજરાતી",
 };
 
 function pathSegments(pathname: string): string[] {
@@ -62,6 +63,19 @@ export function LanguageSwitcher() {
 
     if (s.length === 2 && s[1] === "holidays") {
       router.push(`/${next}/holidays`);
+      return;
+    }
+
+    const nicheHubs = [
+      "calendar",
+      "panchang",
+      "festivals",
+      "devotional",
+      "astrology",
+      "love-tools",
+    ];
+    if (s.length >= 2 && nicheHubs.includes(s[1])) {
+      router.push(`/${next}/${s.slice(1).join("/")}`);
       return;
     }
 

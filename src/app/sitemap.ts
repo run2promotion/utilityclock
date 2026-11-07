@@ -71,6 +71,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
+  // Multi-niche ecosystem discovery hubs and child calendar products
+  const ecosystemHubPaths = [
+    "calendar",
+    "calendar/hindu-calendar",
+    "calendar/gujarati-calendar",
+    "panchang",
+    "festivals",
+    "devotional",
+    "astrology",
+    "love-tools",
+  ];
+  for (const hubPath of ecosystemHubPaths) {
+    const alt = hreflangAlternates(base, "en", { type: "path", path: hubPath });
+    for (const lang of locales) {
+      out.push({
+        url: alt.languages[lang],
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.9,
+        alternates: { languages: alt.languages },
+      });
+    }
+  }
+
   for (const { category, slug } of getAllToolSlugs()) {
     const alt = hreflangAlternates(base, "en", {
       type: "tool",

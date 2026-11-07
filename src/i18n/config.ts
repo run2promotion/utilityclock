@@ -16,6 +16,7 @@ export const locales = [
   "pt",
   "ar",
   "hi",
+  "gu",
 ] as const;
 
 export type AppLocale = (typeof locales)[number];

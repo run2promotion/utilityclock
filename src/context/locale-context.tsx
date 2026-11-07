@@ -2,7 +2,9 @@
 
 import type { AppLocale } from "@/i18n/config";
 import type { Messages } from "@/i18n/dictionary";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
+
+import { getDictionary } from "@/i18n/dictionary";
 
 type LocaleContextValue = { locale: AppLocale; messages: Messages };
 
@@ -17,6 +19,13 @@ export function LocaleProvider({
   messages: Messages;
   children: ReactNode;
 }) {
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = locale;
+      document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    }
+  }, [locale]);
+
   return (
     <LocaleContext.Provider value={{ locale, messages }}>
       {children}
@@ -27,7 +36,7 @@ export function LocaleProvider({
 export function useI18n(): LocaleContextValue {
   const ctx = useContext(LocaleContext);
   if (!ctx) {
-    throw new Error("useI18n must be used within LocaleProvider");
+    return { locale: "en", messages: getDictionary("en") };
   }
   return ctx;
 }

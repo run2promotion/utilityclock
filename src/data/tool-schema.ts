@@ -2,7 +2,13 @@ export type ToolCategoryId =
   | "alarm"
   | "timer"
   | "stopwatch"
-  | "world-clock";
+  | "world-clock"
+  | "date-calendar"
+  | "calculators"
+  | "productivity"
+  | "converters"
+  | "finance"
+  | "text";
 
 export type CategoryMeta = {
   id: ToolCategoryId;

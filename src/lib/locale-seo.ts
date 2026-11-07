@@ -9,6 +9,7 @@ const LOCALE_KEYWORD_SUFFIX: Partial<Record<AppLocale, string>> = {
   de: "praeziser timer online",
   pt: "temporizador preciso online",
   hi: "satik online timer",
+  gu: "satik online timer",
   ja: "seikaku na onrain taima",
   ar: "moaqqat daqiq online",
 };
@@ -18,6 +19,12 @@ const CATEGORY_HINT: Record<ToolCategoryId, string> = {
   alarm: "alarm clock",
   stopwatch: "stopwatch",
   "world-clock": "world time",
+  "date-calendar": "calendar calculator",
+  calculators: "online calculator",
+  productivity: "productivity timer",
+  converters: "unit converter",
+  finance: "financial calculator",
+  text: "text utility",
 };
 
 export function withLocaleKeywordExpansion(
