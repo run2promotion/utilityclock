@@ -3,13 +3,13 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
-import { Calendar, Compass, Sun } from "lucide-react";
+import { siteOrigin } from "@/lib/site-url";
+import { Calendar, Compass, Sparkles, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -124,10 +124,24 @@ export default async function GujaratiCalendarPage({ params }: Props) {
 
         <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
           <Link
-            href={`/${locale}/panchang#choghadiya`}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-orange-600 px-4 py-2 text-white shadow-sm transition hover:bg-orange-700"
+            href={`/${locale}/calendar/gujarati-calendar-2027`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-orange-600 px-4 py-2 text-white shadow-sm transition hover:bg-orange-700 font-bold"
           >
-            <Sun className="h-4 w-4" />
+            <Calendar className="h-4 w-4" />
+            <span>ગુજરાતી કેલેન્ડર 2027 (VS 2083–2084) →</span>
+          </Link>
+          <Link
+            href={`/${locale}/festivals/gujarati-festivals-2027`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <Sparkles className="h-4 w-4 text-orange-500" />
+            <span>ગુજરાતી તહેવારો 2027</span>
+          </Link>
+          <Link
+            href={`/${locale}/panchang#choghadiya`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <Sun className="h-4 w-4 text-orange-500" />
             <span>આજના ચોઘડિયા (Choghadiya)</span>
           </Link>
           <Link

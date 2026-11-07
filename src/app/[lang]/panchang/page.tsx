@@ -2,13 +2,14 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
 import { PanchangExperience } from "@/components/tools/PanchangExperience";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
-import { Clock, Compass, ShieldAlert, Sun } from "lucide-react";
+import { hreflangAlternates } from "@/i18n/alternates";
+import { siteOrigin } from "@/lib/site-url";
+import { Clock, Compass, Moon, ShieldAlert, Sparkles, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -20,17 +21,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   if (!isAppLocale(lang)) return {};
   const locale = lang as AppLocale;
-  const canonicalUrl = `${siteBase}/${locale}/panchang`;
+  const alternates = hreflangAlternates(siteBase, locale, {
+    type: "path",
+    path: "panchang",
+  });
 
   return {
     title: "Today's Vedic Panchang · Daily Tithi, Nakshatra, Rahu Kaal & Choghadiya",
     description:
       "Accurate daily Hindu Vedic Panchang with Tithi, Nakshatra, Yoga, Karana, Abhijit Muhurat, Rahu Kaal timings, day & night Choghadiya, and Sunrise/Sunset.",
     alternates: {
-      canonical: canonicalUrl,
-      languages: Object.fromEntries(
-        locales.map((l) => [l, `${siteBase}/${l}/panchang`]),
-      ),
+      canonical: alternates.canonical,
+      languages: alternates.languages,
     },
     openGraph: {
       title: "Today's Vedic Panchang · Daily Tithi, Nakshatra, Rahu Kaal & Choghadiya",
@@ -284,6 +286,56 @@ export default async function PanchangPage({ params }: Props) {
           Topocentric sunrise and sunset include 34 arcminutes atmospheric refraction and 16 arcminutes solar semi-diameter; local meteorological variations (temperature, barometric pressure, elevation) may cause ±1 to 2 minute variations in observed horizon events.
         </p>
       </div>
+
+      {/* 2027 Sacred Lunar Phase Directories */}
+      <section className="rounded-2xl border border-zinc-200/90 bg-card p-6 shadow-sm dark:border-zinc-800 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              2027 Sacred Lunar Observances & Fasting Calendars
+            </h3>
+            <p className="text-xs text-zinc-500">
+              Access dedicated directories for 2027 Ekadashi Vrats, Purnima full moons, and Amavasya new moons.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <Link
+            href={`/${locale}/calendar/ekadashi-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-amber-700 dark:text-amber-400">Ekadashi 2027 Dates</span>
+              <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+            </div>
+            <p className="text-zinc-500 mt-1">24 sacred fasts, Parana timing windows, and presiding deities.</p>
+          </Link>
+
+          <Link
+            href={`/${locale}/calendar/purnima-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-amber-700 dark:text-amber-400">Purnima 2027 Dates</span>
+              <Sun className="h-3.5 w-3.5 text-amber-500" />
+            </div>
+            <p className="text-zinc-500 mt-1">12 full moon transitions, Satyanarayan Puja, and holy dips.</p>
+          </Link>
+
+          <Link
+            href={`/${locale}/calendar/amavasya-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-indigo-700 dark:text-indigo-400">Amavasya 2027 Dates</span>
+              <Moon className="h-3.5 w-3.5 text-indigo-500" />
+            </div>
+            <p className="text-zinc-500 mt-1">13 new moons, Somvati Amavasya, and Pitru Tarpan guidelines.</p>
+          </Link>
+        </div>
+      </section>
 
       {/* Internal Linking Engine */}
       <InternalLinkingEngine

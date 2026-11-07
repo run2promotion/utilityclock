@@ -15,12 +15,12 @@ import {
   Layers,
   BookOpen,
 } from "lucide-react";
+import { siteOrigin } from "@/lib/site-url";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -298,11 +298,25 @@ export default async function CalendarHubPage({ params }: Props) {
             <span>Hindu Calendar 2026</span>
           </Link>
           <Link
+            href={`/${locale}/calendar/hindu-calendar-2027`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-amber-900 transition hover:bg-amber-500/20 dark:text-amber-300 font-bold"
+          >
+            <Calendar className="h-4 w-4 text-amber-500" />
+            <span>Hindu Calendar 2027 (VS 2083–2084) →</span>
+          </Link>
+          <Link
             href={`/${locale}/calendar/gujarati-calendar`}
             className="inline-flex items-center gap-1.5 rounded-xl bg-orange-600 px-4 py-2.5 text-white shadow-sm transition hover:bg-orange-700"
           >
             <Sun className="h-4 w-4" />
             <span>Gujarati Calendar 2026</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/gujarati-calendar-2027`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-2.5 text-orange-900 transition hover:bg-orange-500/20 dark:text-orange-300 font-bold"
+          >
+            <Sun className="h-4 w-4 text-orange-500" />
+            <span>Gujarati Calendar 2027 →</span>
           </Link>
           <Link
             href={`/${locale}/panchang`}
@@ -320,6 +334,52 @@ export default async function CalendarHubPage({ params }: Props) {
           </Link>
         </div>
       </div>
+
+      {/* 2027 Calendar & Vrat Fasting Hubs */}
+      <section className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              2027 Calendar Ecosystem & Sacred Vrat Portals
+            </h3>
+            <p className="text-xs text-zinc-500">
+              Explore dedicated 2027 calendars with Vikram Samvat 2083–2084, Ekadashi fasts, Purnima, and Amavasya.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <Link
+            href={`/${locale}/calendar/hindu-calendar-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Hindu Calendar 2027 →</span>
+            <span className="text-zinc-500 mt-1 block">VS 2083–2084, 12 lunar months, and major festival dates.</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/gujarati-calendar-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-orange-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <span className="font-bold text-orange-700 dark:text-orange-400 block">Gujarati Calendar 2027 →</span>
+            <span className="text-zinc-500 mt-1 block">Bestu Varas (Oct 30), day/night Choghadiya, and Amas Tithis.</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/ekadashi-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Ekadashi 2027 Dates →</span>
+            <span className="text-zinc-500 mt-1 block">24 fasting dates with morning Parana windows (IST).</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/purnima-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Purnima & Amavasya 2027 →</span>
+            <span className="text-zinc-500 mt-1 block">Full moon Satyanarayan Puja & 13 new moon Shradh dates.</span>
+          </Link>
+        </div>
+      </section>
 
       {/* SECTION 1: ACTIVE PRODUCTION CALENDARS (Category A) */}
       <section>

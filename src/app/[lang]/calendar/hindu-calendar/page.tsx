@@ -3,13 +3,13 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import { Calendar, Compass, Moon, Sparkles, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -125,10 +125,17 @@ export default async function HinduCalendarPage({ params }: Props) {
         {/* Quick Jump Buttons */}
         <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
           <Link
-            href={`/${locale}/panchang`}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-white shadow-sm transition hover:bg-amber-700"
+            href={`/${locale}/calendar/hindu-calendar-2027`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-white shadow-sm transition hover:bg-amber-700 font-bold"
           >
-            <Sun className="h-4 w-4" />
+            <Calendar className="h-4 w-4" />
+            <span>Explore Hindu Calendar 2027 (VS 2083–2084) →</span>
+          </Link>
+          <Link
+            href={`/${locale}/panchang`}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <Sun className="h-4 w-4 text-amber-500" />
             <span>Today&apos;s Live Panchang</span>
           </Link>
           <Link
@@ -294,6 +301,51 @@ export default async function HinduCalendarPage({ params }: Props) {
             <span className="font-bold text-zinc-900 dark:text-zinc-100 block mb-1">Ekadashi & Pradosh</span>
             <span className="text-zinc-500">The 11th lunar day (Ekadashi) and 13th twilight (Pradosham) dedicated to Lord Vishnu and Lord Shiva.</span>
           </div>
+        </div>
+      </section>
+
+      {/* 2027 Calendar & Vrat Fasting Hubs */}
+      <section className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              Upcoming 2027 Calendar & Sacred Fasting Directories
+            </h3>
+            <p className="text-xs text-zinc-500">
+              Plan ahead for Vikram Samvat 2083–2084 with dedicated 2027 lunisolar directories.
+            </p>
+          </div>
+          <Link
+            href={`/${locale}/calendar/hindu-calendar-2027`}
+            className="text-xs font-bold text-amber-700 hover:underline dark:text-amber-400"
+          >
+            Full Hindu Calendar 2027 →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <Link
+            href={`/${locale}/calendar/ekadashi-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Ekadashi 2027 Dates →</span>
+            <span className="text-zinc-500 mt-1 block">All 24 Ekadashi fasting dates with exact Parana timings.</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/purnima-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Purnima 2027 Dates →</span>
+            <span className="text-zinc-500 mt-1 block">Full moon calendar and Satyanarayan Puja schedule.</span>
+          </Link>
+          <Link
+            href={`/${locale}/calendar/amavasya-2027`}
+            className="p-3.5 rounded-xl border border-zinc-200 bg-white hover:border-amber-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          >
+            <span className="font-bold text-amber-700 dark:text-amber-400 block">Amavasya 2027 Dates →</span>
+            <span className="text-zinc-500 mt-1 block">13 new moon dates, Somvati Amavasya, and Pitru Tarpan.</span>
+          </Link>
         </div>
       </section>
 

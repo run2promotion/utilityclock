@@ -1,15 +1,16 @@
 import { HinduCalendarExperience } from "@/components/calendar/HinduCalendarExperience";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
+import { HINDU_CALENDAR_2027_I18N } from "@/data/translations-2027";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import { Calendar, Moon, Sparkles, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -25,24 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     type: "path",
     path: "calendar/hindu-calendar-2027",
   });
+  const i18n = HINDU_CALENDAR_2027_I18N[locale] ?? HINDU_CALENDAR_2027_I18N.en;
 
   return {
-    title:
-      locale === "gu"
-        ? "હિન્દુ કેલેન્ડર 2027 · વિક્રમ સંવત 2083–2084, તિથિ, વ્રત અને પર્વ"
-        : locale === "hi"
-        ? "हिन्दू कैलेंडर 2027 · विक्रम संवत 2083–2084, तिथि, व्रत और त्योहार"
-        : "Hindu Calendar 2027 · Vikram Samvat 2083–2084, Tithi, Vrat & Festivals",
-    description:
-      "Comprehensive 2027 Hindu lunisolar calendar with Vikram Samvat 2083–2084, 12 lunar months, Ekadashi fasts, Purnima, Amavasya, and major Sanatan festival dates.",
+    title: i18n.title,
+    description: i18n.description,
     alternates: {
       canonical: alternates.canonical,
       languages: alternates.languages,
     },
     openGraph: {
-      title: "Hindu Calendar 2027 · Vikram Samvat 2083–2084, Tithi, Vrat & Festivals",
-      description:
-        "Comprehensive 2027 Hindu lunisolar calendar with Vikram Samvat 2083–2084, 12 lunar months, Ekadashi fasts, Purnima, Amavasya, and major Sanatan festival dates.",
+      title: i18n.title,
+      description: i18n.description,
     },
   };
 }
@@ -51,33 +46,34 @@ export default async function HinduCalendar2027Page({ params }: Props) {
   const { lang } = await params;
   if (!isAppLocale(lang)) notFound();
   const locale = lang as AppLocale;
+  const i18n = HINDU_CALENDAR_2027_I18N[locale] ?? HINDU_CALENDAR_2027_I18N.en;
 
   const crumbs: BreadcrumbItem[] = [
-    { name: "Home", href: `/${locale}`, item: `${siteBase}/${locale}` },
-    { name: "Calendar", href: `/${locale}/calendar`, item: `${siteBase}/${locale}/calendar` },
-    { name: "Hindu Calendar 2027", item: `${siteBase}/${locale}/calendar/hindu-calendar-2027` },
+    { name: i18n.crumbs.home, href: `/${locale}`, item: `${siteBase}/${locale}` },
+    { name: i18n.crumbs.parent, href: `/${locale}/calendar`, item: `${siteBase}/${locale}/calendar` },
+    { name: i18n.crumbs.current, item: `${siteBase}/${locale}/calendar/hindu-calendar-2027` },
   ];
 
   const months2027 = [
-    { sanskrit: "Pausha – Magha (पौष – माघ)", gregorian: "January 2027", season: "Shishira (Winter)", events: "Makar Sankranti (Jan 14), Pausha Putrada Ekadashi (Jan 18), Pausha Purnima (Jan 22)" },
+    { sanskrit: "Pausha – Magha (पौष – माघ)", gregorian: "January 2027", season: "Shishira (Winter)", events: "Makar Sankranti Punya Kaal (Jan 15), Pausha Putrada Ekadashi (Jan 18), Pausha Purnima (Jan 22)" },
     { sanskrit: "Magha – Phalguna (माघ – फाल्गुन)", gregorian: "February 2027", season: "Shishira (Winter)", events: "Mauni Amavasya (Feb 6), Vasant Panchami (Feb 11), Jaya Ekadashi (Feb 16), Magha Purnima (Feb 21)" },
-    { sanskrit: "Phalguna – Chaitra (फाल्गुन – चैत्र)", gregorian: "March 2027", season: "Vasanta (Spring)", events: "Maha Shivratri (Mar 6), Vijaya Ekadashi (Mar 4), Holika Dahan (Mar 22), Holi (Mar 23)" },
-    { sanskrit: "Chaitra (चैत्र)", gregorian: "April 2027", season: "Vasanta (Spring)", events: "VS 2084 begins (Apr 7), Chaitra Navratri (Apr 7–15), Rama Navami (Apr 15), Hanuman Jayanti (Apr 21)" },
+    { sanskrit: "Phalguna – Chaitra (फाल्गुन – चैत्र)", gregorian: "March 2027", season: "Vasanta (Spring)", events: "Vijaya Ekadashi (Mar 4), Maha Shivratri (Mar 6), Amalaki Ekadashi (Mar 18), Holika Dahan (Mar 21), Holi / Dhuleti (Mar 22)" },
+    { sanskrit: "Chaitra (चैत्र)", gregorian: "April 2027", season: "Vasanta (Spring)", events: "VS 2084 begins (Apr 7), Chaitra Navratri / Gudi Padwa (Apr 7), Rama Navami (Apr 15), Mahavir Jayanti (Apr 19), Hanuman Jayanti (Apr 20)" },
     { sanskrit: "Vaishakha (वैशाख)", gregorian: "May 2027", season: "Grishma (Summer)", events: "Akshaya Tritiya (May 9), Mohini Ekadashi (May 16), Buddha Purnima (May 20)" },
-    { sanskrit: "Jyeshtha (ज्येष्ठ)", gregorian: "June 2027", season: "Grishma (Summer)", events: "Ganga Dussehra (Jun 14), Nirjala Ekadashi (Jun 15), Vat Purnima (Jun 18)" },
-    { sanskrit: "Ashadha (आषाढ़)", gregorian: "July 2027", season: "Varsha (Monsoon)", events: "Jagannath Ratha Yatra (Jul 5), Devshayani Ekadashi (Jul 15 - Chaturmas begins), Guru Purnima (Jul 18)" },
-    { sanskrit: "Shravana (श्रावण)", gregorian: "August 2027", season: "Varsha (Monsoon)", events: "Shravan Somwar Vrats, Nag Panchami (Aug 7), Shravana Putrada Ekadashi (Aug 13), Raksha Bandhan (Aug 17), Krishna Janmashtami (Aug 24)" },
-    { sanskrit: "Bhadrapada (भाद्रपद)", gregorian: "September 2027", season: "Sharad (Autumn)", events: "Ganesh Chaturthi (Sep 4), Anant Chaturdashi (Sep 14), Pitru Paksha begins (Sep 15), Sarva Pitru Amavasya (Sep 29)" },
-    { sanskrit: "Ashvina (आश्विन)", gregorian: "October 2027", season: "Sharad (Autumn)", events: "Sharad Navratri begins (Sep 30), Durga Ashtami (Oct 8), Dussehra (Oct 10), Sharad Purnima (Oct 15), Karwa Chauth (Oct 18)" },
-    { sanskrit: "Kartika (कार्तिक)", gregorian: "November 2027", season: "Hemanta (Pre-winter)", events: "Dhanteras (Oct 27), Diwali (Oct 29), Govardhan Puja & Bestu Varas (Oct 30), Tulsi Vivah (Nov 10), Dev Diwali (Nov 13)" },
+    { sanskrit: "Jyeshtha (ज्येष्ठ)", gregorian: "June 2027", season: "Grishma (Summer)", events: "Ganga Dussehra (Jun 14), Nirjala Ekadashi (Jun 15), Vat Savitri / Vat Purnima (Jun 18)" },
+    { sanskrit: "Ashadha (आषाढ़)", gregorian: "July 2027", season: "Varsha (Monsoon)", events: "Ashadhi Bij / Jagannath Rath Yatra (Jul 5), Devshayani Ekadashi (Jul 14 - Chaturmas begins), Guru Purnima (Jul 18)" },
+    { sanskrit: "Shravana (श्रावण)", gregorian: "August 2027", season: "Varsha (Monsoon)", events: "Nag Panchami (Aug 7), Shravana Putrada Ekadashi (Aug 13), Raksha Bandhan (Aug 17), Krishna Janmashtami (Aug 24 Smartha, Aug 25 Vaishnava)" },
+    { sanskrit: "Bhadrapada (भाद्रपद)", gregorian: "September 2027", season: "Sharad (Autumn)", events: "Ganesh Chaturthi (Sep 4), Paryushan Samvatsari (Sep 11), Anant Chaturdashi (Sep 14), Pitru Paksha begins (Sep 15), Sarva Pitru Amavasya (Sep 29)" },
+    { sanskrit: "Ashvina (आश्विन)", gregorian: "October 2027", season: "Sharad (Autumn)", events: "Sharad Navratri begins (Sep 30), Maha Ashtami (Oct 8), Dussehra Ravana Dahan (Oct 9), Durga Visarjan (Oct 10), Sharad Purnima (Oct 15), Karwa Chauth (Oct 18)" },
+    { sanskrit: "Kartika (कार्तिक)", gregorian: "November 2027", season: "Hemanta (Pre-winter)", events: "Dhanteras (Oct 27), Kali Chaudas (Oct 28), Diwali (Oct 29), Govardhan Puja & Bestu Varas (Oct 30), Bhai Dooj (Oct 31), Labh Pancham (Nov 3), Chhath Puja (Nov 4), Tulsi Vivah (Nov 9), Dev Diwali (Nov 13)" },
     { sanskrit: "Margashirsha – Pausha (मार्गशीर्ष – पौष)", gregorian: "December 2027", season: "Hemanta (Pre-winter)", events: "Mokshada Ekadashi & Gita Jayanti (Dec 9), Dattatreya Jayanti (Dec 13), Saphala Ekadashi (Dec 24)" },
   ];
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemPage",
-    name: "Hindu Calendar 2027 (Vikram Samvat 2083–2084)",
-    description: "Comprehensive 2027 Hindu lunisolar calendar with Vikram Samvat 2083–2084, 12 lunar months, Ekadashi fasts, Purnima, Amavasya, and major Sanatan festival dates.",
+    name: i18n.heading,
+    description: i18n.description,
     url: `${siteBase}/${locale}/calendar/hindu-calendar-2027`,
     inLanguage: locale,
     isPartOf: {
@@ -109,17 +105,15 @@ export default async function HinduCalendar2027Page({ params }: Props) {
       <header className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3.5 py-1 text-xs font-bold text-amber-800 dark:text-amber-300">
           <Calendar className="h-4 w-4" />
-          <span>Sanatan Lunisolar Panchang · Complete 2027 CE Guide</span>
+          <span>{i18n.badge}</span>
         </div>
 
         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl lg:text-5xl">
-          Hindu Calendar 2027 · Vikram Samvat 2083–2084
+          {i18n.heading}
         </h1>
 
         <p className="max-w-4xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Welcome to the authoritative 2027 Hindu Calendar, computed using classical Indian lunisolar
-          astronomy and topocentric sunrise principles. Discover precise daily Tithis, Nakshatras,
-          the 24 sacred Ekadashi fasts, Purnima, Amavasya, and complete festival schedules.
+          {i18n.intro}
         </p>
       </header>
 
@@ -154,13 +148,13 @@ export default async function HinduCalendar2027Page({ params }: Props) {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-black text-zinc-900 dark:text-zinc-50">
-            Interactive 2027 Monthly Panchang & Tithi Grid
+            {i18n.gridTitle ?? "Interactive 2027 Monthly Panchang & Tithi Grid"}
           </h2>
           <Link
             href={`/${locale}/calendar/hindu-calendar`}
             className="text-xs font-bold text-amber-700 hover:underline dark:text-amber-400"
           >
-            ← Switch to 2026 Calendar
+            {i18n.yearSwitchLabel ?? "← Switch to 2026 Calendar"}
           </Link>
         </div>
 
@@ -171,10 +165,10 @@ export default async function HinduCalendar2027Page({ params }: Props) {
       <section className="space-y-6">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-            2027 Hindu Calendar Month-by-Month Overview
+            {i18n.overviewTitle ?? "2027 Hindu Calendar Month-by-Month Overview"}
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Chronological guide through the 12 sacred lunar months of 2027 CE and their prominent observances.
+            {i18n.overviewDesc ?? "Chronological guide through the 12 sacred lunar months of 2027 CE and their prominent observances."}
           </p>
         </div>
 
@@ -208,10 +202,10 @@ export default async function HinduCalendar2027Page({ params }: Props) {
       <section className="space-y-6 rounded-3xl border border-zinc-200 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-            2027 Key Religious Observances & Hubs
+            {i18n.hubsTitle ?? "2027 Key Religious Observances & Hubs"}
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Explore dedicated hubs for specific spiritual austerities and lunisolar observances in 2027.
+            {i18n.hubsDesc ?? "Explore dedicated hubs for specific spiritual austerities and lunisolar observances in 2027."}
           </p>
         </div>
 
@@ -301,9 +295,10 @@ export default async function HinduCalendar2027Page({ params }: Props) {
               When are the major Hindu festivals in 2027?
             </h3>
             <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-              Major festival dates for 2027 include: Makar Sankranti on Jan 14, Maha Shivratri on Mar 6,
-              Holi on Mar 23, Rama Navami on Apr 15, Raksha Bandhan on Aug 17, Krishna Janmashtami on Aug 24,
-              Ganesh Chaturthi on Sep 4, Dussehra on Oct 10, and Diwali on Oct 29.
+              Major festival dates for 2027 include: Makar Sankranti on Jan 15 (Punya Kaal), Maha Shivratri on Mar 6,
+              Holika Dahan on Mar 21, Holi on Mar 22, Rama Navami on Apr 15, Hanuman Jayanti on Apr 20,
+              Raksha Bandhan on Aug 17, Krishna Janmashtami on Aug 24 (Smartha) & Aug 25 (Vaishnava),
+              Ganesh Chaturthi on Sep 4, Dussehra (Ravana Dahan) on Oct 9, and Diwali on Oct 29.
             </p>
           </div>
         </div>

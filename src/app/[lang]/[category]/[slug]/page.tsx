@@ -47,11 +47,11 @@ import {
   resolveRouteCategory,
 } from "@/i18n/routing";
 import { resolveWorldClockFromSlug } from "@/data/worldClockSlugs";
+import { siteOrigin } from "@/lib/site-url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 function hubNavLabel(
   locale: AppLocale,
@@ -117,10 +117,10 @@ type Props = {
 function withBenefit(title: string, category: ToolCategoryId): string {
   if (title.includes(" - ")) return title;
   const benefit: Record<ToolCategoryId, string> = {
-    alarm: "Set a Precise Wake Reminder",
-    timer: "Start a Fast Countdown",
+    alarm: "Free Online Alarm Clock with Sound",
+    timer: "Start a Fast Online Countdown",
     stopwatch: "Track Time with Accurate Laps",
-    "world-clock": "See Live Local Time Instantly",
+    "world-clock": "Current Local Time Right Now",
     "date-calendar": "Calculate Dates & Business Days",
     calculators: "Fast Accurate Online Calculation",
     productivity: "Optimize Your Routine & Focus",
@@ -170,8 +170,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonicalSlug,
       def,
     );
+    const effectiveTitle =
+      locale === "en" ? withBenefit(localized.title, category) : localized.title;
     const { title, description } = buildSeoMeta({
-      title: withBenefit(localized.title, category),
+      title: effectiveTitle,
       description: withLocaleKeywordExpansion(locale, category, localized.description),
     });
     const alt = hreflangAlternates(siteBase, locale, {
@@ -227,8 +229,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         wc.label,
         wc.timeZone,
       );
+      const effectiveTitle =
+        locale === "en" ? withBenefit(localized.title, "world-clock") : localized.title;
       const { title, description } = buildSeoMeta({
-        title: withBenefit(localized.title, "world-clock"),
+        title: effectiveTitle,
         description: withLocaleKeywordExpansion(
           locale,
           "world-clock",

@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "Online-Wecker, Timer & Uhren",
-    "homeDescription": "Schnelle Browser-Tools: Wecker, Timer und Weltzeit mit SEO-freundlichen Seiten.",
+    "homeTitle": "Wie spät ist es? Genaue Uhrzeit, Online-Wecker & Timer",
+    "homeDescription": "Prüfe die genaue aktuelle Uhrzeit mit unserer digitalen Live-Uhr mit Sekunden. Kostenlose Online-Wecker, Countdown-Timer und Weltzeit für jede Stadt.",
     "patterns": {
-      "timer_minutes_title": "{n}-Minuten-Timer online",
-      "timer_minutes_desc": "Countdown für {n} Minute(n) im Browser mit Ring, optionalen Benachrichtigungen und Alarm.",
-      "world_time_title": "Aktuelle Zeit in {city}",
-      "world_time_desc": "Datum, Uhrzeit und UTC-Offset für {tz} ({city})."
+      "timer_minutes_title": "{n}-Minuten-Timer - Online-Countdown mit Alarm",
+      "timer_minutes_desc": "Kostenloser {n}-Minuten-Timer online mit akustischem Alarm, visuellem Ring und Hintergrundbenachrichtigungen.",
+      "timer_seconds_title": "{n}-Sekunden-Timer - Online-Countdown mit Ton",
+      "timer_seconds_desc": "Kostenloser {n}-Sekunden-Countdown im Browser mit Ton-Signal und genauer Zeitanzeige.",
+      "timer_hours_title": "{n}-Stunden-Timer - Online-Countdown mit Alarm",
+      "timer_hours_desc": "Kostenloser {n}-Stunden-Countdown-Timer mit Stunden-, Minuten- und Sekundenanzeige und akustischem Schlusssignal.",
+      "alarm_preset_title": "Wecker auf {time} online stellen - Online-Wecker mit Ton",
+      "alarm_preset_desc": "Kostenloser Online-Wecker für {time} mit lautem Weckton, Schlummerfunktion und Audio-Alarm. Tab im Browser geöffnet lassen für pünktliches Wecken.",
+      "world_time_title": "Uhrzeit {city} - Aktuelle Zeit in {city} jetzt",
+      "world_time_desc": "Genaue Uhrzeit in {city} jetzt. Datum, Zeitzone {tz}, UTC-Offset und Sommerzeit-Status mit Live-Sekunden im Browser."
     }
   },
   "footer": {

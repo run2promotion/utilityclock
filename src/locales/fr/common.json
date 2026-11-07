@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "Alarme, minuteur & horloges en ligne",
-    "homeDescription": "Outils navigateur rapides : alarme, minuteurs et heure mondiale avec des pages optimisées pour le référencement.",
+    "homeTitle": "Quelle heure est-il ? Heure exacte, minuteur et réveil en ligne",
+    "homeDescription": "Consultez l'heure exacte en direct avec les secondes. Réglez gratuitement votre réveil en ligne, minuteur compte à rebours et consultez l'horloge mondiale.",
     "patterns": {
-      "timer_minutes_title": "Minuteur {n} minutes en ligne",
-      "timer_minutes_desc": "Compte à rebours de {n} minute(s) dans le navigateur avec anneau visible, notifications optionnelles et alerte sonore.",
-      "world_time_title": "Heure actuelle à {city}",
-      "world_time_desc": "Date, heure et décalage UTC pour {tz} ({city})."
+      "timer_minutes_title": "Minuteur {n} minutes - Compte à rebours en ligne avec alarme",
+      "timer_minutes_desc": "Minuteur en ligne gratuit de {n} minutes avec alerte sonore, anneau visuel de progression et alertes en arrière-plan.",
+      "timer_seconds_title": "Minuteur {n} secondes - Compte à rebours en ligne",
+      "timer_seconds_desc": "Compte à rebours en ligne de {n} secondes avec alerte sonore et affichage précis.",
+      "timer_hours_title": "Minuteur {n} heures - Compte à rebours en ligne avec sonnerie",
+      "timer_hours_desc": "Minuteur de {n} heures avec décompte des heures, minutes et secondes et signal sonore à la fin.",
+      "alarm_preset_title": "Régler le réveil à {time} en ligne - Alarme sonore gratuite",
+      "alarm_preset_desc": "Réveil en ligne gratuit réglé pour {time}. Sonnerie forte, fonction répétition (snooze) et alertes sonores. Gardez l'onglet ouvert.",
+      "world_time_title": "Heure à {city} - Heure locale exacte en direct",
+      "world_time_desc": "Heure locale exacte à {city} actuellement. Date du jour, fuseau horaire {tz}, décalage UTC et horloge en direct avec secondes."
     }
   },
   "footer": {

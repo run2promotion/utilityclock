@@ -3,6 +3,7 @@ import { SettingsProvider } from "@/context/settings-context";
 import { defaultLocale, isAppLocale, type AppLocale } from "@/i18n/config";
 import { buildSeoMeta } from "@/lib/seo-metadata";
 import { isFeatureEnabled } from "@/lib/feature-flags";
+import { siteOrigin } from "@/lib/site-url";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Share_Tech_Mono } from "next/font/google";
 import { headers } from "next/headers";
@@ -28,8 +29,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteUrl = siteOrigin();
 const rootMeta = buildSeoMeta({
   title: "Online Timer Clock - Precision Browser Tools",
   description:

@@ -5,5 +5,5 @@
 export function siteOrigin(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (raw) return raw.replace(/\/$/, "");
-  return "https://utilityclock.com";
+  return "https://www.utilityclock.com";
 }

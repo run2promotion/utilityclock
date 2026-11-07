@@ -26,12 +26,12 @@ import {
   getLocalizedCategorySegment,
   resolveRouteCategory,
 } from "@/i18n/routing";
+import { siteOrigin } from "@/lib/site-url";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = {
   params: Promise<{ lang: string; category: string }>;
@@ -65,16 +65,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     type: "hub",
     category,
   });
+  const seoTitle = meta.seoTitle ?? meta.label;
+  const seoDescription = meta.seoDescription ?? meta.description;
   return {
-    title: meta.label,
-    description: meta.description,
+    title: seoTitle,
+    description: seoDescription,
     alternates: {
       canonical: alt.canonical,
       languages: alt.languages,
     },
     openGraph: {
-      title: meta.label,
-      description: meta.description,
+      title: seoTitle,
+      description: seoDescription,
     },
   };
 }

@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "Alarme, temporizador e relógios online",
-    "homeDescription": "Ferramentas rápidas no navegador: alarme, temporizadores e hora mundial com páginas otimizadas para SEO.",
+    "homeTitle": "Que horas são? Hora exata em tempo real, alarme e temporizador",
+    "homeDescription": "Confira que horas são agora com nosso relógio digital exato com segundos. Defina alarmes online gratuitos, temporizadores e consulte a hora mundial.",
     "patterns": {
-      "timer_minutes_title": "Temporizador de {n} minutos online",
-      "timer_minutes_desc": "Contagem decrescente de {n} minuto(s) no navegador com anel visível, notificações opcionais e alarme sonoro.",
-      "world_time_title": "Hora atual em {city}",
-      "world_time_desc": "Data, hora e offset UTC para {tz} ({city})."
+      "timer_minutes_title": "Temporizador de {n} minutos - Contagem decrescente com som",
+      "timer_minutes_desc": "Temporizador online gratuito de {n} minutos com sinal sonoro alto, anel visual e notificações no navegador.",
+      "timer_seconds_title": "Temporizador de {n} segundos - Contagem regressiva online",
+      "timer_seconds_desc": "Contagem decrescente de {n} segundos online com alerta audível e precisão total.",
+      "timer_hours_title": "Temporizador de {n} horas - Contagem regressiva online com alarme",
+      "timer_hours_desc": "Temporizador online de {n} horas com exibição de horas, minutos e segundos restantes e alarme ao terminar.",
+      "alarm_preset_title": "Definir alarme para as {time} - Despertador online com som",
+      "alarm_preset_desc": "Despertador online gratuito para as {time}. Toques altos, opção soneca e alertas sonoros no navegador. Mantenha a aba aberta.",
+      "world_time_title": "Hora em {city} - Hora local exata em tempo real",
+      "world_time_desc": "Hora local exata em {city} agora. Data atual, fuso horário {tz}, deslocamento UTC e relógio digital com segundos."
     }
   },
   "footer": {

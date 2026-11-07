@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "Alarma, temporizador y relojes online",
-    "homeDescription": "Herramientas rápidas en el navegador: alarma, temporizadores y hora mundial con páginas amigables para SEO.",
+    "homeTitle": "¿Qué hora es? Hora exacta en tiempo real, alarma y temporizador",
+    "homeDescription": "Mira qué hora es ahora mismo con nuestro reloj digital exacto en vivo con segundos. Configura alarmas online gratis, temporizadores y consulta la hora mundial.",
     "patterns": {
-      "timer_minutes_title": "Temporizador de {n} minutos online",
-      "timer_minutes_desc": "Cuenta atrás de {n} minuto(s) en el navegador con anillo visible, notificaciones opcionales y alarma sonora.",
-      "world_time_title": "Hora actual en {city}",
-      "world_time_desc": "Fecha, hora y offset UTC para {tz} ({city})."
+      "timer_minutes_title": "Temporizador de {n} minutos - Cuenta atrás online con sonido",
+      "timer_minutes_desc": "Temporizador online gratis de {n} minutos con alarma sonora, anillo visual y notificaciones en segundo plano.",
+      "timer_seconds_title": "Temporizador de {n} segundos - Cuenta atrás online",
+      "timer_seconds_desc": "Temporizador online de {n} segundos con aviso sonoro y cuenta regresiva precisa.",
+      "timer_hours_title": "Temporizador de {n} horas - Cuenta atrás online con alarma",
+      "timer_hours_desc": "Temporizador online de {n} horas con visualización de horas, minutos y segundos restantes con sonido de aviso.",
+      "alarm_preset_title": "Poner alarma a las {time} - Despertador online con sonido",
+      "alarm_preset_desc": "Alarma online gratis para las {time}. Sonido fuerte, modo posponer (snooze) y alertas de audio en el navegador. Mantén la pestaña abierta.",
+      "world_time_title": "Hora en {city} - Hora local exacta en tiempo real",
+      "world_time_desc": "Hora local exacta en {city} ahora. Fecha actual, zona horaria {tz}, offset UTC y cambio de horario en un reloj digital en vivo."
     }
   },
   "footer": {

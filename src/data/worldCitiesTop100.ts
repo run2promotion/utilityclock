@@ -198,8 +198,8 @@ export function buildWorldClockPages(): Record<string, ToolDefinition> {
   for (const c of WORLD_TOP_100_CITIES) {
     const slug = `${c.slugKey}-time`;
     out[slug] = {
-      title: `Current time in ${c.label}`,
-      description: `See the live local time, date, and UTC offset for ${c.label} (${c.timeZone}) in your browser.`,
+      title: `${c.label} Time - Current Local Time in ${c.label} Right Now`,
+      description: `Exact local time in ${c.label} right now. View current date, ${c.timeZone} time zone, UTC offset, daylight saving time (DST) status, and live digital clock with seconds.`,
       worldClock: { timeZone: c.timeZone, label: c.label },
     };
   }

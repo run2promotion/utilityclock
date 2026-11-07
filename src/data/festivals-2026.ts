@@ -28,6 +28,9 @@ export type FestivalItem = {
   significance: string;
   rituals: string[];
   isMajor: boolean;
+  tradition?: string;
+  sourceReference?: string;
+  regionalVariations?: string;
 };
 
 export const FESTIVALS_2026: FestivalItem[] = [

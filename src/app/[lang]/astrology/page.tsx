@@ -2,13 +2,13 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
 import { AstrologyExperience } from "@/components/tools/AstrologyExperience";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import { Heart, Moon, Sparkles, Sun } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 

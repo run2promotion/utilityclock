@@ -10,13 +10,13 @@ import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { getDictionary } from "@/i18n/dictionary";
 import { buildPath } from "@/i18n/routing";
+import { siteOrigin } from "@/lib/site-url";
 import { ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 

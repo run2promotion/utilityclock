@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "Online alarm, timer & clocks",
-    "homeDescription": "Fast, browser-based alarm clock, timers, and world time tools with SEO-friendly preset pages.",
+    "homeTitle": "What Time Is It? Exact Local Time, Online Timer & Alarm Clock",
+    "homeDescription": "Check what time is it right now with our exact, live digital clock with seconds. Set free online countdown timers, loud alarm clocks, and see world clock times.",
     "patterns": {
-      "timer_minutes_title": "{n} minute timer online",
-      "timer_minutes_desc": "Count down {n} minute(s) in your browser with a visible ring, optional notifications, and an audible finish.",
-      "world_time_title": "Current time in {city}",
-      "world_time_desc": "Live date, time, and UTC offset for {tz} ({city})."
+      "timer_minutes_title": "{n} Minute Timer - Online Countdown Timer with Sound",
+      "timer_minutes_desc": "Free {n} minute online timer with loud alarm sound, visual progress ring, and optional browser notifications. Starts immediately in your browser.",
+      "timer_seconds_title": "{n} Second Timer - Online Countdown with Sound",
+      "timer_seconds_desc": "Free {n} second countdown timer online with visual progress ring and audible alarm notification.",
+      "timer_hours_title": "{n} Hour Timer - Online Countdown Timer with Sound",
+      "timer_hours_desc": "Free {n} hour online countdown timer. Displays hours, minutes, and seconds remaining with loud finish sound.",
+      "alarm_preset_title": "Set Alarm for {time} - Free Online Alarm Clock with Sound",
+      "alarm_preset_desc": "Free online alarm preset for {time}. Loud buzzer, gentle wake chimes, customizable snooze, and audio alerts. Keep your browser tab open for on-time waking.",
+      "world_time_title": "{city} Time - Current Local Time in {city} Right Now",
+      "world_time_desc": "Exact local time in {city} right now. View current date, {tz} time zone, UTC offset, daylight saving time (DST) status, and live digital clock with seconds."
     }
   },
   "footer": {

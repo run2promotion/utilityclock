@@ -28,8 +28,8 @@ export function buildAlarmPages(): Record<string, ToolDefinition> {
       const slug = `alarm-for-${h12}-${pad2(minute)}-${period}`;
       const label = formatAlarmClockLabel(h24, minute);
       out[slug] = {
-        title: `Set alarm for ${label} online`,
-        description: `Free browser alarm preset for ${label}. Sound alert and optional notifications — works when the tab is in the background.`,
+        title: `Set Alarm for ${label} - Free Online Alarm Clock with Sound`,
+        description: `Free online alarm preset for ${label}. Loud buzzer sounds, gentle wake chimes, customizable snooze, and audio alerts. Keep the browser tab open for best performance.`,
         alarm: { hour: h24, minute },
       };
     }

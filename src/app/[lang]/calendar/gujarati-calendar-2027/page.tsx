@@ -1,15 +1,16 @@
 import { GujaratiCalendarExperience } from "@/components/calendar/GujaratiCalendarExperience";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
+import { GUJARATI_CALENDAR_2027_I18N } from "@/data/translations-2027";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -25,24 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     type: "path",
     path: "calendar/gujarati-calendar-2027",
   });
+  const i18n = GUJARATI_CALENDAR_2027_I18N[locale] ?? GUJARATI_CALENDAR_2027_I18N.en;
 
   return {
-    title:
-      locale === "gu"
-        ? "ગુજરાતી કેલેન્ડર 2027 · વિક્રમ સંવત 2083–2084, ચોઘડિયા, તિથિ અને તહેવારો"
-        : locale === "hi"
-        ? "गुजराती कैलेंडर 2027 · विक्रम संवत 2083–2084, चौघड़िया, तिथि और पर्व"
-        : "Gujarati Calendar 2027 · Vikram Samvat 2083–2084, Choghadiya & Festivals",
-    description:
-      "Authentic Gujarati lunisolar calendar for 2027 with Vikram Samvat 2083–2084, Bestu Varas (Oct 30), day/night Choghadiya, Amavasyanta Tithi grids, and festivals.",
+    title: i18n.title,
+    description: i18n.description,
     alternates: {
       canonical: alternates.canonical,
       languages: alternates.languages,
     },
     openGraph: {
-      title: "Gujarati Calendar 2027 · Vikram Samvat 2083–2084, Choghadiya & Festivals",
-      description:
-        "Authentic Gujarati lunisolar calendar for 2027 with Vikram Samvat 2083–2084, Bestu Varas (Oct 30), day/night Choghadiya, Amavasyanta Tithi grids, and festivals.",
+      title: i18n.title,
+      description: i18n.description,
     },
   };
 }
@@ -51,24 +46,25 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
   const { lang } = await params;
   if (!isAppLocale(lang)) notFound();
   const locale = lang as AppLocale;
+  const i18n = GUJARATI_CALENDAR_2027_I18N[locale] ?? GUJARATI_CALENDAR_2027_I18N.en;
 
   const crumbs: BreadcrumbItem[] = [
-    { name: "Home", href: `/${locale}`, item: `${siteBase}/${locale}` },
-    { name: "Calendar", href: `/${locale}/calendar`, item: `${siteBase}/${locale}/calendar` },
-    { name: "Gujarati Calendar 2027", item: `${siteBase}/${locale}/calendar/gujarati-calendar-2027` },
+    { name: i18n.crumbs.home, href: `/${locale}`, item: `${siteBase}/${locale}` },
+    { name: i18n.crumbs.parent, href: `/${locale}/calendar`, item: `${siteBase}/${locale}/calendar` },
+    { name: i18n.crumbs.current, item: `${siteBase}/${locale}/calendar/gujarati-calendar-2027` },
   ];
 
   const gujaratiMonths2027 = [
-    { name: "Posh (પોષ)", vs: "VS 2083", greg: "Jan 2027", keyFest: "Uttarayan / Makarsankranti (Jan 14), Posh Sud Ekadashi (Jan 18)" },
+    { name: "Posh (પોષ)", vs: "VS 2083", greg: "Jan 2027", keyFest: "Uttarayan / Makarsankranti (Jan 14–15), Posh Sud Ekadashi (Jan 18)" },
     { name: "Maha (મહા)", vs: "VS 2083", greg: "Feb 2027", keyFest: "Maha Sud Pancham - Vasant Panchami (Feb 11), Maha Shivratri preparations" },
-    { name: "Fagun (ફાગણ)", vs: "VS 2083", greg: "Mar 2027", keyFest: "Maha Shivratri (Mar 6), Holi / Hutashani (Mar 22), Dhuleti (Mar 23)" },
-    { name: "Chaitra (ચૈત્ર)", vs: "VS 2083", greg: "Apr 2027", keyFest: "Chaitra Navratri (Apr 7–15), Ram Navami (Apr 15), Hanuman Jayanti (Apr 21)" },
+    { name: "Fagun (ફાગણ)", vs: "VS 2083", greg: "Mar 2027", keyFest: "Maha Shivratri (Mar 6), Hutashani / Holika Dahan (Mar 21), Dhuleti (Mar 22)" },
+    { name: "Chaitra (ચૈત્ર)", vs: "VS 2083", greg: "Apr 2027", keyFest: "Chaitra Navratri (Apr 7–15), Ram Navami (Apr 15), Hanuman Jayanti (Apr 20)" },
     { name: "Vaishakh (વૈશાખ)", vs: "VS 2083", greg: "May 2027", keyFest: "Akhatrij / Akshaya Tritiya (May 9), Mohini Ekadashi (May 16)" },
     { name: "Jeth (જેઠ)", vs: "VS 2083", greg: "Jun 2027", keyFest: "Ganga Dussehra (Jun 14), Nirjala Ekadashi (Jun 15), Vat Savitri (Jun 18)" },
-    { name: "Ashadh (અષાઢ)", vs: "VS 2083", greg: "Jul 2027", keyFest: "Ashadhi Bij - Ratha Yatra (Jul 5), Devshayani Ekadashi (Jul 15), Guru Purnima (Jul 18)" },
-    { name: "Shravan (શ્રાવણ)", vs: "VS 2083", greg: "Aug 2027", keyFest: "Pavitra Shravan Somvar, Rakshabandhan (Aug 17), Janmashtami (Aug 24)" },
-    { name: "Bhadarvo (ભાદરવો)", vs: "VS 2083", greg: "Sep 2027", keyFest: "Ganesh Chaturthi (Sep 4), Samvatsari (Jain), Shraddha Paksha begins (Sep 15)" },
-    { name: "Aso (આસો)", vs: "VS 2083", greg: "Oct 2027", keyFest: "Navratri Garba (Sep 30–Oct 8), Dussehra (Oct 10), Sharad Poonam (Oct 15), Diwali (Oct 29)" },
+    { name: "Ashadh (અષાઢ)", vs: "VS 2083", greg: "Jul 2027", keyFest: "Ashadhi Bij - Ratha Yatra (Jul 5), Devshayani Ekadashi (Jul 14), Guru Purnima (Jul 18)" },
+    { name: "Shravan (શ્રાવણ)", vs: "VS 2083", greg: "Aug 2027", keyFest: "Pavitra Shravan Somvar, Rakshabandhan (Aug 17), Janmashtami (Aug 24–25)" },
+    { name: "Bhadarvo (ભાદરવો)", vs: "VS 2083", greg: "Sep 2027", keyFest: "Ganesh Chaturthi (Sep 4), Samvatsari (Jain Sep 11), Shraddha Paksha begins (Sep 15)" },
+    { name: "Aso (આસો)", vs: "VS 2083", greg: "Oct 2027", keyFest: "Navratri Garba (Sep 30–Oct 8), Dussehra (Oct 9–10), Sharad Poonam (Oct 15), Diwali (Oct 29)" },
     { name: "Kartak (કારતક)", vs: "VS 2084", greg: "Nov 2027", keyFest: "Bestu Varas - Nutan Varsh (Oct 30), Bhai Bij (Oct 31), Labh Pancham (Nov 3), Dev Diwali (Nov 13)" },
     { name: "Magshar (માગશર)", vs: "VS 2084", greg: "Dec 2027", keyFest: "Gita Jayanti & Mokshada Ekadashi (Dec 9), Dattatreya Jayanti (Dec 13)" },
   ];
@@ -76,8 +72,8 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemPage",
-    name: "Gujarati Calendar 2027 (વિક્રમ સંવત 2083–2084)",
-    description: "Authentic Gujarati lunisolar calendar for 2027 with Vikram Samvat 2083–2084, Bestu Varas (Oct 30), day/night Choghadiya, Amavasyanta Tithi grids, and festivals.",
+    name: i18n.heading,
+    description: i18n.description,
     url: `${siteBase}/${locale}/calendar/gujarati-calendar-2027`,
     inLanguage: locale,
     isPartOf: {
@@ -109,17 +105,15 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
       <header className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-3.5 py-1 text-xs font-bold text-orange-800 dark:text-orange-300">
           <Calendar className="h-4 w-4" />
-          <span>ગુજરાતી પંચાંગ અને કેલેન્ડર · Vikram Samvat 2083–2084</span>
+          <span>{i18n.badge}</span>
         </div>
 
         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl lg:text-5xl">
-          Gujarati Calendar 2027 · વિક્રમ સંવત 2083–2084
+          {i18n.heading}
         </h1>
 
         <p className="max-w-4xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Authentic Gujarati Amavasyanta calendar for 2027. Includes topocentric sunrise timings,
-          live Day & Night Choghadiya tables for Ahmedabad, Surat, Rajkot, Vadodara, and Mumbai,
-          and exact Tithi dates for Uttarayan, Janmashtami, Navratri, Diwali, and Bestu Varas.
+          {i18n.intro}
         </p>
       </header>
 
@@ -154,13 +148,13 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-black text-zinc-900 dark:text-zinc-50">
-            Interactive Gujarati Calendar & Choghadiya 2027
+            {i18n.gridTitle ?? "Interactive Gujarati Calendar & Choghadiya 2027"}
           </h2>
           <Link
             href={`/${locale}/calendar/gujarati-calendar`}
             className="text-xs font-bold text-orange-700 hover:underline dark:text-orange-400"
           >
-            ← Switch to 2026 Gujarati Calendar
+            {i18n.yearSwitchLabel ?? "← Switch to 2026 Gujarati Calendar"}
           </Link>
         </div>
 
@@ -171,10 +165,10 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
       <section className="space-y-6">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
-            2027 Gujarati Months Directory (વિક્રમ સંવત ૨૦૮૩–૨૦૮૪)
+            {i18n.overviewTitle ?? "2027 Gujarati Months Directory (વિક્રમ સંવત ૨૦૮૩–૨૦૮૪)"}
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Overview of all 12 Gujarati months in 2027 CE with Gregorian calendar mapping and prominent Utsavs.
+            {i18n.overviewDesc ?? "Overview of all 12 Gujarati months in 2027 CE with Gregorian calendar mapping and prominent Utsavs."}
           </p>
         </div>
 
@@ -196,7 +190,7 @@ export default async function GujaratiCalendar2027Page({ params }: Props) {
               </h3>
 
               <div className="mt-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                <span className="font-bold text-zinc-800 dark:text-zinc-200">મુખ્ય તહેવારો: </span>
+                <span className="font-bold text-zinc-800 dark:text-zinc-200">Key Observances: </span>
                 {m.keyFest}
               </div>
             </div>

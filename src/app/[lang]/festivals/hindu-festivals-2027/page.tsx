@@ -1,15 +1,16 @@
 import { FestivalsExperience } from "@/components/festivals/FestivalsExperience";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/nav/Breadcrumbs";
 import { InternalLinkingEngine } from "@/components/navigation/InternalLinkingEngine";
+import { HINDU_FESTIVALS_2027_I18N } from "@/data/translations-2027";
 import { hreflangAlternates } from "@/i18n/alternates";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
+import { siteOrigin } from "@/lib/site-url";
 import { Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -25,24 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     type: "path",
     path: "festivals/hindu-festivals-2027",
   });
+  const i18n = HINDU_FESTIVALS_2027_I18N[locale] ?? HINDU_FESTIVALS_2027_I18N.en;
 
   return {
-    title:
-      locale === "gu"
-        ? "હિન્દુ તહેવારો 2027 · સંપૂર્ણ તારીખો, વ્રત અને ઉત્સવ કેલેન્ડર"
-        : locale === "hi"
-        ? "हिन्दू त्योहार 2027 · सम्पूर्ण तिथियाँ, व्रत और उत्सव कैलेंडर"
-        : "Hindu Festivals 2027 · Complete Dates, Vrat & Observances Calendar",
-    description:
-      "Complete 2027 Hindu festival calendar with accurate dates, Tithi timings, fasting guidelines, and rituals for Maha Shivratri, Holi, Rama Navami, Janmashtami, Navratri, and Diwali.",
+    title: i18n.title,
+    description: i18n.description,
     alternates: {
       canonical: alternates.canonical,
       languages: alternates.languages,
     },
     openGraph: {
-      title: "Hindu Festivals 2027 · Complete Dates, Vrat & Observances Calendar",
-      description:
-        "Complete 2027 Hindu festival calendar with accurate dates, Tithi timings, fasting guidelines, and rituals for Maha Shivratri, Holi, Rama Navami, Janmashtami, Navratri, and Diwali.",
+      title: i18n.title,
+      description: i18n.description,
     },
   };
 }
@@ -51,18 +46,19 @@ export default async function HinduFestivals2027Page({ params }: Props) {
   const { lang } = await params;
   if (!isAppLocale(lang)) notFound();
   const locale = lang as AppLocale;
+  const i18n = HINDU_FESTIVALS_2027_I18N[locale] ?? HINDU_FESTIVALS_2027_I18N.en;
 
   const crumbs: BreadcrumbItem[] = [
-    { name: "Home", href: `/${locale}`, item: `${siteBase}/${locale}` },
-    { name: "Festivals", href: `/${locale}/festivals`, item: `${siteBase}/${locale}/festivals` },
-    { name: "Hindu Festivals 2027", item: `${siteBase}/${locale}/festivals/hindu-festivals-2027` },
+    { name: i18n.crumbs.home, href: `/${locale}`, item: `${siteBase}/${locale}` },
+    { name: i18n.crumbs.parent, href: `/${locale}/festivals`, item: `${siteBase}/${locale}/festivals` },
+    { name: i18n.crumbs.current, item: `${siteBase}/${locale}/festivals/hindu-festivals-2027` },
   ];
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Hindu Festivals 2027 (सनातन उत्सव व पर्व)",
-    description: "Complete 2027 Hindu festival calendar with accurate dates, Tithi timings, fasting guidelines, and rituals.",
+    name: i18n.heading,
+    description: i18n.description,
     url: `${siteBase}/${locale}/festivals/hindu-festivals-2027`,
     inLanguage: locale,
     isPartOf: {
@@ -94,17 +90,15 @@ export default async function HinduFestivals2027Page({ params }: Props) {
       <header className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/10 px-3.5 py-1 text-xs font-bold text-purple-800 dark:text-purple-300">
           <Sparkles className="h-4 w-4" />
-          <span>Sanatan Calendar 2027 · Sacred Utsav Directory</span>
+          <span>{i18n.badge}</span>
         </div>
 
         <h1 className="text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl lg:text-5xl">
-          Hindu Festivals 2027 · सम्पूर्ण हिन्दू त्योहार व व्रत
+          {i18n.heading}
         </h1>
 
         <p className="max-w-4xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Explore all auspicious dates, lunisolar Tithis, and time-honored rituals for the 2027 Hindu
-          festival calendar. From spring Holi celebrations to autumn Sharad Navratri and Diwali, find
-          exact dates computed with classical astronomical algorithms.
+          {i18n.intro}
         </p>
       </header>
 
@@ -138,20 +132,29 @@ export default async function HinduFestivals2027Page({ params }: Props) {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 text-xs">
           <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <span className="font-bold text-purple-700 dark:text-purple-400">March 6, 2027 (Friday)</span>
+            <span className="font-bold text-purple-700 dark:text-purple-400">January 15, 2027 (Friday)</span>
+            <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Makar Sankranti (Punya Kaal)</h3>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Solar ingress occurs on Jan 14 at 21:05 IST; scriptural Punya Kaal bathing, charity,
+              and public holiday are observed on Friday, Jan 15 morning.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <span className="font-bold text-purple-700 dark:text-purple-400">March 6, 2027 (Saturday)</span>
             <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Maha Shivratri</h3>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Phalguna Krishna Chaturdashi. The sacred celestial night of Lord Shiva and Devi Parvati&apos;s
+              Phalguna Krishna Chaturdashi. Sacred celestial night of Lord Shiva and Devi Parvati&apos;s
               cosmic union. Fasting, Nishita Kaal Rudrabhishek, and four prahar pujas.
             </p>
           </div>
 
           <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <span className="font-bold text-purple-700 dark:text-purple-400">March 22–23, 2027</span>
+            <span className="font-bold text-purple-700 dark:text-purple-400">March 21–22, 2027</span>
             <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Holika Dahan & Holi</h3>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Phalguna Purnima and Chaitra Krishna Pratipada. Triumph of Bhakta Prahlada over Holika,
-              followed by the joyous festival of vibrant herbal colors and spring songs.
+              Holika Dahan bonfire lit on Sunday night, March 21 during Pradosh Kaal. Joyful Dhulandi
+              color celebration follows on Monday, March 22.
             </p>
           </div>
 
@@ -165,20 +168,29 @@ export default async function HinduFestivals2027Page({ params }: Props) {
           </div>
 
           <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <span className="font-bold text-purple-700 dark:text-purple-400">August 17, 2027 (Tuesday)</span>
-            <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Raksha Bandhan</h3>
+            <span className="font-bold text-purple-700 dark:text-purple-400">April 20, 2027 (Tuesday)</span>
+            <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Hanuman Jayanti</h3>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Shravana Purnima. Sisters tie protective sacred threads (Rakhi) on brothers&apos; wrists;
-              Brahmins observe sacred thread renewal (Upakarma / Yajñopavīta Snan).
+              Chaitra Purnima Udaya Tithi. Appearance day of Lord Hanuman; recitation of Hanuman Chalisa
+              and Sundarkand across shrines nationwide.
             </p>
           </div>
 
           <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <span className="font-bold text-purple-700 dark:text-purple-400">August 24, 2027 (Tuesday)</span>
+            <span className="font-bold text-purple-700 dark:text-purple-400">August 24–25, 2027</span>
             <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Krishna Janmashtami</h3>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Bhadrapada Krishna Ashtami in Rohini Nakshatra. Midnight celebration of Bhagavan Sri Krishna&apos;s
-              birth in Mathura, with Makhan-Mishri Bhog and Dahi Handi.
+              Smartha fast on Tuesday, Aug 24 (Nishita Kaal Ashtami). Vaishnava, ISKCON, and pan-Indian public
+              holiday observed on Wednesday, Aug 25 (Udaya Ashtami) with Dahi Handi.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <span className="font-bold text-purple-700 dark:text-purple-400">October 9–10, 2027</span>
+            <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Dussehra & Durga Visarjan</h3>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Ravana Dahan observed on Saturday, Oct 9 in North India (Aparahna Kaal). Bengal Durga Visarjan
+              and South Indian Vidyarambham observed on Sunday, Oct 10 morning (Udaya Dashami).
             </p>
           </div>
 
@@ -187,7 +199,7 @@ export default async function HinduFestivals2027Page({ params }: Props) {
             <h3 className="mt-1 text-base font-black text-zinc-900 dark:text-zinc-50">Diwali (Deepavali)</h3>
             <p className="mt-2 text-zinc-600 dark:text-zinc-400 leading-relaxed">
               Kartika Amavasya. Festival of lights marking Lord Rama&apos;s return to Ayodhya and the worship
-              of Maa Mahalakshmi and Lord Ganesha for prosperity, light, and spiritual bliss.
+              of Maa Mahalakshmi and Lord Ganesha in Pradosh Kaal for prosperity and peace.
             </p>
           </div>
         </div>

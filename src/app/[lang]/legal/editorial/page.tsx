@@ -1,11 +1,11 @@
 import { LegalShell } from "@/components/legal/LegalShell";
 import { isAppLocale, locales, type AppLocale } from "@/i18n/config";
 import { hreflangAlternates } from "@/i18n/alternates";
+import { siteOrigin } from "@/lib/site-url";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-const siteBase =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://utilityclock.com";
+const siteBase = siteOrigin();
 
 type Props = { params: Promise<{ lang: string }> };
 

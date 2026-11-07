@@ -633,6 +633,18 @@ export const CROSS_NICHE_RELATIONSHIPS: Record<string, CrossNicheBridge[]> = {
       description: { en: "Comprehensive grid showing Paksha, Ekadashi, Pradosh, and monthly festivals.", de: "Monatsübersicht.", fr: "Grille mensuelle avec Paksha et jeûnes.", ja: "シュクラ・パクラ、クリシュナ・パクラの各日と祝祭日の月間グリッド。", es: "Cuadrícula con Paksha y festivos.", pt: "Grade mensal com Paksha e festivais.", ar: "جدول شهري يوضح الباكشا والأعياد.", hi: "शुक्ल व कृष्ण पक्ष, एकादशी, प्रदोष और मासिक त्योहारों का संपूर्ण चक्र।", gu: "શુક્લ અને કૃષ્ણ પક્ષ, એકાદશી, પ્રદોષ અને માસિક તહેવારોનું સંપૂર્ણ ચક્ર." },
       href: "/calendar/hindu-calendar",
     },
+    {
+      anchorTitle: { en: "Hindu Calendar 2027", de: "Hindukalender 2027", fr: "Calendrier Hindou 2027", ja: "ヒンドゥー暦 2027", es: "Calendario Hindú 2027", pt: "Calendário Hindu 2027", ar: "التقويم الهندوسي 2027", hi: "हिन्दू कैलेंडर 2027", gu: "હિન્દુ કેલેન્ડર 2027" },
+      categoryTag: { en: "Upcoming Year", de: "Kommendes Jahr", fr: "Année suivante", ja: "次年度", es: "Año siguiente", pt: "Próximo Ano", ar: "العام القادم", hi: "आगामी वर्ष", gu: "આગામી વર્ષ" },
+      description: { en: "Complete Vikram Samvat 2083–2084 calendar with 12 lunar months and Tithis.", de: "Vikram Samvat 2083–2084 Kalender.", fr: "Calendrier Vikram Samvat 2083–2084 avec 12 mois lunaires.", ja: "ヴィクラム暦2083–2084年の12太陰月と祭礼日程。", es: "Calendario Vikram Samvat 2083–2084 completo.", pt: "Calendário Vikram Samvat 2083–2084 completo.", ar: "تقويم فيكرام سامفات 2083–2084 مع الشهور القمرية.", hi: "विक्रम संवत 2083–2084 का संपूर्ण पंचांग, 12 मास एवं प्रमुख त्योहार।", gu: "વિક્રમ સંવત 2083–2084 નું સંપૂર્ણ પંચાંગ, 12 માસ અને મુખ્ય તહેવારો." },
+      href: "/calendar/hindu-calendar-2027",
+    },
+    {
+      anchorTitle: { en: "Ekadashi 2027 Vrat Dates", de: "Ekadashi 2027 Termine", fr: "Dates d'Ekadashi 2027", ja: "エーカーダシー 2027 日程", es: "Fechas de Ekadashi 2027", pt: "Datas de Ekadashi 2027", ar: "صيام إيكاداشي 2027", hi: "एकादशी 2027 व्रत तिथियां", gu: "એકાદશી 2027 વ્રત તારીખો" },
+      categoryTag: { en: "Vrat Directory", de: "Fasten", fr: "Jeûnes", ja: "断食", es: "Ayunos", pt: "Jejuns", ar: "الصيام", hi: "व्रत संग्रह", gu: "વ્રત સંગ્રહ" },
+      description: { en: "All 24 Ekadashi fasts with exact morning Parana timings in IST.", de: "Alle 24 Ekadashis mit Parana-Zeiten.", fr: "Les 24 jeûnes d'Ekadashi avec les horaires de Parana.", ja: "全24回のエーカーダシー断食日とパーラナ時間。", es: "Los 24 ayunos de Ekadashi con horarios de Parana.", pt: "Todos os 24 jejuns de Ekadashi com horários de Parana.", ar: "جميع أيام صيام الإيكاداشي الـ 24 ومواقيت كسر الصيام.", hi: "24 एकादशी व्रतों की सूची, पूजन विधि एवं पारण का सटीक समय।", gu: "24 અગિયારસ વ્રતોની યાદી, પૂજન વિધિ અને પારણાનો ચોક્કસ સમય." },
+      href: "/calendar/ekadashi-2027",
+    },
   ],
   "love-tools": [
     {

@@ -35,6 +35,8 @@ function applySecurityHeaders(response: NextResponse, allowEmbedding: boolean) {
   response.headers.set("X-Content-Type-Options", "nosniff");
   if (allowEmbedding) {
     response.headers.delete("X-Frame-Options");
+    // Prevent duplicate embed URL query variants (?embed=1) from indexing or competing with canonical pages
+    response.headers.set("X-Robots-Tag", "noindex, follow");
   } else {
     response.headers.set("X-Frame-Options", "DENY");
   }
@@ -72,8 +74,19 @@ function hostAllowed(hostHeader: string | null): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  if (!hostAllowed(request.headers.get("host"))) {
+  const hostHeader = request.headers.get("host");
+  if (!hostAllowed(hostHeader)) {
     return new NextResponse("Invalid host", { status: 400 });
+  }
+
+  // Enforce standardized preferred hostname: 301 redirect non-www utilityclock.com -> www.utilityclock.com
+  const hostOnly = hostHeader?.split(":")[0].trim().toLowerCase();
+  if (hostOnly === "utilityclock.com") {
+    const url = request.nextUrl.clone();
+    url.host = "www.utilityclock.com";
+    url.protocol = "https:";
+    url.port = "";
+    return NextResponse.redirect(url, 301);
   }
 
   const segments = request.nextUrl.pathname.split("/").filter(Boolean);

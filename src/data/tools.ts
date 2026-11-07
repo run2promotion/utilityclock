@@ -30,24 +30,36 @@ export const CATEGORIES: Record<ToolCategoryId, CategoryMeta> = {
     description:
       "Set an online alarm with sound and optional browser notifications.",
     hubPath: "/alarm",
+    seoTitle: "Online Alarm Clock - Set Alarm with Loud Sound & Snooze",
+    seoDescription:
+      "Free online alarm clock with loud buzzer sounds, gentle wake chimes, customizable snooze, and audio alerts. Keep your browser tab open for reliable timing.",
   },
   timer: {
     id: "timer",
     label: "Timer",
     description: "Count down with preset durations for common tasks.",
     hubPath: "/timer",
+    seoTitle: "Online Timer - Free Fullscreen Countdown Timer with Sound",
+    seoDescription:
+      "Free online countdown timer with loud alarm sound, visual progress rings, and custom minutes or seconds. Features distraction-free fullscreen mode and browser alerts.",
   },
   stopwatch: {
     id: "stopwatch",
     label: "Stopwatch",
     description: "Track elapsed time with a simple stopwatch.",
     hubPath: "/stopwatch",
+    seoTitle: "Online Stopwatch - Split Lap Timer with Milliseconds",
+    seoDescription:
+      "Free precision online stopwatch with millisecond accuracy, split lap times, and fastest/slowest lap highlighting. Clean fullscreen display for study and sports.",
   },
   "world-clock": {
     id: "world-clock",
     label: "World Clock",
     description: "See the current time in major cities around the world.",
     hubPath: "/world-clock",
+    seoTitle: "World Clock - Current Local Time in Cities Worldwide",
+    seoDescription:
+      "Check exact local time, time zones, UTC offsets, and daylight saving time (DST) changes across major cities worldwide. Accurate multi-city time comparison.",
   },
   "date-calendar": {
     id: "date-calendar",

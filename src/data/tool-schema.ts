@@ -15,6 +15,8 @@ export type CategoryMeta = {
   label: string;
   description: string;
   hubPath: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type AlarmPreset = {

@@ -33,13 +33,19 @@
   },
   "meta": {
     "siteName": "Utility Clock",
-    "homeTitle": "オンラインアラーム・タイマー・時計",
-    "homeDescription": "ブラウザで使える高速ツール：アラーム、タイマー、世界時刻。SEO向けのプリセットページ。",
+    "homeTitle": "今何時？ 正確な現在時刻・オンラインタイマー・目覚まし時計",
+    "homeDescription": "秒単位で正確なデジタル時計で今何時かを確認。無料のオンライン目覚まし時計、カウントダウンタイマー、世界時計ツールを簡単操作で利用できます。",
     "patterns": {
-      "timer_minutes_title": "{n}分タイマー（オンライン）",
-      "timer_minutes_desc": "ブラウザで{n}分のカウントダウン。リング表示、通知、音のアラームに対応。",
-      "world_time_title": "{city}の現在時刻",
-      "world_time_desc": "{tz}（{city}）の日付・時刻・UTCオフセット。"
+      "timer_minutes_title": "{n}分タイマー - 音でお知らせする無料カウントダウン",
+      "timer_minutes_desc": "ブラウザで動く無料の{n}分タイマー。見やすい進行リング、大きなアラーム音、バックグラウンド通知付き。",
+      "timer_seconds_title": "{n}秒タイマー - 正確なオンラインカウントダウン",
+      "timer_seconds_desc": "{n}秒のカウントダウンタイマー。完了時に音でお知らせします。",
+      "timer_hours_title": "{n}時間タイマー - 長時間カウントダウン（音付き）",
+      "timer_hours_desc": "{n}時間のオンラインカウントダウンタイマー。時・分・秒の残り時間を表示し、終了時にアラーム音でお知らせ。",
+      "alarm_preset_title": "{time}のアラーム設定 - 音が鳴る無料オンライン目覚まし時計",
+      "alarm_preset_desc": "{time}に鳴る無料オンライン目覚まし時計。大きなアラーム音、スヌーズ機能、音声通知に対応。タブを開いたままご利用ください。",
+      "world_time_title": "{city}の現在時刻 - 現地時間とタイムゾーン",
+      "world_time_desc": "{city}の正確な現地時間。現在の日付、タイムゾーン（{tz}）、UTCオフセット、秒単位のライブ時計を表示。"
     }
   },
   "footer": {
