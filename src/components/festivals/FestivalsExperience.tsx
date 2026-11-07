@@ -1,17 +1,18 @@
 "use client";
 
 import { useI18n } from "@/context/locale-context";
-import {
-  FESTIVALS_2026,
-  type FestivalCategory,
-} from "@/data/festivals-2026";
+import { type FestivalCategory } from "@/data/festivals-2026";
+import { ALL_FESTIVALS, getFestivalsForYear } from "@/data/festivals-registry";
 import {
   Calendar as CalendarIcon,
+  Check,
   Clock,
   Compass,
   LayoutGrid,
   ListOrdered,
+  Printer,
   Search,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
@@ -41,20 +42,33 @@ const MONTH_FILTERS = [
   { value: "12", label: "Dec" },
 ];
 
-export function FestivalsExperience() {
+export interface FestivalsExperienceProps {
+  initialYear?: number | "all";
+  initialCategory?: "all" | FestivalCategory;
+}
+
+export function FestivalsExperience({
+  initialYear = 2026,
+  initialCategory = "all",
+}: FestivalsExperienceProps = {}) {
   const { locale } = useI18n();
 
-  const [activeCategory, setActiveCategory] = useState<"all" | FestivalCategory>("all");
+  const [selectedYear, setSelectedYear] = useState<number | "all">(initialYear);
+  const [activeCategory, setActiveCategory] = useState<"all" | FestivalCategory>(initialCategory);
   const [selectedMonth, setSelectedMonth] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewMode, setViewMode] = useState<"grid" | "timeline">("grid");
+  const [copied, setCopied] = useState<boolean>(false);
 
   // Today reference
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   // Filtered festivals
   const filteredFestivals = useMemo(() => {
-    let list = FESTIVALS_2026;
+    let list =
+      selectedYear === "all"
+        ? ALL_FESTIVALS
+        : getFestivalsForYear(selectedYear);
 
     // Category filter
     if (activeCategory !== "all") {
@@ -82,13 +96,17 @@ export function FestivalsExperience() {
     }
 
     return list;
-  }, [activeCategory, selectedMonth, searchQuery]);
+  }, [selectedYear, activeCategory, selectedMonth, searchQuery]);
 
   // Upcoming major festivals
   const upcomingFestivals = useMemo(() => {
-    const future = FESTIVALS_2026.filter((f) => f.date >= todayStr && f.isMajor);
+    const pool =
+      selectedYear === "all"
+        ? ALL_FESTIVALS
+        : getFestivalsForYear(selectedYear);
+    const future = pool.filter((f) => f.date >= todayStr && f.isMajor);
     return future.slice(0, 3);
-  }, [todayStr]);
+  }, [selectedYear, todayStr]);
 
   // Calculate days remaining
   const getDaysRemaining = (targetDateStr: string) => {
@@ -101,15 +119,29 @@ export function FestivalsExperience() {
     return `${Math.abs(diff)} days ago`;
   };
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <div className="w-full space-y-8">
       {/* Upcoming Festivals Live Countdown Hero Bar */}
       {upcomingFestivals.length > 0 && (
-        <div className="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent p-6 shadow-sm">
+        <div className="rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent p-6 shadow-sm print:hidden">
           <div className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
             <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
-              Upcoming Major Observances (2026)
+              Upcoming Major Observances ({selectedYear === "all" ? "2026–2027" : selectedYear})
             </h2>
           </div>
 
@@ -154,8 +186,8 @@ export function FestivalsExperience() {
       )}
 
       {/* Interactive Search & Filter Controls */}
-      <div className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80">
-        {/* Search Bar & Layout Switcher */}
+      <div className="space-y-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80 print:hidden">
+        {/* Search Bar, Year Switcher & Layout Switcher */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
@@ -168,7 +200,41 @@ export function FestivalsExperience() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Year Switcher Pills */}
+            <div className="inline-flex rounded-xl border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-800/80 text-xs">
+              <button
+                onClick={() => setSelectedYear(2027)}
+                className={`rounded-lg px-2.5 py-1 font-bold transition ${
+                  selectedYear === 2027
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400"
+                }`}
+              >
+                2027
+              </button>
+              <button
+                onClick={() => setSelectedYear(2026)}
+                className={`rounded-lg px-2.5 py-1 font-bold transition ${
+                  selectedYear === 2026
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400"
+                }`}
+              >
+                2026
+              </button>
+              <button
+                onClick={() => setSelectedYear("all")}
+                className={`rounded-lg px-2.5 py-1 font-bold transition ${
+                  selectedYear === "all"
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400"
+                }`}
+              >
+                All
+              </button>
+            </div>
+
             {/* View Mode Toggle */}
             <div className="inline-flex rounded-xl border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-800/80">
               <button
@@ -192,6 +258,27 @@ export function FestivalsExperience() {
                 }`}
               >
                 <ListOrdered className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Print and Share buttons */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handlePrint}
+                aria-label="Print Festivals Directory"
+                title="Print Festivals"
+                className="rounded-xl border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                <Printer className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleShare}
+                aria-label="Share Festival Directory"
+                title="Copy Directory Link"
+                className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 px-2.5 py-1.5 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800 text-xs"
+              >
+                {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Share2 className="h-4 w-4" />}
+                <span className="text-[11px] font-semibold">{copied ? "Copied" : "Share"}</span>
               </button>
             </div>
           </div>

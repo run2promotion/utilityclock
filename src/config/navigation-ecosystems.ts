@@ -147,24 +147,25 @@ export const ECOSYSTEMS: Record<EcosystemId, EcosystemConfig> = {
         title: { en: "Calendar Years", de: "Kalenderjahre", fr: "Années civiles", ja: "暦年", es: "Años del Calendario", pt: "Anos do Calendário", ar: "سنوات التقويم", hi: "कैलेंडर वर्ष", gu: "કેલેન્ડર વર્ષ" },
         links: [
           { label: { en: "Hindu Calendar 2026", de: "Hindukalender 2026", fr: "Calendrier hindou 2026", ja: "ヒンドゥー暦 2026", es: "Calendario Hindú 2026", pt: "Calendário Hindu 2026", ar: "التقويم الهندوسي 2026", hi: "हिन्दू कैलेंडर 2026", gu: "હિન્દુ કેલેન્ડર 2026" }, href: "/calendar/hindu-calendar" },
-          { label: { en: "Hindu Calendar 2027", de: "Hindukalender 2027", fr: "Calendrier hindou 2027", ja: "ヒンドゥー暦 2027", es: "Calendario Hindú 2027", pt: "Calendário Hindu 2027", ar: "التقويم الهندوسي 2027", hi: "हिन्दू कैलेंडर 2027", gu: "હિન્દુ કેલેન્ડર 2027" }, href: "/calendar/hindu-calendar#2027" },
-          { label: { en: "Vikram Samvat 2082–2083", de: "Vikram Samvat 2082–2083", fr: "Vikram Samvat 2082–2083", ja: "ヴィクラム暦 2082–2083", es: "Vikram Samvat 2082–2083", pt: "Vikram Samvat 2082–2083", ar: "فيكرام سامفات 2082–2083", hi: "विक्रम संवत 2082–2083", gu: "વિક્રમ સંવત 2082–2083" }, href: "/calendar/hindu-calendar#samvat" },
+          { label: { en: "Hindu Calendar 2027", de: "Hindukalender 2027", fr: "Calendrier hindou 2027", ja: "ヒンドゥー暦 2027", es: "Calendario Hindú 2027", pt: "Calendário Hindu 2027", ar: "التقويم الهندوسي 2027", hi: "हिन्दू कैलेंडर 2027", gu: "હિન્દુ કેલેન્ડર 2027" }, href: "/calendar/hindu-calendar-2027" },
+          { label: { en: "Vikram Samvat 2082–2083", de: "Vikram Samvat 2082–2083", fr: "Vikram Samvat 2082–2083", ja: "ヴィクラム暦 2082–2083", es: "Vikram Samvat 2082–2083", pt: "Vikram Samvat 2082–2083", ar: "فيكرام سامفات 2082–2083", hi: "विक्रम संवत 2082–2083", gu: "વિક્રમ સંવત 2082–2083" }, href: "/calendar/hindu-calendar" },
+          { label: { en: "Vikram Samvat 2083–2084", de: "Vikram Samvat 2083–2084", fr: "Vikram Samvat 2083–2084", ja: "ヴィクラム暦 2083–2084", es: "Vikram Samvat 2083–2084", pt: "Vikram Samvat 2083–2084", ar: "فيكرام سامفات 2083–2084", hi: "विक्रम संवत 2083–2084", gu: "વિક્રમ સંવત 2083–2084" }, href: "/calendar/hindu-calendar-2027" },
         ],
       },
       {
         title: { en: "Sacred Observances", de: "Heilige Feste", fr: "Fêtes sacrées", ja: "宗教儀礼", es: "Celebraciones Sagradas", pt: "Celebrações Sagradas", ar: "المناسبات المقدسة", hi: "पवित्र व्रत एवं उपवास", gu: "પવિત્ર વ્રત અને ઉપવાસ" },
         links: [
-          { label: { en: "Ekadashi Vrat Dates", de: "Ekadashi Termine", fr: "Dates d'Ekadashi", ja: "エーカーダシー断食日", es: "Fechas de Ekadashi", pt: "Datas de Ekadashi", ar: "تواريخ إيكاداشي", hi: "एकादशी व्रत तिथियाँ", gu: "એકાદશી વ્રત તારીખો" }, href: "/calendar/hindu-calendar#ekadashi" },
-          { label: { en: "Pradosh Vrat Schedule", de: "Pradosh Termine", fr: "Calendrier Pradosh", ja: "プラドーシャ断食", es: "Horario de Pradosh", pt: "Calendário Pradosh", ar: "جدول برادوش", hi: "प्रदोष व्रत तालिका", gu: "પ્રદોષ વ્રત તારીખો" }, href: "/calendar/hindu-calendar#pradosh" },
-          { label: { en: "Purnima & Amavasya", de: "Vollmond & Neumond", fr: "Pleine et Nouvelle Lune", ja: "満月と新月", es: "Purnima y Amavasya", pt: "Purnima e Amavasya", ar: "بورنيما وأمافاسيا", hi: "पूर्णिमा और अमावस्या", gu: "પૂનમ અને અમાસ" }, href: "/calendar/hindu-calendar#moon-phases" },
+          { label: { en: "Ekadashi 2027 Dates", de: "Ekadashi 2027 Termine", fr: "Dates d'Ekadashi 2027", ja: "エーカーダシー2027年", es: "Fechas de Ekadashi 2027", pt: "Datas de Ekadashi 2027", ar: "تواريخ إيكاداشي 2027", hi: "एकादशी 2027 तिथियाँ", gu: "એકાદશી 2027 તારીખો" }, href: "/calendar/ekadashi-2027" },
+          { label: { en: "Purnima 2027 Dates", de: "Purnima 2027 Termine", fr: "Dates de Purnima 2027", ja: "満月2027年日程", es: "Fechas de Purnima 2027", pt: "Datas de Purnima 2027", ar: "تواريخ بورنيما 2027", hi: "पूर्णिमा 2027 तिथियाँ", gu: "પૂર્ણિમા 2027 તારીખો" }, href: "/calendar/purnima-2027" },
+          { label: { en: "Amavasya 2027 Dates", de: "Amavasya 2027 Termine", fr: "Dates d'Amavasya 2027", ja: "新月2027年日程", es: "Fechas de Amavasya 2027", pt: "Datas de Amavasya 2027", ar: "تواريخ أمافاسيا 2027", hi: "अमावस्या 2027 तिथियाँ", gu: "અમાવસ્યા 2027 તારીખો" }, href: "/calendar/amavasya-2027" },
         ],
       },
       {
         title: { en: "Regional Calendars", de: "Regionale Kalender", fr: "Calendriers régionaux", ja: "地域別カレンダー", es: "Calendarios Regionales", pt: "Calendários Regionais", ar: "التقاويم الإقليمية", hi: "क्षेत्रीय पंचांग", gu: "પ્રાદેશિક પંચાંગ" },
         links: [
-          { label: { en: "Gujarati Calendar", de: "Gujarati-Kalender", fr: "Calendrier gujarati", ja: "グジャラート暦", es: "Calendario Gujarati", pt: "Calendário Gujarati", ar: "التقويم الغوجاراتي", hi: "गुजराती कैलेंडर", gu: "ગુજરાતી કેલેન્ડર" }, href: "/calendar/gujarati-calendar" },
+          { label: { en: "Gujarati Calendar 2027", de: "Gujarati-Kalender 2027", fr: "Calendrier gujarati 2027", ja: "グジャラート暦 2027", es: "Calendario Gujarati 2027", pt: "Calendário Gujarati 2027", ar: "التقويم الغوجاراتي 2027", hi: "गुजराती कैलेंडर 2027", gu: "ગુજરાતી કેલેન્ડર 2027" }, href: "/calendar/gujarati-calendar-2027" },
           { label: { en: "Panchang & Muhurat", de: "Panchang & Muhurat", fr: "Panchang & Muhurat", ja: "パンチャングとムフラト", es: "Panchang y Muhurat", pt: "Panchang e Muhurat", ar: "البانتشانغ والمواقيت", hi: "दैनिक पंचांग व मुहूर्त", gu: "દૈનિક પંચાંગ અને મુહૂર્ત" }, href: "/panchang" },
-          { label: { en: "Major Hindu Festivals", de: "Hindu-Feste", fr: "Grandes fêtes hindoues", ja: "主要ヒンドゥー祭礼", es: "Festivales Hindúes", pt: "Festivais Hindus", ar: "المهرجانات الهندوسية", hi: "प्रमुख हिन्दू त्योहार", gu: "મુખ્ય હિન્દુ તહેવારો" }, href: "/festivals#hindu" },
+          { label: { en: "Major Hindu Festivals", de: "Hindu-Feste", fr: "Grandes fêtes hindoues", ja: "主要ヒンドゥー祭礼", es: "Festivales Hindúes", pt: "Festivais Hindus", ar: "المهرجانات الهندوسية", hi: "प्रमुख हिन्दू त्योहार", gu: "મુખ્ય હિન્દુ તહેવારો" }, href: "/festivals/hindu-festivals-2027" },
         ],
       },
     ],
@@ -198,9 +199,10 @@ export const ECOSYSTEMS: Record<EcosystemId, EcosystemConfig> = {
     primaryPath: "/calendar/gujarati-calendar",
     secondaryNav: [
       { id: "overview", label: { en: "Gujarati Calendar", de: "Gujarati-Kalender", fr: "Calendrier gujarati", ja: "グジャラート暦", es: "Calendario Gujarati", pt: "Calendário Gujarati", ar: "التقويم الغوجاراتي", hi: "ગુજરાતી કેલેન્ડર", gu: "ગુજરાતી કેલેન્ડર" }, href: "/calendar/gujarati-calendar" },
+      { id: "gujarati-2027", label: { en: "Gujarati 2027", de: "Gujarati 2027", fr: "Gujarati 2027", ja: "グジャラート2027", es: "Gujarati 2027", pt: "Gujarati 2027", ar: "غوجاراتي 2027", hi: "गुजराती 2027", gu: "ગુજરાતી 2027" }, href: "/calendar/gujarati-calendar-2027" },
       { id: "months", label: { en: "Gujarati Months", de: "Gujarati-Monate", fr: "Mois gujaratis", ja: "グジャラート月名", es: "Meses Gujaratis", pt: "Meses Gujaratis", ar: "الشهور الغوجاراتية", hi: "ગુજરાતી મહિના", gu: "ગુજરાતી મહિના" }, href: "/calendar/gujarati-calendar#months" },
       { id: "panchang", label: { en: "Gujarati Panchang", de: "Gujarati-Panchang", fr: "Panchang gujarati", ja: "グジャラート・パンチャング", es: "Panchang Gujarati", pt: "Panchang Gujarati", ar: "بانتشانغ غوجاراتي", hi: "ગુજરાતી પંચાંગ", gu: "ગુજરાતી પંચાંગ" }, href: "/panchang#gujarati" },
-      { id: "festivals", label: { en: "Gujarati Festivals", de: "Gujarati-Feste", fr: "Fêtes gujaraties", ja: "グジャラート祭礼", es: "Festividades Gujaratis", pt: "Festivais Gujaratis", ar: "المهرجانات الغوجاراتية", hi: "ગુજરાતી તહેવારો", gu: "ગુજરાતી તહેવારો" }, href: "/festivals#gujarati" },
+      { id: "festivals", label: { en: "Gujarati Festivals", de: "Gujarati-Feste", fr: "Fêtes gujaraties", ja: "グジャラート祭礼", es: "Festividades Gujaratis", pt: "Festivais Gujaratis", ar: "المهرجانات الغوجاراتية", hi: "ગુજરાતી તહેવારો", gu: "ગુજરાતી તહેવારો" }, href: "/festivals/gujarati-festivals-2027" },
       { id: "vrat", label: { en: "Gujarati Vrat", de: "Gujarati-Vrat", fr: "Vrat gujaratis", ja: "グジャラート断食日", es: "Vrat Gujarati", pt: "Vrat Gujarati", ar: "صيام غوجاراتي", hi: "ગુજરાતી વ્રત કથા", gu: "ગુજરાતી વ્રત કથા" }, href: "/calendar/gujarati-calendar#vrat" },
     ],
     footerSections: [
@@ -323,6 +325,8 @@ export const ECOSYSTEMS: Record<EcosystemId, EcosystemConfig> = {
     primaryPath: "/festivals",
     secondaryNav: [
       { id: "all", label: { en: "All Festivals", de: "Alle Feste", fr: "Toutes les fêtes", ja: "全祭礼一覧", es: "Todos los Festivales", pt: "Todos os Festivais", ar: "جميع المهرجانات", hi: "सभी त्योहार", gu: "બધા તહેવારો" }, href: "/festivals" },
+      { id: "hindu-2027", label: { en: "Hindu 2027", de: "Hindu 2027", fr: "Hindou 2027", ja: "ヒンドゥー2027", es: "Hindú 2027", pt: "Hindu 2027", ar: "هندوسي 2027", hi: "हिन्दू त्योहार 2027", gu: "હિન્દુ તહેવારો 2027" }, href: "/festivals/hindu-festivals-2027" },
+      { id: "gujarati-2027", label: { en: "Gujarati 2027", de: "Gujarati 2027", fr: "Gujarati 2027", ja: "グジャラート2027", es: "Gujarati 2027", pt: "Gujarati 2027", ar: "غوجاراتي 2027", hi: "गुजराती त्योहार 2027", gu: "ગુજરાતી તહેવારો 2027" }, href: "/festivals/gujarati-festivals-2027" },
       { id: "hindu", label: { en: "Hindu Festivals", de: "Hindu-Feste", fr: "Fêtes hindoues", ja: "ヒンドゥー教の祭り", es: "Festivales Hindúes", pt: "Festivais Hindus", ar: "الأعياد الهندوسية", hi: "हिन्दू त्योहार", gu: "हिन्दू त्योहार" }, href: "/festivals#hindu" },
       { id: "jain", label: { en: "Jain Festivals", de: "Jain-Feste", fr: "Fêtes jaïnes", ja: "ジャイナ教の祭り", es: "Festivales Jainistas", pt: "Festivais Jainistas", ar: "الأعياد الجاينية", hi: "जैन पर्व", gu: "જૈન તહેવારો" }, href: "/festivals#jain" },
       { id: "sikh", label: { en: "Sikh Festivals", de: "Sikh-Feste", fr: "Fêtes sikhes", ja: "シーク教の祭り", es: "Festivales Sijs", pt: "Festivais Sikhs", ar: "الأعياد السيخية", hi: "सिख त्योहार", gu: "सिख त्योहार" }, href: "/festivals#sikh" },

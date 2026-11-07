@@ -1,7 +1,8 @@
 "use client";
 
 import { useI18n } from "@/context/locale-context";
-import { FESTIVALS_2026, type FestivalItem } from "@/data/festivals-2026";
+import { type FestivalItem } from "@/data/festivals-2026";
+import { getFestivalsByDate } from "@/data/festivals-registry";
 import {
   STANDARD_CITIES,
   type CityCoordinates,
@@ -12,11 +13,14 @@ import {
 } from "@/lib/panchang/panchang-engine";
 import {
   Calendar as CalendarIcon,
+  Check,
   ChevronLeft,
   ChevronRight,
   Clock,
   Compass,
   MapPin,
+  Printer,
+  Share2,
   Sun,
   X,
 } from "lucide-react";
@@ -53,7 +57,7 @@ const GUJARATI_CITIES: Record<string, CityCoordinates> = {
   delhi: STANDARD_CITIES.delhi,
 };
 
-const GUJARATI_MONTH_NAV = [
+const GUJARATI_MONTH_NAV_2026 = [
   { index: 0, en: "Kartak", gu: "કારતક", yearStr: "VS 2082" },
   { index: 1, en: "Magshar", gu: "માગશર", yearStr: "VS 2082" },
   { index: 2, en: "Posh", gu: "પોષ", yearStr: "VS 2082" },
@@ -61,12 +65,27 @@ const GUJARATI_MONTH_NAV = [
   { index: 4, en: "Fagun", gu: "ફાગણ", yearStr: "VS 2082" },
   { index: 5, en: "Chaitra", gu: "ચૈત્ર", yearStr: "VS 2082" },
   { index: 6, en: "Vaishakh", gu: "વૈશાખ", yearStr: "VS 2082" },
-  { index: 7, en: "Adhik Jeth", gu: "અધિક જેઠ (પુરુષોત્તમ)", yearStr: "VS 2082 (સ્પેશિયલ)" },
+  { index: 7, en: "Adhik Jeth", gu: "અધિક જેઠ (પુરુષોત્તમ)", yearStr: "VS 2082 (સ્પેશિયલ અધિક માસ)" },
   { index: 8, en: "Jeth", gu: "જેઠ (નિજ)", yearStr: "VS 2082" },
   { index: 9, en: "Ashadh", gu: "અષાઢ", yearStr: "VS 2082" },
   { index: 10, en: "Shravan", gu: "શ્રાવણ", yearStr: "VS 2082" },
   { index: 11, en: "Bhadarvo", gu: "ભાદરવો", yearStr: "VS 2082" },
   { index: 12, en: "Aso", gu: "આસો", yearStr: "VS 2082" },
+];
+
+const GUJARATI_MONTH_NAV_2027 = [
+  { index: 0, en: "Posh", gu: "પોષ", yearStr: "VS 2083" },
+  { index: 1, en: "Maha", gu: "મહા", yearStr: "VS 2083" },
+  { index: 2, en: "Fagun", gu: "ફાગણ", yearStr: "VS 2083" },
+  { index: 3, en: "Chaitra", gu: "ચૈત્ર", yearStr: "VS 2083" },
+  { index: 4, en: "Vaishakh", gu: "વૈશાખ", yearStr: "VS 2083" },
+  { index: 5, en: "Jeth", gu: "જેઠ", yearStr: "VS 2083" },
+  { index: 6, en: "Ashadh", gu: "અષાઢ", yearStr: "VS 2083" },
+  { index: 7, en: "Shravan", gu: "શ્રાવણ", yearStr: "VS 2083" },
+  { index: 8, en: "Bhadarvo", gu: "ભાદરવો", yearStr: "VS 2083" },
+  { index: 9, en: "Aso", gu: "આસો (દિવાળી)", yearStr: "VS 2083" },
+  { index: 10, en: "Kartak", gu: "કારતક (બેસતું વર્ષ)", yearStr: "VS 2084" },
+  { index: 11, en: "Magshar", gu: "માગશર", yearStr: "VS 2084" },
 ];
 
 const GUJARATI_WEEKDAYS = [
@@ -81,7 +100,7 @@ const GUJARATI_WEEKDAYS = [
 
 // Approximate Gregorian month range mapping for 2026 Gujarati months
 const GUJARATI_MONTH_GREGORIAN_MONTH_2026: Record<number, number> = {
-  0: 10, // Kartak -> Nov 2026 (or Oct 2025)
+  0: 10, // Kartak -> Nov 2026
   1: 11, // Magshar -> Dec
   2: 0,  // Posh -> Jan 2026
   3: 1,  // Maha -> Feb 2026
@@ -94,6 +113,22 @@ const GUJARATI_MONTH_GREGORIAN_MONTH_2026: Record<number, number> = {
   10: 7, // Shravan -> Aug 2026
   11: 8, // Bhadarvo -> Sep 2026
   12: 9, // Aso -> Oct 2026
+};
+
+// Gregorian month range mapping for 2027 Gujarati months (0 = Jan, 11 = Dec)
+const GUJARATI_MONTH_GREGORIAN_MONTH_2027: Record<number, number> = {
+  0: 0,  // Posh -> Jan 2027
+  1: 1,  // Maha -> Feb 2027
+  2: 2,  // Fagun -> Mar 2027
+  3: 3,  // Chaitra -> Apr 2027
+  4: 4,  // Vaishakh -> May 2027
+  5: 5,  // Jeth -> Jun 2027
+  6: 6,  // Ashadh -> Jul 2027
+  7: 7,  // Shravan -> Aug 2027
+  8: 8,  // Bhadarvo -> Sep 2027
+  9: 9,  // Aso -> Oct 2027 (Diwali Oct 29)
+  10: 10, // Kartak -> Nov 2027 (Bestu Varas Oct 30)
+  11: 11, // Magshar -> Dec 2027
 };
 
 type GujaratiCalendarDay = {
@@ -110,30 +145,53 @@ type GujaratiCalendarDay = {
   gujaratiTithiLabel: string;
 };
 
-export function GujaratiCalendarExperience() {
+export interface GujaratiCalendarExperienceProps {
+  initialYear?: number;
+  initialMonthIndex?: number;
+}
+
+export function GujaratiCalendarExperience({
+  initialYear = 2026,
+  initialMonthIndex,
+}: GujaratiCalendarExperienceProps = {}) {
   const { locale } = useI18n();
 
-  // Selected Gujarati month index (0 to 12)
-  const [selectedGujMonthIndex, setSelectedGujMonthIndex] = useState<number>(4); // Fagun / March 2026 default
+  const [selectedYear, setSelectedYear] = useState<number>(initialYear);
+  // Selected Gujarati month index
+  const [selectedGujMonthIndex, setSelectedGujMonthIndex] = useState<number>(
+    initialMonthIndex !== undefined
+      ? initialMonthIndex
+      : initialYear === 2027
+      ? 0
+      : 4
+  );
   const [selectedCityKey, setSelectedCityKey] = useState<string>("ahmedabad");
   const [activeDayModal, setActiveDayModal] = useState<GujaratiCalendarDay | null>(null);
   const [showChoghadiyaCard, setShowChoghadiyaCard] = useState<boolean>(true);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const city: CityCoordinates =
     GUJARATI_CITIES[selectedCityKey] || GUJARATI_CITIES.ahmedabad;
 
+  const monthNav = selectedYear === 2026 ? GUJARATI_MONTH_NAV_2026 : GUJARATI_MONTH_NAV_2027;
+  const safeMonthIndex = Math.min(selectedGujMonthIndex, monthNav.length - 1);
+  const currentGujMonth = monthNav[safeMonthIndex];
+
   // Selected Gregorian month corresponding to the selected Gujarati month
-  const gregMonth = GUJARATI_MONTH_GREGORIAN_MONTH_2026[selectedGujMonthIndex] ?? 2;
-  const year = 2026;
+  const gregMonthMapping =
+    selectedYear === 2026
+      ? GUJARATI_MONTH_GREGORIAN_MONTH_2026
+      : GUJARATI_MONTH_GREGORIAN_MONTH_2027;
+  const gregMonth = gregMonthMapping[safeMonthIndex] ?? 0;
 
   // Build calendar days
   const calendarDays: GujaratiCalendarDay[] = useMemo(() => {
     const days: GujaratiCalendarDay[] = [];
-    const firstDayOfMonth = new Date(Date.UTC(year, gregMonth, 1, 12, 0, 0));
-    const lastDayOfMonth = new Date(Date.UTC(year, gregMonth + 1, 0, 12, 0, 0));
+    const firstDayOfMonth = new Date(Date.UTC(selectedYear, gregMonth, 1, 12, 0, 0));
+    const lastDayOfMonth = new Date(Date.UTC(selectedYear, gregMonth + 1, 0, 12, 0, 0));
 
     const firstDayIndex = (firstDayOfMonth.getUTCDay() + 6) % 7;
-    const prevMonthLastDay = new Date(Date.UTC(year, gregMonth, 0, 12, 0, 0)).getUTCDate();
+    const prevMonthLastDay = new Date(Date.UTC(selectedYear, gregMonth, 0, 12, 0, 0)).getUTCDate();
 
     // Helper to format Gujarati Tithi label
     const formatGujTithi = (p: PanchangOutput) => {
@@ -163,10 +221,10 @@ export function GujaratiCalendarExperience() {
 
     // Leading padding
     for (let i = firstDayIndex - 1; i >= 0; i--) {
-      const d = new Date(Date.UTC(year, gregMonth - 1, prevMonthLastDay - i, 12, 0, 0));
+      const d = new Date(Date.UTC(selectedYear, gregMonth - 1, prevMonthLastDay - i, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -186,10 +244,10 @@ export function GujaratiCalendarExperience() {
     // Current month days
     const totalDays = lastDayOfMonth.getUTCDate();
     for (let day = 1; day <= totalDays; day++) {
-      const d = new Date(Date.UTC(year, gregMonth, day, 12, 0, 0));
+      const d = new Date(Date.UTC(selectedYear, gregMonth, day, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -210,10 +268,10 @@ export function GujaratiCalendarExperience() {
     const totalSlots = days.length <= 35 ? 35 : 42;
     const remaining = totalSlots - days.length;
     for (let day = 1; day <= remaining; day++) {
-      const d = new Date(Date.UTC(year, gregMonth + 1, day, 12, 0, 0));
+      const d = new Date(Date.UTC(selectedYear, gregMonth + 1, day, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -231,9 +289,7 @@ export function GujaratiCalendarExperience() {
     }
 
     return days;
-  }, [gregMonth, year, city]);
-
-  const currentGujMonth = GUJARATI_MONTH_NAV[selectedGujMonthIndex];
+  }, [gregMonth, selectedYear, city]);
 
   // Daily Panchang for today
   const todayPanchang = useMemo(() => {
@@ -247,6 +303,20 @@ export function GujaratiCalendarExperience() {
       minute: "2-digit",
       timeZone: city.timezone,
     });
+  };
+
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   // Get Choghadiya nature styling
@@ -266,11 +336,11 @@ export function GujaratiCalendarExperience() {
   return (
     <div className="w-full space-y-6">
       {/* Gujarati Month & City Selector Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-orange-500/20 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-orange-500/20 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80 print:hidden">
         <div className="flex items-center gap-3">
           <button
             onClick={() =>
-              setSelectedGujMonthIndex((prev) => (prev === 0 ? 12 : prev - 1))
+              setSelectedGujMonthIndex((prev) => (prev === 0 ? monthNav.length - 1 : prev - 1))
             }
             aria-label="Previous Month"
             className="rounded-xl border border-zinc-200 p-2 text-zinc-700 transition hover:bg-orange-50 hover:text-orange-700 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
@@ -286,12 +356,14 @@ export function GujaratiCalendarExperience() {
               <span>{currentGujMonth.yearStr}</span>
               <span>•</span>
               <span className="text-zinc-500">અમાવસ્યાન્ત પદ્ધતિ (Amavasyanta)</span>
+              <span>•</span>
+              <span className="text-zinc-500">{selectedYear} CE</span>
             </div>
           </div>
 
           <button
             onClick={() =>
-              setSelectedGujMonthIndex((prev) => (prev === 12 ? 0 : prev + 1))
+              setSelectedGujMonthIndex((prev) => (prev === monthNav.length - 1 ? 0 : prev + 1))
             }
             aria-label="Next Month"
             className="rounded-xl border border-zinc-200 p-2 text-zinc-700 transition hover:bg-orange-50 hover:text-orange-700 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
@@ -300,14 +372,44 @@ export function GujaratiCalendarExperience() {
           </button>
         </div>
 
-        {/* City and Month Dropdowns */}
-        <div className="flex flex-wrap items-center gap-3 text-xs">
+        {/* Year, City and Month Dropdowns */}
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          {/* Year Switcher Pills */}
+          <div className="inline-flex rounded-xl border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-800/80">
+            <button
+              onClick={() => {
+                setSelectedYear(2026);
+                setSelectedGujMonthIndex((idx) => Math.min(idx, GUJARATI_MONTH_NAV_2026.length - 1));
+              }}
+              className={`rounded-lg px-3 py-1 font-bold transition ${
+                selectedYear === 2026
+                  ? "bg-orange-600 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+            >
+              2026
+            </button>
+            <button
+              onClick={() => {
+                setSelectedYear(2027);
+                setSelectedGujMonthIndex((idx) => Math.min(idx, GUJARATI_MONTH_NAV_2027.length - 1));
+              }}
+              className={`rounded-lg px-3 py-1 font-bold transition ${
+                selectedYear === 2027
+                  ? "bg-orange-600 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+            >
+              2027
+            </button>
+          </div>
+
           <select
-            value={selectedGujMonthIndex}
+            value={safeMonthIndex}
             onChange={(e) => setSelectedGujMonthIndex(Number(e.target.value))}
-            className="rounded-xl border border-zinc-300 bg-white px-3 py-2 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            className="rounded-xl border border-zinc-300 bg-white px-3 py-1.5 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
           >
-            {GUJARATI_MONTH_NAV.map((m) => (
+            {monthNav.map((m) => (
               <option key={m.index} value={m.index}>
                 {m.gu} ({m.en})
               </option>
@@ -319,7 +421,7 @@ export function GujaratiCalendarExperience() {
             <select
               value={selectedCityKey}
               onChange={(e) => setSelectedCityKey(e.target.value)}
-              className="rounded-xl border border-zinc-300 bg-white px-2.5 py-2 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+              className="rounded-xl border border-zinc-300 bg-white px-2.5 py-1.5 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
             >
               {Object.entries(GUJARATI_CITIES).map(([key, c]) => (
                 <option key={key} value={key}>
@@ -331,17 +433,38 @@ export function GujaratiCalendarExperience() {
 
           <button
             onClick={() => setShowChoghadiyaCard((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 font-semibold text-orange-800 transition hover:bg-orange-100 dark:border-orange-800 dark:bg-orange-950/60 dark:text-orange-300"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-1.5 font-semibold text-orange-800 transition hover:bg-orange-100 dark:border-orange-800 dark:bg-orange-950/60 dark:text-orange-300"
           >
             <Clock className="h-4 w-4" />
-            <span>ચોઘડિયા પેનલ</span>
+            <span>ચોઘડિયા</span>
           </button>
+
+          {/* Actions: Print and Share */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handlePrint}
+              aria-label="Print Gujarati Calendar"
+              title="Print Gujarati Calendar"
+              className="rounded-xl border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <Printer className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handleShare}
+              aria-label="Share Calendar Link"
+              title="Copy Calendar Link"
+              className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 px-2.5 py-1.5 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Share2 className="h-4 w-4" />}
+              <span className="text-[11px] font-semibold">{copied ? "Copied" : "Share"}</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Real-time Day Choghadiya Highlights Widget */}
       {showChoghadiyaCard && (
-        <div className="rounded-3xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent p-5 shadow-sm">
+        <div className="rounded-3xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent p-5 shadow-sm print:hidden">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-orange-500/20 pb-3">
             <div className="flex items-center gap-2">
               <Sun className="h-5 w-5 text-orange-600" />
@@ -492,7 +615,7 @@ export function GujaratiCalendarExperience() {
 
       {/* Selected Day Detail Modal Sheet */}
       {activeDayModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm print:hidden">
           <div className="relative w-full max-w-lg rounded-3xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
             <button
               onClick={() => setActiveDayModal(null)}
@@ -509,7 +632,7 @@ export function GujaratiCalendarExperience() {
             </div>
 
             <h3 className="mt-1 text-2xl font-black text-zinc-900 dark:text-zinc-50">
-              {activeDayModal.gujaratiTithiLabel} — {activeDayModal.dayNumber} {GUJARATI_MONTH_NAV[selectedGujMonthIndex].gu}
+              {activeDayModal.gujaratiTithiLabel} — {activeDayModal.dayNumber} {currentGujMonth.gu}
             </h3>
 
             {activeDayModal.festivals.length > 0 && (

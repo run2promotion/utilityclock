@@ -1,7 +1,8 @@
 "use client";
 
 import { useI18n } from "@/context/locale-context";
-import { FESTIVALS_2026, type FestivalItem } from "@/data/festivals-2026";
+import { type FestivalItem } from "@/data/festivals-2026";
+import { getFestivalsByDate } from "@/data/festivals-registry";
 import {
   STANDARD_CITIES,
   type CityCoordinates,
@@ -12,12 +13,15 @@ import {
 } from "@/lib/panchang/panchang-engine";
 import {
   Calendar as CalendarIcon,
+  Check,
   ChevronLeft,
   ChevronRight,
   Compass,
   Filter,
   MapPin,
   Moon,
+  Printer,
+  Share2,
   Sparkles,
   Sun,
   X,
@@ -58,16 +62,27 @@ type CalendarDay = {
   isSankranti: boolean;
 };
 
-export function HinduCalendarExperience() {
+export interface HinduCalendarExperienceProps {
+  initialYear?: number;
+  initialMonth?: number;
+}
+
+export function HinduCalendarExperience({
+  initialYear = 2026,
+  initialMonth,
+}: HinduCalendarExperienceProps = {}) {
   const { locale } = useI18n();
 
   // Selected year and month (0 = Jan, 11 = Dec)
-  const [selectedYear, setSelectedYear] = useState<number>(2026);
-  const [selectedMonth, setSelectedMonth] = useState<number>(2); // Default March 2026 (Navratri / Holi / VS 2083 transition)
+  const [selectedYear, setSelectedYear] = useState<number>(initialYear);
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    initialMonth !== undefined ? initialMonth : initialYear === 2027 ? 0 : 2
+  );
   const [selectedCityKey, setSelectedCityKey] = useState<string>("delhi");
   const [tradition, setTradition] = useState<Tradition>("purnimanta");
   const [filterMode, setFilterMode] = useState<"all" | "vrats" | "festivals">("all");
   const [activeDayModal, setActiveDayModal] = useState<CalendarDay | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const city: CityCoordinates =
     STANDARD_CITIES[selectedCityKey] || STANDARD_CITIES.delhi;
@@ -88,7 +103,7 @@ export function HinduCalendarExperience() {
       const d = new Date(Date.UTC(selectedYear, selectedMonth - 1, prevMonthLastDay - i, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -111,7 +126,7 @@ export function HinduCalendarExperience() {
       const d = new Date(Date.UTC(selectedYear, selectedMonth, day, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -135,7 +150,7 @@ export function HinduCalendarExperience() {
       const d = new Date(Date.UTC(selectedYear, selectedMonth + 1, day, 12, 0, 0));
       const dateStr = d.toISOString().slice(0, 10);
       const panchang = calculateDailyPanchang(d, city);
-      const festivals = FESTIVALS_2026.filter((f) => f.date === dateStr);
+      const festivals = getFestivalsByDate(dateStr);
       const tithiNum = panchang.udayaTithi.index;
       days.push({
         date: d,
@@ -214,10 +229,24 @@ export function HinduCalendarExperience() {
     return parts[0].trim();
   };
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <div className="w-full space-y-6">
       {/* Top Interactive Controls Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80 print:hidden">
         {/* Month & Year Navigator */}
         <div className="flex items-center gap-3">
           <button
@@ -234,17 +263,39 @@ export function HinduCalendarExperience() {
             </h2>
             <div className="flex flex-wrap items-center gap-2 text-xs text-amber-700 dark:text-amber-400 font-medium">
               <span>
-                {selectedYear === 2026 && selectedMonth < 2
-                  ? "Vikram Samvat 2082"
-                  : "Vikram Samvat 2083"}
+                {selectedYear === 2026
+                  ? selectedMonth < 3
+                    ? "Vikram Samvat 2082"
+                    : "Vikram Samvat 2083"
+                  : selectedYear === 2027
+                  ? selectedMonth < 3
+                    ? "Vikram Samvat 2083"
+                    : "Vikram Samvat 2084"
+                  : `Vikram Samvat ${selectedYear + 57}`}
               </span>
               <span>•</span>
-              <span className="text-zinc-500">Shaka 1948</span>
+              <span className="text-zinc-500">
+                {selectedYear === 2026
+                  ? selectedMonth < 2
+                    ? "Shaka 1947"
+                    : "Shaka 1948"
+                  : selectedMonth < 2
+                  ? "Shaka 1948"
+                  : "Shaka 1949"}
+              </span>
               {selectedYear === 2026 && selectedMonth >= 4 && selectedMonth <= 6 && (
                 <>
                   <span>•</span>
                   <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
                     Adhika Jyeshtha Period
+                  </span>
+                </>
+              )}
+              {selectedYear === 2027 && (
+                <>
+                  <span>•</span>
+                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300">
+                    Nija Year (12 Lunations)
                   </span>
                 </>
               )}
@@ -260,13 +311,37 @@ export function HinduCalendarExperience() {
           </button>
         </div>
 
-        {/* Location & Tradition Options */}
-        <div className="flex flex-wrap items-center gap-3 text-xs">
+        {/* Location, Year Toggle & Tradition Options */}
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          {/* Year Switcher Pills */}
+          <div className="inline-flex rounded-xl border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-800/80">
+            <button
+              onClick={() => setSelectedYear(2026)}
+              className={`rounded-lg px-3 py-1 font-bold transition ${
+                selectedYear === 2026
+                  ? "bg-amber-600 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+            >
+              2026
+            </button>
+            <button
+              onClick={() => setSelectedYear(2027)}
+              className={`rounded-lg px-3 py-1 font-bold transition ${
+                selectedYear === 2027
+                  ? "bg-amber-600 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
+            >
+              2027
+            </button>
+          </div>
+
           {/* Quick Month Select Dropdown */}
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="rounded-xl border border-zinc-300 bg-white px-3 py-2 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            className="rounded-xl border border-zinc-300 bg-white px-3 py-1.5 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
           >
             {MONTH_NAMES.map((name, idx) => (
               <option key={idx} value={idx}>
@@ -281,7 +356,7 @@ export function HinduCalendarExperience() {
             <select
               value={selectedCityKey}
               onChange={(e) => setSelectedCityKey(e.target.value)}
-              className="rounded-xl border border-zinc-300 bg-white px-2.5 py-2 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+              className="rounded-xl border border-zinc-300 bg-white px-2.5 py-1.5 font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
             >
               {Object.entries(STANDARD_CITIES).map(([key, c]) => (
                 <option key={key} value={key}>
@@ -312,6 +387,27 @@ export function HinduCalendarExperience() {
               }`}
             >
               Amanta (South/West)
+            </button>
+          </div>
+
+          {/* Actions: Print and Share */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handlePrint}
+              aria-label="Print Calendar"
+              title="Print Calendar"
+              className="rounded-xl border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <Printer className="h-4 w-4" />
+            </button>
+            <button
+              onClick={handleShare}
+              aria-label="Share Calendar Link"
+              title="Copy Calendar Link"
+              className="inline-flex items-center gap-1 rounded-xl border border-zinc-200 px-2.5 py-1.5 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Share2 className="h-4 w-4" />}
+              <span className="text-[11px] font-semibold">{copied ? "Copied" : "Share"}</span>
             </button>
           </div>
         </div>
@@ -369,7 +465,7 @@ export function HinduCalendarExperience() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 text-xs">
+      <div className="flex items-center gap-2 text-xs print:hidden">
         <span className="font-semibold text-zinc-500 flex items-center gap-1">
           <Filter className="h-3.5 w-3.5" />
           View:
@@ -514,7 +610,7 @@ export function HinduCalendarExperience() {
 
       {/* Selected Day Detail Modal Sheet */}
       {activeDayModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm print:hidden">
           <div className="relative w-full max-w-lg rounded-3xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
             <button
               onClick={() => setActiveDayModal(null)}
